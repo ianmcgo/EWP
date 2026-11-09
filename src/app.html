@@ -1,0 +1,1134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Epic Warpath Army Builder</title>
+<meta name="description" content="A fast, offline-friendly army list builder for Epic Warpath with company slot tracking, validation, printing and sharing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1216;--panel:#171b21;--panel2:#1d222a;--line:#2a313b;--line2:#353e4a;
+  --text:#e6e9ee;--muted:#9aa3af;--dim:#6b7380;
+  --accent:#e0a63a;--ok:#5cbf7a;--warn:#e0a63a;--bad:#e2604f;
+  --fac:#e0a63a;
+  --hq:#d9b44a;--troop:#6aa5e0;--spec:#b07fe0;--sup:#e0804f;--trans:#5cbfa8;--super:#e05f7c;
+  --radius:10px;
+  --head:"Barlow Condensed",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.4}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--fac)}
+.app{display:grid;grid-template-rows:auto auto 1fr auto;min-height:100vh}
+header.top{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#0b0e12;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.brand{font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.brand span{color:var(--fac)}
+.listname{flex:1 1 200px;min-width:140px;background:transparent;border:1px solid transparent;border-radius:6px;padding:6px 8px;font-family:var(--head);font-size:20px;font-weight:600}
+.listname:hover{border-color:var(--line)}
+.listname:focus{outline:none;border-color:var(--fac);background:var(--panel)}
+.tbtn{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:7px 12px;font-weight:600;font-size:14px;white-space:nowrap}
+.tbtn:hover{border-color:var(--fac)}
+.tbtn.primary{background:var(--fac);color:#111;border-color:var(--fac)}
+.bar{display:flex;align-items:center;gap:14px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line);flex-wrap:wrap;position:sticky;top:0;z-index:20}
+.field{display:flex;align-items:center;gap:6px}
+.field label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+select,.num{background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:6px 8px}
+.num{width:84px}
+.pts{flex:1 1 260px;min-width:220px}
+.ptsline{display:flex;justify-content:space-between;font-family:var(--head);font-size:18px;font-weight:600}
+.ptsline .left{color:var(--muted);font-size:15px}
+.meter{height:8px;background:var(--panel2);border-radius:6px;overflow:hidden;margin-top:4px;border:1px solid var(--line)}
+.meter i{display:block;height:100%;background:var(--ok);transition:width .25s}
+.meter.over i{background:var(--bad)}
+.status{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px;padding:6px 10px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2)}
+.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,1fr);gap:16px;padding:16px;align-items:start}
+@media (min-width:1360px){main{grid-template-columns:minmax(0,1.2fr) minmax(340px,1fr) minmax(300px,.85fr)}}
+.col{min-width:0}
+.tabs{display:none}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+.ph{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.ph h2{margin:0;font-family:var(--head);font-size:19px;letter-spacing:.05em;text-transform:uppercase;font-weight:700;flex:1}
+.issues{margin:0 0 14px;padding:10px 14px;border-radius:var(--radius);border:1px solid rgba(226,96,79,.4);background:rgba(226,96,79,.08)}
+.issues h3{margin:0 0 6px;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--bad)}
+.issues ul{margin:0;padding-left:18px}
+.issues li{margin:2px 0}
+.company{margin-bottom:14px}
+.company.active{border-color:var(--fac);box-shadow:0 0 0 1px var(--fac) inset}
+.ch{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}
+.ch h3{margin:0;font-family:var(--head);font-size:18px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;flex:1}
+.ch .cpts{font-family:var(--head);font-weight:600;color:var(--muted)}
+.tag{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:20px;background:var(--fac);color:#111}
+.ibtn{background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 7px;color:var(--muted);font-size:14px;line-height:1}
+.ibtn:hover{border-color:var(--line2);color:var(--text)}
+.ibtn.danger:hover{color:var(--bad);border-color:var(--bad)}
+.slots{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.slot{display:flex;align-items:center;gap:6px;font-size:13px;padding:4px 8px;border-radius:7px;border:1px solid var(--line2);background:var(--panel)}
+.slot b{font-family:var(--head);font-size:15px}
+.slot .sw{width:8px;height:8px;border-radius:2px}
+.slot.need{border-color:var(--bad);color:#ffd6cf}
+.slot.full{opacity:.75}
+.slot.over{border-color:var(--bad);background:rgba(226,96,79,.15)}
+.cbody{padding:6px 0}
+.empty{padding:16px;color:var(--muted);font-size:14px}
+.empty b{color:var(--text)}
+.grp{padding:6px 12px 2px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:6px}
+.grp .sw{width:8px;height:8px;border-radius:2px}
+.row{display:flex;align-items:center;gap:8px;padding:7px 12px;border-top:1px solid transparent}
+.row:hover{background:var(--panel2)}
+.row .nm{flex:1;min-width:0;cursor:pointer}
+.row .nm b{font-weight:600}
+.row .sub,.prow .sub{display:block;font-size:12px;color:var(--muted)}
+.row .p{font-family:var(--head);font-weight:600;font-size:17px;min-width:44px;text-align:right}
+.u-badge{font-size:10px;font-weight:700;border:1px solid var(--muted);color:var(--muted);border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:1px}
+.ct{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:3px;cursor:pointer;width:max-content}
+.ct input{accent-color:var(--fac)}
+.addc{display:flex;gap:8px;flex-wrap:wrap;padding:0 0 4px}
+.picker .ph{position:sticky;top:0}
+.pick-tools{display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap;align-items:center}
+.search{flex:1;min-width:140px;background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:7px 10px}
+.target{font-size:13px;color:var(--muted)}
+.target b{color:var(--fac)}
+.prow{display:flex;align-items:center;gap:8px;padding:7px 12px}
+.prow:hover{background:var(--panel2)}
+.prow .nm{flex:1;min-width:0;cursor:pointer}
+.prow .why{display:block;font-size:12px;color:var(--warn)}
+.prow.off .nm b{color:var(--muted)}
+.add{width:34px;height:34px;border-radius:8px;border:1px solid var(--fac);background:transparent;color:var(--fac);font-size:20px;font-weight:700;line-height:1;flex:none}
+.add:hover{background:var(--fac);color:#111}
+.add:disabled{border-color:var(--line2);color:var(--dim);cursor:not-allowed;background:transparent}
+.card{margin:4px 12px 10px;border:1px solid var(--line2);border-radius:8px;background:#12161b;overflow:hidden}
+.card .chd{display:flex;gap:8px;align-items:baseline;padding:8px 10px;background:var(--panel2);flex-wrap:wrap}
+.card .chd b{font-family:var(--head);font-size:17px;letter-spacing:.03em}
+.card .chd span{font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(8,1fr);text-align:center;border-bottom:1px solid var(--line)}
+.stats div{padding:5px 2px;border-right:1px solid var(--line)}
+.stats div:last-child{border-right:0}
+.stats small{display:block;font-size:10px;color:var(--dim);font-weight:700;letter-spacing:.06em}
+.stats strong{font-family:var(--head);font-size:16px}
+.kws{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;border-bottom:1px solid var(--line)}
+.kw{font-size:12px;border:1px solid var(--line2);border-radius:5px;padding:1px 7px;background:var(--panel);cursor:help;font-style:italic}
+.kw:hover{border-color:var(--fac)}
+.kw.none{cursor:default;font-style:normal;color:var(--dim)}
+table.wp{width:100%;border-collapse:collapse;font-size:13px}
+table.wp th{font-size:10px;color:var(--dim);text-align:left;padding:5px 8px;letter-spacing:.06em;font-weight:700;text-transform:uppercase}
+table.wp td{padding:5px 8px;border-top:1px solid var(--line);vertical-align:top}
+table.wp td.c{text-align:center;white-space:nowrap}
+table.wp tr.g td{color:var(--muted);font-style:italic;padding-bottom:0}
+.mode{font-size:10px;color:var(--fac);font-weight:700;margin-left:4px}
+.rules{padding:6px 10px 10px;font-size:13px}
+.rules p{margin:6px 0}
+.note{margin:8px 10px;padding:7px 9px;border-left:3px solid var(--warn);background:rgba(224,166,58,.08);font-size:12.5px;color:#f0dcb4}
+.pop{position:fixed;z-index:100;max-width:340px;background:#20262f;border:1px solid var(--line2);border-radius:8px;padding:10px 12px;font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.pop b{display:block;font-family:var(--head);font-size:16px;margin-bottom:4px;color:var(--fac)}
+.side-sec{padding:12px 14px;border-bottom:1px solid var(--line)}
+.side-sec:last-child{border-bottom:0}
+.side-sec h3{margin:0 0 8px;font-family:var(--head);font-size:16px;letter-spacing:.05em;text-transform:uppercase}
+.kv{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kv div{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px;text-align:center}
+.kv small{display:block;font-size:10px;color:var(--dim);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.kv strong{font-family:var(--head);font-size:22px}
+.dice{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.die{display:flex;align-items:center;gap:5px;font-size:13px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 8px}
+.die i{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid rgba(255,255,255,.3)}
+.die i.Black{background:#111}.die i.Orange{background:#e07a1f}.die i.Green{background:#3fa34d}
+.strat{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.strat:first-of-type{border-top:0}
+.strat .sd{flex:1;font-size:13px}
+.strat .sd b{font-size:14px}
+.strat .sd span{display:block;color:var(--muted);font-size:12.5px}
+.strat input[type=checkbox]{accent-color:var(--fac);width:18px;height:18px;margin-top:2px}
+.strat select{padding:4px 6px;font-size:13px}
+.stepper{display:flex;align-items:center;gap:4px}
+.stepper button{width:24px;height:24px;border-radius:5px;border:1px solid var(--line2);background:var(--panel2);line-height:1}
+.order{border-top:1px solid var(--line);padding:8px 0;font-size:13px}
+.order:first-of-type{border-top:0}
+.order b{font-size:14px}
+.order .cost{float:right;font-family:var(--head);font-weight:700;color:var(--fac)}
+.order .when{color:var(--muted);font-style:italic;margin:2px 0}
+details.gl summary{cursor:pointer;font-weight:600;padding:5px 0}
+details.gl p{margin:2px 0 8px;font-size:13px;color:#cfd4db}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+.modal{background:var(--panel);border:1px solid var(--line2);border-radius:12px;width:min(640px,100%);overflow:hidden}
+.modal .ph{background:var(--panel2)}
+.mbody{padding:14px}
+.lrow{display:flex;align-items:center;gap:8px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--panel2)}
+.lrow.cur{border-color:var(--fac)}
+.lrow .nm{flex:1;cursor:pointer;min-width:0}
+.lrow .nm small{display:block;color:var(--muted)}
+textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var(--line2);border-radius:8px;padding:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+.facgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.facbtn{padding:14px 10px;border-radius:10px;border:1px solid var(--line2);background:var(--panel2);text-align:left}
+.facbtn:hover{border-color:var(--c)}
+.facbtn b{display:block;font-family:var(--head);font-size:19px;color:var(--c);letter-spacing:.03em}
+.facbtn small{color:var(--muted)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#20262f;border:1px solid var(--fac);padding:9px 16px;border-radius:8px;z-index:120;font-weight:600}
+.thumb{width:44px;height:44px;border-radius:7px;object-fit:cover;background:#0d1014;border:1px solid var(--line);flex:none;cursor:pointer}
+.thumb.none{display:inline-block;background:repeating-linear-gradient(45deg,#14181d,#14181d 4px,#181d23 4px,#181d23 8px)}
+.uimg{background:#0d1014;border-bottom:1px solid var(--line);display:flex;justify-content:center}
+.uimg img{max-width:100%;max-height:260px;object-fit:contain;display:block}
+.e-badge{font-size:9.5px;font-weight:700;letter-spacing:.05em;border:1px solid var(--warn);color:var(--warn);border-radius:4px;padding:0 4px;margin-left:5px;vertical-align:1px;font-style:normal}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--panel);border-left:1px solid var(--line2);z-index:95;display:flex;flex-direction:column;box-shadow:-20px 0 40px rgba(0,0,0,.5);transform:translateX(105%);transition:transform .22s}
+.drawer.open{transform:none}
+.drawer .ph{background:var(--panel2)}
+.dbody{overflow:auto;flex:1;padding-bottom:30px}
+.dsec{padding:12px 14px;border-bottom:1px solid var(--line)}
+.dsec h3{margin:0 0 8px;font-family:var(--head);font-size:17px;letter-spacing:.05em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.drow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.qn{min-width:34px;height:32px;border-radius:7px;border:1px solid var(--line2);background:var(--panel2);font-weight:700}
+.qn.on{border-color:var(--fac);color:var(--fac)}
+.rollbtn{background:var(--fac);color:#111;border:0;border-radius:8px;padding:9px 16px;font-family:var(--head);font-size:17px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.tray{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.d8{width:36px;height:36px;display:grid;place-items:center;font-family:var(--head);font-weight:700;font-size:19px;border-radius:7px;background:var(--panel2);border:1px solid var(--line2);color:var(--dim);animation:pop .25s}
+.d8.hit{color:#111;background:var(--ok);border-color:var(--ok)}
+.d8.ex{background:var(--fac);border-color:var(--fac);color:#111;box-shadow:0 0 0 2px rgba(255,255,255,.25) inset}
+.d8.bonus{outline:2px dashed var(--fac);outline-offset:1px}
+@keyframes pop{from{transform:scale(.6) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+.res{margin-top:10px;font-family:var(--head);font-size:20px;font-weight:700}
+.res small{font-family:var(--body);font-size:13px;color:var(--muted);font-weight:400}
+.cd{width:46px;height:46px;border-radius:9px;display:grid;place-items:center;cursor:pointer;animation:pop .25s;position:relative;border:2px solid rgba(255,255,255,.15)}
+.cd.Black{background:#121212}.cd.Orange{background:#e8641e}.cd.Green{background:#7ccf3a}
+.cd svg{width:34px;height:34px}
+.cd.Black svg{fill:#e8e8e8}.cd.Orange svg,.cd.Green svg{fill:#141414}
+.cd.spent{opacity:.28}
+.cd.rr::after{content:"↻";position:absolute;top:-7px;right:-7px;background:var(--fac);color:#111;border-radius:50%;width:17px;height:17px;font-size:12px;display:grid;place-items:center;font-weight:700}
+.cpbox{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
+.cpbox .big{font-family:var(--head);font-size:30px;font-weight:700;color:var(--fac);line-height:1}
+.tdie{width:84px;height:84px;border-radius:14px;background:#e6e2a1;color:#111;display:grid;place-items:center;font-family:var(--head);font-size:26px;font-weight:700;animation:pop .3s;position:relative}
+.tdie .arr{position:absolute;inset:0;display:grid;place-items:center}
+.tdie .arr i{position:absolute;top:4px;font-style:normal;font-size:18px}
+.tdimg{width:96px;height:auto;animation:pop .3s;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+.faces{display:grid;grid-template-columns:auto repeat(6,1fr);gap:4px;align-items:center;font-size:12px;margin-top:6px}
+.faces select{padding:2px;font-size:12px}
+footer{padding:16px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line)}
+footer a{color:var(--muted)}
+.hint{font-size:12.5px;color:var(--muted)}
+.printonly{display:none}
+@media (max-width:900px){
+  main{grid-template-columns:1fr;padding:12px 12px 80px}
+  .tabs{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;background:#0b0e12;border-top:1px solid var(--line)}
+  .tabs button{flex:1;padding:12px 4px;background:transparent;border:0;font-family:var(--head);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .tabs button.on{color:var(--fac);box-shadow:0 -2px 0 var(--fac) inset}
+  .col[data-tab]{display:none}
+  .col[data-tab].on{display:block}
+  .bar{padding:8px 12px;gap:10px;position:static}
+  .toast{bottom:74px}
+  .tabs small{display:block;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:0;color:var(--muted)}
+  header.top{padding:8px 12px}
+  .brand{font-size:16px}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .stats div:nth-child(4){border-right:0}
+  .stats div:nth-child(-n+4){border-bottom:1px solid var(--line)}
+  .kv{grid-template-columns:repeat(2,1fr)}
+}
+@media print{
+  body{background:#fff;color:#000;font-size:11px}
+  .app>*:not(.printonly){display:none!important}
+  .printonly{display:block!important}
+  .pr h1{font-size:20px;margin:0 0 2px}
+  .pr .meta{margin-bottom:10px}
+  .pr h2{font-size:14px;border-bottom:2px solid #000;margin:14px 0 6px;text-transform:uppercase}
+  .pr .pu{break-inside:avoid;border:1px solid #999;margin:0 0 6px;padding:4px 6px}
+  .pr .pu .t{display:flex;justify-content:space-between;font-weight:700}
+  .pr table{width:100%;border-collapse:collapse;margin-top:3px}
+  .pr td,.pr th{border:1px solid #bbb;padding:2px 4px;text-align:left;font-size:10px}
+  .pr .rule{break-inside:avoid;margin:0 0 5px}
+  .pr .cols{columns:2;column-gap:16px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand">Epic Warpath <span>Army Builder</span></div>
+    <input class="listname" id="listName" aria-label="List name">
+    <button class="tbtn" id="btnDice">🎲 Dice</button>
+    <button class="tbtn" id="btnLists">My Lists</button>
+    <button class="tbtn" id="btnExport">Export</button>
+    <button class="tbtn" id="btnShare">Share</button>
+    <button class="tbtn primary" id="btnPrint">Print</button>
+  </header>
+  <div class="bar" id="bar"></div>
+  <main>
+    <section class="col on" data-tab="list" id="colList"></section>
+    <section class="col" data-tab="add" id="colAdd"></section>
+    <section class="col" data-tab="info" id="colInfo"></section>
+  </main>
+  <footer>
+    Created by Ian McGonigal · <a href="https://ianmcgo.github.io/website/" target="_blank" rel="noopener">Website</a> · <a href="https://www.patreon.com/cw/ianmcg" target="_blank" rel="noopener">Patreon</a><br>
+    Unofficial fan tool. Epic Warpath and all related content © Mantic Games. Data from the Epic Warpath Rulebook (1st Edition).
+  </footer>
+  <nav class="tabs" id="tabs">
+    <button data-t="list" class="on">Army</button>
+    <button data-t="add">Add</button>
+    <button data-t="info">Summary</button>
+    <button data-dice>Dice</button>
+  </nav>
+  <aside class="drawer" id="drawer" aria-label="Dice roller">
+    <div class="ph"><h2>Dice Roller</h2><button class="ibtn" id="closeDice" aria-label="Close dice roller">✕</button></div>
+    <div class="dbody" id="diceBody"></div>
+  </aside>
+  <div class="printonly" id="printArea"></div>
+</div>
+<script>
+const DATA = __DATA__;
+const HIT_IMG = "data:image/webp;base64,__HITIMG__";
+const FAC_COLORS = {"asterians":"#7fd3e6","enforcers":"#5b9be6","forge-fathers":"#e0913f","gcps":"#9cbc5e","marauders":"#d6ad3c","nameless":"#bb7ddb","plague":"#8fcc48","veer-myn":"#df6a58"};
+const CATS = ["HQ","Troop","Specialist","Support","Transport","Super-Heavy"];
+const CAT_LABEL = {"HQ":"HQ","Troop":"Troops","Specialist":"Specialists","Support":"Support","Transport":"Transports","Super-Heavy":"Super-Heavy"};
+const CAT_VAR = {"HQ":"--hq","Troop":"--troop","Specialist":"--spec","Support":"--sup","Transport":"--trans","Super-Heavy":"--super"};
+const NO_TRANSPORT = ["Walker","Vehicle","Super-heavy","Bike"];
+const LS_KEY = "ewp_builder_lists_v1";
+const LS_CUR = "ewp_builder_current_v1";
+const FAC = Object.fromEntries(DATA.factions.map(f => [f.id, f]));
+const UNIT = {};
+DATA.factions.forEach(f => f.units.forEach(u => { UNIT[f.id + ":" + u.id] = u; }));
+
+let lists = [];
+let cur = null;
+let activeCompany = 0;
+let openCards = new Set();
+let pickerQuery = "";
+let tab = "list";
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uidGen = () => Math.random().toString(36).slice(2, 10);
+
+function store(get, key, val) {
+  try {
+    if (get) return localStorage.getItem(key);
+    localStorage.setItem(key, val);
+  } catch (e) { return null; }
+}
+
+function newList(fid) {
+  return {id: uidGen(), name: (FAC[fid] ? FAC[fid].n : "New") + " Army", faction: fid, limit: 2000,
+    companies: [{id: uidGen(), units: []}], strat: {quick: 0, hold: 0, bombard: 0, intel: 0, recon: {Black: 0, Orange: 0, Green: 0}}, updated: Date.now()};
+}
+
+function load() {
+  try { lists = JSON.parse(store(true, LS_KEY) || "[]"); } catch (e) { lists = []; }
+  const hash = location.hash.startsWith("#l=") ? location.hash.slice(3) : null;
+  if (hash) {
+    const imp = decodeShare(hash);
+    if (imp) {
+      lists.unshift(imp);
+      cur = imp;
+      history.replaceState(null, "", location.pathname + location.search);
+      save();
+      toast("Shared list imported");
+      return;
+    }
+  }
+  const cid = store(true, LS_CUR);
+  cur = lists.find(l => l.id === cid) || lists[0] || null;
+}
+
+function save() {
+  if (cur) {
+    cur.updated = Date.now();
+    if (!lists.includes(cur)) lists.unshift(cur);
+    store(false, LS_CUR, cur.id);
+  }
+  store(false, LS_KEY, JSON.stringify(lists));
+}
+
+const fac = () => FAC[cur.faction];
+const unitOf = e => UNIT[cur.faction + ":" + e.key];
+const isCommand = u => u.t === "Command";
+const baseType = u => isCommand(u) ? (u.st || "") : u.t;
+const isSuper = u => u.c === "Super-Heavy" || /super/i.test(baseType(u));
+
+function roles(u) {
+  const r = [];
+  if (isCommand(u)) r.push("HQ");
+  if (isSuper(u)) { r.push("Support"); r.push("Super-Heavy"); }
+  else if (!isCommand(u)) r.push(u.c);
+  return r;
+}
+
+function transportEligible(u) {
+  if (u.c === "Transport") return false;
+  return !NO_TRANSPORT.some(t => baseType(u).toLowerCase() === t.toLowerCase());
+}
+
+function counts(units) {
+  const c = {HQ: 0, Troop: 0, Specialist: 0, Support: 0, "Super-Heavy": 0, Transport: 0, elig: 0};
+  units.forEach(e => {
+    const u = typeof e === "string" ? UNIT[cur.faction + ":" + e] : unitOf(e);
+    if (!u) return;
+    roles(u).forEach(r => c[r]++);
+    if (transportEligible(u)) c.elig++;
+  });
+  return c;
+}
+
+function caps(c) {
+  return {HQ: 1, Troop: 4, Specialist: c.Troop, Support: Math.floor((c.Troop + c.Specialist) / 2), "Super-Heavy": 1, Transport: c.elig};
+}
+
+function uniqueTaken(key) {
+  return cur.companies.some(co => co.units.some(e => e.key === key));
+}
+
+function whyNot(u, co) {
+  if (u.u && uniqueTaken(u.id)) return "Unique [U] – already in your army";
+  const before = counts(co.units);
+  const after = counts(co.units.concat([{key: u.id}]));
+  const cp = caps(after);
+  const r = roles(u);
+  if (r.includes("HQ") && after.HQ > 1) return "This company already has its HQ";
+  if (r.includes("Troop") && after.Troop > 4) return "Max 4 Troops per company";
+  if (r.includes("Specialist") && after.Specialist > cp.Specialist) return "Needs another Troop (1 Specialist per Troop)";
+  if (r.includes("Super-Heavy") && after["Super-Heavy"] > 1) return "Only 1 Super-heavy per company";
+  if (r.includes("Support") && after.Support > cp.Support) {
+    const need = after.Support * 2 - (before.Troop + before.Specialist);
+    return "Needs " + need + " more Troop/Specialist" + (need > 1 ? "s" : "") + " (1 Support per 2)";
+  }
+  if (r.includes("Transport") && after.Transport > cp.Transport) return "Needs an Infantry/Heavy Infantry unit to carry";
+  return "";
+}
+
+function unitPts(e) {
+  const u = unitOf(e);
+  if (!u) return 0;
+  return (u.p || 0) + (e.ct && u.ct ? u.ct.p : 0);
+}
+
+function stratPts() {
+  const s = cur.strat;
+  let p = 0;
+  DATA.stratagems.forEach(st => {
+    if (st.p && s[st.id]) p += st.p;
+    if (st.tiers && s.intel) { const t = st.tiers.find(t => t[0] === s.intel); if (t) p += t[1]; }
+    if (st.dice) st.dice.forEach(([c, v]) => { p += (s.recon[c] || 0) * v; });
+  });
+  return p;
+}
+
+const companyPts = co => co.units.reduce((a, e) => a + unitPts(e), 0);
+const totalPts = () => cur.companies.reduce((a, co) => a + companyPts(co), 0) + stratPts();
+
+function issues() {
+  const out = [];
+  const tp = totalPts();
+  if (tp > cur.limit) out.push("Over the points limit by " + (tp - cur.limit) + " pts.");
+  const uniq = {};
+  cur.companies.forEach((co, i) => {
+    const n = "Company " + (i + 1);
+    const c = counts(co.units);
+    const cp = caps(c);
+    if (!co.units.length) { out.push(n + " is empty – add 1 HQ and 2 Troops, or remove it."); return; }
+    if (c.HQ < 1) out.push(n + " needs an HQ unit.");
+    if (c.HQ > 1) out.push(n + " has " + c.HQ + " HQ units (max 1).");
+    if (c.Troop < 2) out.push(n + " needs at least 2 Troop units (has " + c.Troop + ").");
+    if (c.Troop > 4) out.push(n + " has " + c.Troop + " Troop units (max 4).");
+    if (c.Specialist > cp.Specialist) out.push(n + " has more Specialists (" + c.Specialist + ") than Troops (" + c.Troop + ").");
+    if (c.Support > cp.Support) out.push(n + " has " + c.Support + " Support slots used but only " + cp.Support + " unlocked (1 per 2 Troops/Specialists).");
+    if (c["Super-Heavy"] > 1) out.push(n + " has more than 1 Super-heavy unit.");
+    if (c.Transport > cp.Transport) out.push(n + " has more Transports (" + c.Transport + ") than units that can ride in them (" + cp.Transport + ").");
+    co.units.forEach(e => { const u = unitOf(e); if (u && u.u) uniq[u.n] = (uniq[u.n] || 0) + 1; });
+  });
+  Object.entries(uniq).forEach(([n, k]) => { if (k > 1) out.push(n + " is Unique [U] but taken " + k + " times."); });
+  return out;
+}
+
+function tacticianDice(u) {
+  const k = u.k.find(k => k.startsWith("Tactician"));
+  if (!k) return [];
+  const m = k.match(/\((.*)\)/);
+  return m ? m[1].split(",").map(s => s.trim()).filter(Boolean) : [];
+}
+
+function totals() {
+  let units = 0, us = 0, bases = 0;
+  const dice = {Black: 0, Orange: 0, Green: 0};
+  cur.companies.forEach(co => co.units.forEach(e => {
+    const u = unitOf(e);
+    if (!u) return;
+    units++;
+    us += parseInt(u.us) || 0;
+    bases += u.b || 0;
+    tacticianDice(u).forEach(d => { if (d in dice) dice[d]++; });
+    if (e.ct) units++;
+  }));
+  Object.keys(cur.strat.recon).forEach(c => {});
+  return {units, us, bases, dice};
+}
+
+function setFacColor() {
+  document.documentElement.style.setProperty("--fac", FAC_COLORS[cur.faction] || "#e0a63a");
+}
+
+function render() {
+  setFacColor();
+  $("#listName").value = cur.name;
+  renderBar();
+  renderList();
+  renderPicker();
+  renderInfo();
+  document.querySelectorAll(".col[data-tab]").forEach(c => c.classList.toggle("on", c.dataset.tab === tab));
+  document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.t === tab));
+  document.querySelector('#tabs [data-t="list"]').innerHTML = `Army<small>${totalPts()} / ${cur.limit}</small>`;
+}
+
+function renderBar() {
+  const tp = totalPts();
+  const iss = issues();
+  const pct = Math.min(100, cur.limit ? tp / cur.limit * 100 : 0);
+  const left = cur.limit - tp;
+  const opts = DATA.factions.map(f => `<option value="${f.id}" ${f.id === cur.faction ? "selected" : ""}>${esc(f.n)}</option>`).join("");
+  const presets = [1000, 1500, 2000, 2500, 3000];
+  $("#bar").innerHTML = `
+    <div class="field"><label for="selFac">Faction</label><select id="selFac">${opts}</select></div>
+    <div class="field"><label for="selLimit">Points</label>
+      <select id="selLimit">${presets.map(p => `<option ${p === cur.limit ? "selected" : ""}>${p}</option>`).join("")}<option value="custom" ${presets.includes(cur.limit) ? "" : "selected"}>Custom…</option></select>
+      ${presets.includes(cur.limit) ? "" : `<input class="num" id="numLimit" type="number" min="0" step="50" value="${cur.limit}">`}
+    </div>
+    <div class="pts">
+      <div class="ptsline"><span>${tp} / ${cur.limit} pts</span><span class="left">${left >= 0 ? left + " to spend" : (-left) + " over"}</span></div>
+      <div class="meter ${tp > cur.limit ? "over" : ""}"><i style="width:${pct}%"></i></div>
+    </div>
+    <div class="status ${iss.length ? "bad" : "ok"}"><span class="dot"></span>${iss.length ? iss.length + " issue" + (iss.length > 1 ? "s" : "") : "Valid list"}</div>`;
+  $("#selFac").onchange = e => changeFaction(e.target.value);
+  $("#selLimit").onchange = e => {
+    if (e.target.value === "custom") { cur.limit = cur.limit + 1 === 0 ? 0 : cur.limit; renderBarCustom(); return; }
+    cur.limit = parseInt(e.target.value); save(); render();
+  };
+  const nl = $("#numLimit");
+  if (nl) nl.onchange = e => { cur.limit = Math.max(0, parseInt(e.target.value) || 0); save(); render(); };
+}
+
+function renderBarCustom() {
+  const sel = $("#selLimit");
+  if (!$("#numLimit")) {
+    sel.insertAdjacentHTML("afterend", `<input class="num" id="numLimit" type="number" min="0" step="50" value="${cur.limit}">`);
+    const nl = $("#numLimit");
+    nl.focus();
+    nl.onchange = e => { cur.limit = Math.max(0, parseInt(e.target.value) || 0); save(); render(); };
+  }
+}
+
+function changeFaction(fid) {
+  const has = cur.companies.some(c => c.units.length);
+  if (has && !confirm("Switching faction will clear the units in this list. Continue?")) { renderBar(); return; }
+  const oldName = FAC[cur.faction].n + " Army";
+  cur.faction = fid;
+  cur.companies = [{id: uidGen(), units: []}];
+  if (cur.name === oldName) cur.name = FAC[fid].n + " Army";
+  activeCompany = 0;
+  openCards.clear();
+  save(); render();
+}
+
+function slotChips(co) {
+  const c = counts(co.units);
+  const cp = caps(c);
+  const chip = (cat, n, max, min) => {
+    let cls = "";
+    if (n > max) cls = "over";
+    else if (min && n < min) cls = "need";
+    else if (n === max && max > 0) cls = "full";
+    return `<span class="slot ${cls}" title="${esc(CAT_LABEL[cat])}"><i class="sw" style="background:var(${CAT_VAR[cat]})"></i>${CAT_LABEL[cat]} <b>${n}/${max}</b>${min && n < min ? ` <small>need ${min}</small>` : ""}</span>`;
+  };
+  return chip("HQ", c.HQ, 1, 1) + chip("Troop", c.Troop, 4, 2) + chip("Specialist", c.Specialist, cp.Specialist) +
+    chip("Support", c.Support, cp.Support) + chip("Super-Heavy", c["Super-Heavy"], 1) + chip("Transport", c.Transport, cp.Transport);
+}
+
+function sortKey(u) {
+  const r = roles(u);
+  if (r.includes("HQ")) return 0;
+  if (r.includes("Super-Heavy")) return 4;
+  return {"Troop": 1, "Specialist": 2, "Support": 3, "Transport": 5}[u.c] ?? 6;
+}
+
+function renderList() {
+  const iss = issues();
+  let h = "";
+  if (iss.length) h += `<div class="issues"><h3>Fix before you play</h3><ul>${iss.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div>`;
+  cur.companies.forEach((co, ci) => {
+    const units = co.units.map((e, i) => ({e, i, u: unitOf(e)})).filter(x => x.u);
+    units.sort((a, b) => sortKey(a.u) - sortKey(b.u) || a.i - b.i);
+    h += `<div class="panel company ${ci === activeCompany ? "active" : ""}" data-ci="${ci}">
+      <div class="ch" data-act="activate" data-ci="${ci}">
+        <h3>Company ${ci + 1}</h3>${ci === activeCompany ? `<span class="tag">Adding here</span>` : ""}
+        <span class="cpts">${companyPts(co)} pts</span>
+        ${cur.companies.length > 1 ? `<button class="ibtn danger" data-act="delco" data-ci="${ci}" title="Remove company">✕</button>` : ""}
+      </div>
+      <div class="slots">${slotChips(co)}</div>
+      <div class="cbody">`;
+    if (!units.length) {
+      h += `<div class="empty">Every company needs <b>1 HQ</b> and <b>2 Troops</b>. Each Troop unlocks a Specialist, and every 2 Troops/Specialists unlock a Support slot. ${tab === "list" && window.innerWidth <= 900 ? `<br><br><button class="tbtn primary" data-act="goadd">Add units</button>` : "Pick units from the list on the right."}</div>`;
+    }
+    let lastGrp = null;
+    units.forEach(({e, i, u}) => {
+      const g = sortKey(u);
+      const gname = ["HQ", "Troops", "Specialists", "Support", "Super-Heavy", "Transports", "Other"][g];
+      const gvar = ["--hq", "--troop", "--spec", "--sup", "--super", "--trans", "--dim"][g];
+      if (g !== lastGrp) { h += `<div class="grp"><i class="sw" style="background:var(${gvar})"></i>${gname}</div>`; lastGrp = g; }
+      const ck = "L" + co.id + e.id;
+      h += `<div class="row">
+        ${thumbHtml(u, ck)}
+        <div class="nm" data-act="toggle" data-ck="${ck}"><b>${esc(u.n)}</b>${u.u ? `<span class="u-badge">U</span>` : ""}${u.e ? `<span class="e-badge" title="Changed by FAQ &amp; Errata v1.2">ERRATA</span>` : ""}
+          <span class="sub">${esc(typeLabel(u))} · ${u.b} base${u.b > 1 ? "s" : ""}${e.ct && u.ct ? " · with " + esc(u.ct.name) : ""}</span>
+          ${u.ct ? `<label class="ct" onclick="event.stopPropagation()"><input type="checkbox" data-act="ct" data-ci="${ci}" data-i="${i}" ${e.ct ? "checked" : ""}> Command Transport: ${esc(u.ct.name)} (+${u.ct.p})</label>` : ""}
+        </div>
+        <span class="p">${unitPts(e)}</span>
+        <button class="ibtn" data-act="dup" data-ci="${ci}" data-i="${i}" title="Add another">⧉</button>
+        ${cur.companies.length > 1 ? `<select class="ibtn" data-act="move" data-ci="${ci}" data-i="${i}" title="Move to company" style="width:auto">${cur.companies.map((_, k) => `<option value="${k}" ${k === ci ? "selected" : ""}>C${k + 1}</option>`).join("")}</select>` : ""}
+        <button class="ibtn danger" data-act="del" data-ci="${ci}" data-i="${i}" title="Remove">✕</button>
+      </div>`;
+      if (openCards.has(ck)) h += unitCard(u);
+    });
+    h += `</div></div>`;
+  });
+  h += `<div class="addc"><button class="tbtn" data-act="addco">+ Add Company</button>${cur.companies.some(c => c.units.length) ? `<button class="tbtn" data-act="clear">Clear list</button>` : ""}</div>`;
+  $("#colList").innerHTML = h;
+}
+
+function thumbHtml(u, ck) {
+  if (!u.img) return `<span class="thumb none" data-act="toggle" data-ck="${ck}"></span>`;
+  const small = u.img.replace(/-(944x944|500x500)(\.\w+)$/, "-150x150$2");
+  return `<img class="thumb" src="${esc(small)}" data-full="${esc(u.img)}" alt="" loading="lazy" data-act="toggle" data-ck="${ck}" onerror="if(this.dataset.full&&this.src!==this.dataset.full){this.src=this.dataset.full}else{this.style.visibility='hidden'}">`;
+}
+
+function typeLabel(u) {
+  return isCommand(u) ? "Command (" + (u.st || "") + ")" : u.t;
+}
+
+function unitCard(u) {
+  const s = u.s;
+  let h = `<div class="card">${u.img ? `<div class="uimg"><img src="${esc(u.img)}" alt="${esc(u.n)} miniatures" loading="lazy" onerror="this.parentNode.remove()"></div>` : ""}<div class="chd"><b>${esc(u.n)} (${u.b})</b><span>${esc(typeLabel(u))}</span><span style="margin-left:auto">${u.p} pts</span></div>
+    <div class="stats">${[["SP", s[0]], ["SH", s[1]], ["AS", s[2]], ["AR", s[3]], ["SV", s[4]], ["HT", u.ht], ["US", u.us], ["Bases", u.b]].map(([k, v]) => `<div><small>${k}</small><strong>${esc(v || "-")}</strong></div>`).join("")}</div>
+    <div class="kws">${u.k.length ? u.k.map(k => kwChip(k)).join("") : `<span class="kw none">No keywords</span>`}</div>
+    <table class="wp"><tr><th>Weapon</th><th>Range</th><th>ADice</th><th>Keywords</th></tr>`;
+  let lastG = null;
+  u.w.forEach(([g, n, r, a, k, ch]) => {
+    if (g && g !== lastG) h += `<tr class="g"><td colspan="4">${esc(g)}</td></tr>`;
+    lastG = g;
+    h += `<tr><td>${g ? "• " : ""}${esc(n)}${ch ? `<span class="mode" title="Firing mode: choose one each time the unit fires">MODE</span>` : ""}</td><td class="c">${esc(r === "A" ? "Assault" : r + '"')}</td><td class="c">${esc(a)}</td><td>${k ? k.split(/,\s*(?![^()]*\))/).map(x => kwChip(x.trim(), true)).join(" ") : "-"}</td></tr>`;
+  });
+  h += `</table>`;
+  if (u.r) h += `<div class="rules">${u.r.map(([n, t]) => `<p><b>${esc(n)}:</b> ${esc(t)}</p>`).join("")}</div>`;
+  if (u.e) h += `<div class="note"><b>FAQ &amp; Errata v1.2:</b> ${u.e.map(esc).join("; ")}.</div>`;
+  h += `</div>`;
+  return h;
+}
+
+function glossFor(k) {
+  const base = k.replace(/\s*[\(\[].*$/, "").trim().toLowerCase();
+  const alias = {"apc": "apc", "ap1": "armour penetration", "ap2": "armour penetration", "ap3": "armour penetration", "ap4": "armour penetration",
+    "orbital deployment": "orbital (or subterranean) deployment", "quick fix": "quick-fix", "indirect only": "indirect (only)"};
+  let key = alias[base] || base;
+  if (/^indirect\s*\(only\)/i.test(k)) key = "indirect (only)";
+  return DATA.glossary.find(([n]) => n.toLowerCase().replace(/\s*[\(\[].*$/, "") === key.replace(/\s*[\(\[].*$/, "") && (key !== "indirect (only)" || n.toLowerCase().startsWith("indirect (only)")))
+    || DATA.glossary.find(([n]) => n.toLowerCase().startsWith(key));
+}
+
+function kwChip(k, inline) {
+  const g = glossFor(k);
+  return `<span class="kw" ${g ? `data-kw="${esc(k)}"` : ""} ${inline ? 'style="padding:0 5px"' : ""}>${esc(k)}</span>`;
+}
+
+function renderPicker() {
+  const co = cur.companies[activeCompany] || cur.companies[0];
+  const f = fac();
+  const q = pickerQuery.trim().toLowerCase();
+  let h = `<div class="panel picker"><div class="ph"><h2>Add Units</h2></div>
+    <div class="pick-tools"><input class="search" id="search" placeholder="Search ${esc(f.n)} units or keywords…" value="${esc(pickerQuery)}">
+    <span class="target">Adding to <b>Company ${activeCompany + 1}</b></span></div>`;
+  const order = ["HQ", "Troop", "Specialist", "Support", "Transport", "Super-Heavy"];
+  order.forEach(cat => {
+    const us = f.units.filter(u => u.c === cat).filter(u => !q || u.n.toLowerCase().includes(q) || u.k.join(" ").toLowerCase().includes(q) || u.w.some(w => (w[1] + " " + w[4]).toLowerCase().includes(q)));
+    if (!us.length) return;
+    h += `<div class="grp" style="padding-top:12px"><i class="sw" style="background:var(${CAT_VAR[cat]})"></i>${CAT_LABEL[cat]}${cat === "Super-Heavy" ? " · uses a Support slot" : ""}</div>`;
+    us.forEach(u => {
+      const why = whyNot(u, co);
+      const ck = "P" + u.id;
+      h += `<div class="prow ${why ? "off" : ""}">
+        ${thumbHtml(u, ck)}
+        <div class="nm" data-act="toggle" data-ck="${ck}"><b>${esc(u.n)}</b>${u.u ? `<span class="u-badge">U</span>` : ""}${u.e ? `<span class="e-badge" title="Changed by FAQ &amp; Errata v1.2">ERRATA</span>` : ""}
+          <span class="sub" style="font-size:12px;color:var(--muted)">${esc(typeLabel(u))} · ${u.b} base${u.b > 1 ? "s" : ""} · US ${esc(u.us)}${isCommand(u) && isSuper(u) ? " · takes HQ + Support slot" : ""}</span>
+          ${why ? `<span class="why">${esc(why)}</span>` : ""}</div>
+        <span class="p" style="font-family:var(--head);font-weight:600;font-size:17px">${u.p}</span>
+        <button class="add" data-act="add" data-key="${u.id}" ${why ? "disabled" : ""} title="${why ? esc(why) : "Add to Company " + (activeCompany + 1)}" aria-label="Add ${esc(u.n)}">+</button>
+      </div>`;
+      if (openCards.has(ck)) h += unitCard(u);
+    });
+  });
+  h += `<div class="side-sec hint">Tap a unit name to see its full profile. Greyed units explain what they need to unlock. Tap a keyword for its rule.</div></div>`;
+  const had = document.activeElement && document.activeElement.id === "search";
+  const pos = had ? document.activeElement.selectionStart : 0;
+  $("#colAdd").innerHTML = h;
+  const s = $("#search");
+  s.oninput = e => { pickerQuery = e.target.value; renderPicker(); };
+  if (had) { s.focus(); s.setSelectionRange(pos, pos); }
+}
+
+function renderInfo() {
+  const f = fac();
+  const t = totals();
+  const s = cur.strat;
+  const sp = stratPts();
+  let h = `<div class="panel">
+    <div class="ph"><h2>Summary</h2></div>
+    <div class="side-sec"><div class="kv">
+      <div><small>Points</small><strong>${totalPts()}</strong></div>
+      <div><small>Units</small><strong>${t.units}</strong></div>
+      <div><small>Unit Strength</small><strong>${t.us}</strong></div>
+      <div><small>Army Nerve</small><strong>${esc(f.nerve)}</strong></div>
+    </div>
+    <div class="dice"><span class="hint" style="align-self:center">Command dice from Tacticians:</span>${["Black", "Orange", "Green"].map(c => `<span class="die"><i class="${c}"></i>${c} × ${t.dice[c]}</span>`).join("")}</div></div>
+    <div class="side-sec"><h3>Battlefield Stratagems <span class="hint" style="text-transform:none;letter-spacing:0">(${sp} pts)</span></h3>`;
+  DATA.stratagems.forEach(st => {
+    if (st.p) {
+      h += `<label class="strat"><input type="checkbox" data-act="strat" data-id="${st.id}" ${s[st.id] ? "checked" : ""}><div class="sd"><b>${esc(st.n)}</b> · ${st.p} pts<span>${esc(st.d)}</span></div></label>`;
+    } else if (st.tiers) {
+      h += `<div class="strat"><select data-act="intel"><option value="0">None</option>${st.tiers.map(([n, p]) => `<option value="${n}" ${s.intel === n ? "selected" : ""}>${n} chance${n > 1 ? "s" : ""} – ${p} pts</option>`).join("")}</select><div class="sd"><b>${esc(st.n)}</b><span>${esc(st.d)}</span></div></div>`;
+    } else if (st.dice) {
+      h += `<div class="strat"><div class="sd"><b>${esc(st.n)}</b><span>${esc(st.d)}</span>
+        <div class="dice">${st.dice.map(([c, p]) => `<span class="die"><i class="${c}"></i>${c} (${p}pts)<span class="stepper"><button data-act="recon" data-c="${c}" data-d="-1">−</button><b>${s.recon[c] || 0}</b><button data-act="recon" data-c="${c}" data-d="1">+</button></span></span>`).join("")}</div></div></div>`;
+    }
+  });
+  h += `</div>
+    <div class="side-sec"><h3>Army Special Rule</h3>${f.rules.map(([n, t, er]) => `<p style="margin:0;font-size:13px"><b>${esc(n)}:</b> ${esc(t)}${er ? ` <span class="e-badge" title="${esc(er)}">ERRATA</span>` : ""}</p>`).join("")}</div>
+    <div class="side-sec"><h3>Strategic Orders</h3>${f.orders.map(([n, c, w, e, er]) => `<div class="order"><span class="cost">${esc(c)} CP</span><b>${esc(n)}</b>${er ? ` <span class="e-badge">ERRATA</span>` : ""}<div class="when">${esc(w)}</div><div>${esc(e)}</div></div>`).join("")}</div>
+    <div class="side-sec"><h3>Keywords in this list</h3>${usedGlossary().map(([n, t]) => `<details class="gl"><summary>${esc(n)}</summary><p>${esc(t)}</p></details>`).join("") || `<span class="hint">Add units to see the keywords you'll need.</span>`}</div>
+  </div>`;
+  $("#colInfo").innerHTML = h;
+}
+
+function usedGlossary() {
+  const set = new Map();
+  cur.companies.forEach(co => co.units.forEach(e => {
+    const u = unitOf(e);
+    if (!u) return;
+    const all = [...u.k];
+    u.w.forEach(w => w[4] && w[4].split(/,\s*(?![^()]*\))/).forEach(x => all.push(x.trim())));
+    all.forEach(k => { const g = glossFor(k); if (g) set.set(g[0], g); });
+  }));
+  return [...set.values()].sort((a, b) => a[0].localeCompare(b[0]));
+}
+
+function addUnit(key) {
+  const co = cur.companies[activeCompany];
+  const u = UNIT[cur.faction + ":" + key];
+  if (!u || whyNot(u, co)) return;
+  co.units.push({id: uidGen(), key, ct: 0});
+  save(); render();
+  toast("Added " + u.n + " (" + u.p + " pts)");
+}
+
+document.addEventListener("click", e => {
+  const kw = e.target.closest("[data-kw]");
+  if (kw) { showPop(kw); e.stopPropagation(); return; }
+  hidePop();
+  const t = e.target.closest("[data-act]");
+  if (!t) return;
+  const a = t.dataset.act;
+  const ci = +t.dataset.ci, i = +t.dataset.i;
+  if (a === "add") addUnit(t.dataset.key);
+  else if (a === "toggle") { const k = t.dataset.ck; openCards.has(k) ? openCards.delete(k) : openCards.add(k); render(); }
+  else if (a === "activate") { if (e.target.closest("button")) return; activeCompany = ci; render(); }
+  else if (a === "delco") {
+    if (cur.companies[ci].units.length && !confirm("Remove Company " + (ci + 1) + " and its units?")) return;
+    cur.companies.splice(ci, 1); activeCompany = Math.min(activeCompany, cur.companies.length - 1); save(); render();
+  }
+  else if (a === "addco") { cur.companies.push({id: uidGen(), units: []}); activeCompany = cur.companies.length - 1; save(); render(); }
+  else if (a === "clear") { if (confirm("Remove every unit from this list?")) { cur.companies = [{id: uidGen(), units: []}]; activeCompany = 0; save(); render(); } }
+  else if (a === "del") { cur.companies[ci].units.splice(i, 1); save(); render(); }
+  else if (a === "dup") {
+    const e2 = cur.companies[ci].units[i];
+    const u = unitOf(e2);
+    const why = whyNot(u, cur.companies[ci]);
+    if (why) { toast("Can't add another: " + why); return; }
+    cur.companies[ci].units.push({id: uidGen(), key: e2.key, ct: e2.ct}); save(); render();
+  }
+  else if (a === "goadd") { tab = "add"; render(); window.scrollTo(0, 0); }
+  else if (a === "recon") { const c = t.dataset.c; cur.strat.recon[c] = Math.max(0, (cur.strat.recon[c] || 0) + +t.dataset.d); save(); render(); }
+});
+
+document.addEventListener("change", e => {
+  const t = e.target.closest("[data-act]");
+  if (!t) return;
+  const a = t.dataset.act;
+  if (a === "ct") { cur.companies[+t.dataset.ci].units[+t.dataset.i].ct = t.checked ? 1 : 0; save(); render(); }
+  else if (a === "move") {
+    const from = +t.dataset.ci, to = +t.value;
+    const [x] = cur.companies[from].units.splice(+t.dataset.i, 1);
+    cur.companies[to].units.push(x); save(); render();
+  }
+  else if (a === "strat") { cur.strat[t.dataset.id] = t.checked ? 1 : 0; save(); render(); }
+  else if (a === "intel") { cur.strat.intel = +t.value; save(); render(); }
+});
+
+let popEl = null;
+function showPop(el) {
+  hidePop();
+  const g = glossFor(el.dataset.kw);
+  if (!g) return;
+  popEl = document.createElement("div");
+  popEl.className = "pop";
+  popEl.innerHTML = `<b>${esc(g[0])}</b>${esc(g[1])}`;
+  document.body.appendChild(popEl);
+  const r = el.getBoundingClientRect();
+  const w = Math.min(340, window.innerWidth - 24);
+  popEl.style.width = w + "px";
+  let left = Math.min(Math.max(12, r.left), window.innerWidth - w - 12);
+  let top = r.bottom + 6;
+  if (top + popEl.offsetHeight > window.innerHeight - 10) top = Math.max(10, r.top - popEl.offsetHeight - 6);
+  popEl.style.left = left + "px";
+  popEl.style.top = top + "px";
+}
+function hidePop() { if (popEl) { popEl.remove(); popEl = null; } }
+window.addEventListener("scroll", hidePop, {passive: true});
+
+function toast(msg) {
+  document.querySelectorAll(".toast").forEach(x => x.remove());
+  const t = document.createElement("div");
+  t.className = "toast";
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 1800);
+}
+
+function modal(title, body, after) {
+  const o = document.createElement("div");
+  o.className = "overlay";
+  o.innerHTML = `<div class="modal"><div class="ph"><h2>${esc(title)}</h2><button class="ibtn" data-close>✕</button></div><div class="mbody">${body}</div></div>`;
+  o.addEventListener("click", e => { if (e.target === o || e.target.closest("[data-close]")) o.remove(); });
+  document.body.appendChild(o);
+  if (after) after(o);
+  return o;
+}
+
+function factionPicker(cb, title) {
+  const body = `<div class="facgrid">${DATA.factions.map(f => `<button class="facbtn" style="--c:${FAC_COLORS[f.id]}" data-f="${f.id}"><b>${esc(f.n)}</b><small>${f.units.length} units · Nerve ${esc(f.nerve)}</small></button>`).join("")}</div>`;
+  return modal(title || "Choose a faction", body, o => o.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { o.remove(); cb(b.dataset.f); }));
+}
+
+function openLists() {
+  const body = () => `<button class="tbtn primary" data-new style="margin-bottom:12px">+ New list</button>
+    ${lists.map(l => `<div class="lrow ${l === cur ? "cur" : ""}"><div class="nm" data-open="${l.id}"><b>${esc(l.name)}</b><small>${esc(FAC[l.faction] ? FAC[l.faction].n : "?")} · ${listPts(l)} / ${l.limit} pts · ${new Date(l.updated).toLocaleDateString()}</small></div>
+      <button class="ibtn" data-copy="${l.id}" title="Duplicate">⧉</button><button class="ibtn danger" data-rm="${l.id}" title="Delete">✕</button></div>`).join("")}
+    <p class="hint">Lists are saved in this browser automatically. Use Share or Export to move them between devices.</p>
+    <button class="tbtn" data-import>Import list file (.json)</button>`;
+  const o = modal("My Lists", body());
+  const wire = () => {
+    o.querySelector("[data-new]").onclick = () => factionPicker(fid => { cur = newList(fid); lists.unshift(cur); activeCompany = 0; save(); render(); o.remove(); });
+    o.querySelectorAll("[data-open]").forEach(b => b.onclick = () => { cur = lists.find(l => l.id === b.dataset.open); activeCompany = 0; openCards.clear(); save(); render(); o.remove(); });
+    o.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => { const src = lists.find(l => l.id === b.dataset.copy); const c = JSON.parse(JSON.stringify(src)); c.id = uidGen(); c.name += " (copy)"; lists.unshift(c); save(); refresh(); });
+    o.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => {
+      const l = lists.find(x => x.id === b.dataset.rm);
+      if (!confirm("Delete \"" + l.name + "\"?")) return;
+      lists = lists.filter(x => x !== l);
+      if (l === cur) { cur = lists[0] || null; if (!cur) { o.remove(); store(false, LS_KEY, JSON.stringify(lists)); start(); return; } }
+      save(); render(); refresh();
+    });
+    o.querySelector("[data-import]").onclick = () => {
+      const inp = document.createElement("input");
+      inp.type = "file"; inp.accept = ".json,application/json";
+      inp.onchange = () => {
+        const fr = new FileReader();
+        fr.onload = () => {
+          try {
+            const l = sanitize(JSON.parse(fr.result));
+            if (!l) throw 0;
+            lists.unshift(l); cur = l; activeCompany = 0; save(); render(); o.remove(); toast("List imported");
+          } catch (err) { alert("That file isn't a valid army list."); }
+        };
+        fr.readAsText(inp.files[0]);
+      };
+      inp.click();
+    };
+  };
+  const refresh = () => { o.querySelector(".mbody").innerHTML = body(); wire(); };
+  wire();
+}
+
+function listPts(l) {
+  const keep = cur;
+  cur = l;
+  const p = totalPts();
+  cur = keep;
+  return p;
+}
+
+function sanitize(l) {
+  if (!l || !FAC[l.faction] || !Array.isArray(l.companies)) return null;
+  const n = newList(l.faction);
+  n.name = String(l.name || n.name).slice(0, 80);
+  n.limit = Math.max(0, parseInt(l.limit) || 2000);
+  n.companies = l.companies.map(c => ({id: uidGen(), units: (c.units || []).filter(e => UNIT[l.faction + ":" + e.key]).map(e => ({id: uidGen(), key: e.key, ct: e.ct ? 1 : 0}))}));
+  if (!n.companies.length) n.companies = [{id: uidGen(), units: []}];
+  if (l.strat) {
+    n.strat.quick = l.strat.quick ? 1 : 0; n.strat.hold = l.strat.hold ? 1 : 0; n.strat.bombard = l.strat.bombard ? 1 : 0;
+    n.strat.intel = [0, 1, 2, 3].includes(+l.strat.intel) ? +l.strat.intel : 0;
+    ["Black", "Orange", "Green"].forEach(c => n.strat.recon[c] = Math.max(0, parseInt(l.strat.recon && l.strat.recon[c]) || 0));
+  }
+  return n;
+}
+
+function textExport() {
+  const f = fac();
+  const t = totals();
+  const L = [];
+  L.push(cur.name);
+  L.push(f.n + " · " + totalPts() + " / " + cur.limit + " pts · Nerve " + f.nerve + " · " + t.units + " units · US " + t.us);
+  const iss = issues();
+  if (iss.length) L.push("INVALID: " + iss.join(" "));
+  cur.companies.forEach((co, ci) => {
+    L.push("");
+    L.push("== Company " + (ci + 1) + " (" + companyPts(co) + " pts) ==");
+    co.units.map(e => ({e, u: unitOf(e)})).filter(x => x.u).sort((a, b) => sortKey(a.u) - sortKey(b.u)).forEach(({e, u}) => {
+      L.push("- " + u.n + " (" + u.b + ") [" + u.c + "] " + u.p + " pts" + (e.ct && u.ct ? " + " + u.ct.name + " Command Transport (" + u.ct.p + ")" : ""));
+    });
+  });
+  const s = cur.strat;
+  const st = [];
+  if (s.quick) st.push("Quick Thinking (5)");
+  if (s.hold) st.push("Take and Hold (20)");
+  if (s.bombard) st.push("Bombardment Fire (30)");
+  if (s.intel) st.push("Covert Intel x" + s.intel);
+  const rc = Object.entries(s.recon).filter(([, n]) => n).map(([c, n]) => n + " " + c);
+  if (rc.length) st.push("Advanced Recon: " + rc.join(", "));
+  if (st.length) { L.push(""); L.push("Stratagems: " + st.join(", ") + " (" + stratPts() + " pts)"); }
+  const dz = Object.entries(t.dice).filter(([, n]) => n).map(([c, n]) => n + " " + c);
+  if (dz.length) L.push("Tactician dice: " + dz.join(", "));
+  return L.join("\n");
+}
+
+function openExport() {
+  const txt = textExport();
+  modal("Export", `<textarea class="out" readonly>${esc(txt)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="tbtn primary" data-copytxt>Copy text</button><button class="tbtn" data-json>Download .json</button><button class="tbtn" data-print>Print / PDF</button></div>`, o => {
+    o.querySelector("[data-copytxt]").onclick = () => copy(txt, "List copied");
+    o.querySelector("[data-json]").onclick = () => {
+      const b = new Blob([JSON.stringify(cur, null, 1)], {type: "application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(b);
+      a.download = cur.name.replace(/[^\w\- ]+/g, "").trim().replace(/\s+/g, "_") + ".json";
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    };
+    o.querySelector("[data-print]").onclick = () => { o.remove(); doPrint(); };
+  });
+}
+
+function copy(txt, msg) {
+  const done = () => toast(msg);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, () => fallbackCopy(txt, done));
+  else fallbackCopy(txt, done);
+}
+function fallbackCopy(txt, done) {
+  const ta = document.createElement("textarea");
+  ta.value = txt; document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); done(); } catch (e) {}
+  ta.remove();
+}
+
+function encodeShare(l) {
+  const o = {f: l.faction, n: l.name, l: l.limit, c: l.companies.map(c => c.units.map(e => e.ct ? [e.key, 1] : e.key)), s: l.strat};
+  const bytes = new TextEncoder().encode(JSON.stringify(o));
+  let bin = "";
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+function decodeShare(s) {
+  try {
+    const bin = atob(s.replace(/-/g, "+").replace(/_/g, "/"));
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    const o = JSON.parse(new TextDecoder().decode(bytes));
+    return sanitize({faction: o.f, name: o.n, limit: o.l, companies: (o.c || []).map(c => ({units: c.map(x => Array.isArray(x) ? {key: x[0], ct: x[1]} : {key: x})})), strat: o.s});
+  } catch (e) { return null; }
+}
+
+function openShare() {
+  const url = location.origin + location.pathname + "#l=" + encodeShare(cur);
+  const isFile = location.protocol === "file:";
+  modal("Share this list", `<p class="hint">Anyone who opens this link gets their own copy of the list. ${isFile ? "This page is running from a local file, so the link only works on this computer — host the page (e.g. GitHub Pages) to share links." : ""}</p>
+    <textarea class="out" style="min-height:90px" readonly>${esc(url)}</textarea>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="tbtn primary" data-cp>Copy link</button></div>`, o => {
+    o.querySelector("[data-cp]").onclick = () => copy(url, "Link copied");
+  });
+}
+
+function doPrint() {
+  const f = fac();
+  const t = totals();
+  let h = `<div class="pr"><h1>${esc(cur.name)}</h1><div class="meta">${esc(f.n)} · ${totalPts()} / ${cur.limit} pts · Army Nerve ${esc(f.nerve)} · ${t.units} units · Unit Strength ${t.us} · Tactician dice: ${["Black", "Orange", "Green"].map(c => t.dice[c] + " " + c).join(", ")}</div>`;
+  cur.companies.forEach((co, ci) => {
+    h += `<h2>Company ${ci + 1} – ${companyPts(co)} pts</h2>`;
+    co.units.map(e => ({e, u: unitOf(e)})).filter(x => x.u).sort((a, b) => sortKey(a.u) - sortKey(b.u)).forEach(({e, u}) => {
+      h += `<div class="pu"><div class="t"><span>${esc(u.n)} (${u.b}) – ${esc(typeLabel(u))}${e.ct && u.ct ? " + " + esc(u.ct.name) + " Command Transport" : ""}</span><span>${unitPts(e)} pts</span></div>
+        <table><tr>${["SP", "SH", "AS", "AR", "SV", "HT", "US"].map(k => `<th>${k}</th>`).join("")}<th>Keywords</th></tr><tr>${[...u.s, u.ht, u.us].map(v => `<td>${esc(v || "-")}</td>`).join("")}<td>${esc(u.k.join(", ") || "-")}</td></tr></table>
+        <table><tr><th>Weapon</th><th>Range</th><th>ADice</th><th>Keywords</th></tr>${u.w.map(([g, n, r, a, k, ch]) => `<tr><td>${g ? esc(g) + ": " : ""}${esc(n)}${ch ? "*" : ""}</td><td>${esc(r)}</td><td>${esc(a)}</td><td>${esc(k || "-")}</td></tr>`).join("")}</table>
+        ${u.r ? u.r.map(([n, x]) => `<div><b>${esc(n)}:</b> ${esc(x)}</div>`).join("") : ""}</div>`;
+    });
+  });
+  const s = textExport().split("\n").filter(l => l.startsWith("Stratagems"));
+  if (s.length) h += `<h2>Battlefield Stratagems</h2><div>${esc(s[0])}</div>`;
+  h += `<h2>Army Special Rule</h2>${f.rules.map(([n, x]) => `<div class="rule"><b>${esc(n)}:</b> ${esc(x)}</div>`).join("")}`;
+  h += `<h2>Strategic Orders</h2>${f.orders.map(([n, c, w, e]) => `<div class="rule"><b>${esc(n)} (${esc(c)} CP)</b> – <i>${esc(w)}</i> ${esc(e)}</div>`).join("")}`;
+  h += `<h2>Keywords</h2><div class="cols">${usedGlossary().map(([n, x]) => `<div class="rule"><b>${esc(n)}:</b> ${esc(x)}</div>`).join("")}</div></div>`;
+  $("#printArea").innerHTML = h;
+  window.print();
+}
+
+function start() {
+  factionPicker(fid => { cur = newList(fid); lists = lists.filter(l => l.companies.some(c => c.units.length)); lists.unshift(cur); save(); render(); }, "Choose your faction to start");
+}
+
+$("#listName").addEventListener("input", e => { cur.name = e.target.value; save(); });
+$("#btnLists").onclick = openLists;
+$("#btnExport").onclick = openExport;
+$("#btnShare").onclick = openShare;
+$("#btnPrint").onclick = doPrint;
+document.querySelectorAll("#tabs button[data-t]").forEach(b => b.onclick = () => { tab = b.dataset.t; render(); window.scrollTo(0, 0); });
+document.querySelector("#tabs [data-dice]").onclick = () => openDice();
+$("#btnDice").onclick = () => openDice();
+$("#closeDice").onclick = () => $("#drawer").classList.remove("open");
+
+const SWORD = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></svg>`;
+const SWORDS2 = `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-8 12 12)"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></g><g transform="scale(-1 1) translate(-24 0) rotate(-8 12 12)"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></g></svg>`;
+const DEFAULT_FACES = {Black: [0, 0, 0, 1, 1, 2], Orange: [0, 0, 1, 1, 2, 2], Green: [0, 1, 1, 2, 2, 2]};
+let dice = {n: 6, need: 5, explode: true, last: null, cmd: {Black: 3, Orange: 0, Green: 0}, rolled: [], rerolls: 0, spent: 0, tgt: null, faces: JSON.parse(JSON.stringify(DEFAULT_FACES))};
+try { const sd = JSON.parse(store(true, "ewp_dice_v1") || "null"); if (sd) dice = Object.assign(dice, sd, {last: null, rolled: [], tgt: null}); } catch (e) {}
+const saveDice = () => store(false, "ewp_dice_v1", JSON.stringify({n: dice.n, need: dice.need, explode: dice.explode, cmd: dice.cmd, faces: dice.faces}));
+const d = n => 1 + Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296 * n);
+
+function openDice() { renderDice(); $("#drawer").classList.add("open"); }
+
+function armyDice() {
+  const t = cur ? totals() : {dice: {Black: 0, Orange: 0, Green: 0}};
+  const cmdUnits = cur ? cur.companies.reduce((a, co) => a + co.units.filter(e => unitOf(e) && isCommand(unitOf(e))).length, 0) : 0;
+  return {Black: 3 + t.dice.Black, Orange: t.dice.Orange, Green: t.dice.Green, cmdUnits};
+}
+
+function rollD8() {
+  const base = [];
+  for (let i = 0; i < dice.n; i++) base.push(d(8));
+  const bonus = [];
+  if (dice.explode) {
+    let pending = base.filter(v => v === 8 && v >= dice.need).length;
+    let guard = 0;
+    while (pending && guard++ < 200) {
+      const r = d(8);
+      bonus.push(r);
+      pending--;
+      if (r === 8) pending++;
+    }
+  }
+  dice.last = {base, bonus, need: dice.need, explode: dice.explode};
+}
+
+function rerollFails() {
+  if (!dice.last) return;
+  dice.last.base = dice.last.base.map(v => v >= dice.last.need ? v : d(8));
+  const bonus = [];
+  if (dice.last.explode) {
+    let pending = dice.last.base.filter(v => v === 8).length;
+    let guard = 0;
+    while (pending && guard++ < 200) { const r = d(8); bonus.push(r); pending--; if (r === 8) pending++; }
+  }
+  dice.last.bonus = bonus;
+}
+
+function cmdFace(c) { return dice.faces[c][d(6) - 1]; }
+
+function rollCmd() {
+  dice.rolled = [];
+  ["Black", "Orange", "Green"].forEach(c => { for (let i = 0; i < (dice.cmd[c] || 0); i++) dice.rolled.push({c, v: cmdFace(c), rr: 0}); });
+  dice.rerolls = armyDice().cmdUnits;
+  dice.spent = 0;
+}
+
+function faceSvg(v) { return v === 2 ? SWORDS2 : v === 1 ? SWORD : ""; }
+
+function renderDice() {
+  const L = dice.last;
+  let h = `<div class="dsec"><h3>D8 Attack Roll</h3>
+    <div class="drow"><span class="hint">Dice</span>${[1, 2, 3, 4, 6, 8, 10, 12, 16, 20].map(n => `<button class="qn ${dice.n === n ? "on" : ""}" data-dn="${n}">${n}</button>`).join("")}
+      <span class="stepper"><button data-dstep="-1">−</button><b style="min-width:24px;text-align:center">${dice.n}</b><button data-dstep="1">+</button></span></div>
+    <div class="drow"><span class="hint">Need</span>${[2, 3, 4, 5, 6, 7, 8].map(n => `<button class="qn ${dice.need === n ? "on" : ""}" data-need="${n}">${n}+</button>`).join("")}</div>
+    <div class="drow"><label class="ct" style="color:var(--text)"><input type="checkbox" id="dExplode" ${dice.explode ? "checked" : ""}> Exploding 8s (Sustained Attack / Vicious)</label></div>
+    <div class="drow"><button class="rollbtn" data-roll="d8">Roll ${dice.n}D8</button>${L ? `<button class="tbtn" data-roll="refail">Re-roll misses</button>` : ""}</div>`;
+  if (L) {
+    const hits = L.base.filter(v => v >= L.need).length;
+    const bh = L.bonus.filter(v => v >= L.need).length;
+    const sorted = [...L.base].sort((a, b) => b - a);
+    h += `<div class="tray">${sorted.map(v => `<span class="d8 ${v >= L.need ? "hit" : ""} ${v === 8 && L.explode && v >= L.need ? "ex" : ""}">${v}</span>`).join("")}</div>`;
+    if (L.bonus.length) h += `<div class="hint" style="margin-top:8px">Bonus dice from 8s:</div><div class="tray">${L.bonus.map(v => `<span class="d8 bonus ${v >= L.need ? "hit" : ""} ${v === 8 ? "ex" : ""}">${v}</span>`).join("")}</div>`;
+    h += `<div class="res">${hits + bh} success${hits + bh === 1 ? "" : "es"} <small>${hits} from ${L.base.length}D8${L.bonus.length ? ` + ${bh} from ${L.bonus.length} exploding` : ""} · needing ${L.need}+</small></div>`;
+  }
+  h += `</div>`;
+  const ad = armyDice();
+  const cp = dice.rolled.reduce((a, x) => a + x.v, 0);
+  h += `<div class="dsec"><h3>Command Dice</h3>
+    <div class="drow">${["Black", "Orange", "Green"].map(c => `<span class="die"><i class="${c}"></i>${c}<span class="stepper"><button data-cstep="${c}" data-d="-1">−</button><b>${dice.cmd[c] || 0}</b><button data-cstep="${c}" data-d="1">+</button></span></span>`).join("")}</div>
+    <div class="drow"><button class="tbtn" data-roll="fromarmy">Use my army: 3 Black + Tacticians (${ad.Black}B ${ad.Orange}O ${ad.Green}G)</button></div>
+    <div class="drow"><button class="rollbtn" data-roll="cmd">Roll Command Dice</button></div>`;
+  if (dice.rolled.length) {
+    h += `<div class="hint">${dice.rerolls ? `Tap a die to re-roll it – ${dice.rerolls} re-roll${dice.rerolls > 1 ? "s" : ""} left (1 per Command Unit in play).` : "No re-rolls left. Tap Spend as you use Command Points."}</div>
+      <div class="tray">${dice.rolled.map((x, i) => `<span class="cd ${x.c} ${x.rr ? "rr" : ""}" data-cdi="${i}" title="${x.c}: ${x.v} CP">${faceSvg(x.v)}</span>`).join("")}</div>
+      <div class="cpbox"><span class="big">${Math.max(0, cp - dice.spent)}</span><span>of ${cp} Command Points left</span>
+      <button class="tbtn" data-roll="spend" ${cp - dice.spent <= 0 ? "disabled" : ""}>Spend 1</button><button class="tbtn" data-roll="unspend" ${dice.spent <= 0 ? "disabled" : ""}>Undo</button></div>`;
+  }
+  h += `<details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Command dice faces (set these to match your dice)</summary>
+    <p class="hint">The rulebook doesn't list how many swords are on each face, so these are placeholders. Check your dice and set the six faces for each colour (0 = blank).</p>
+    <div class="faces"><span></span>${[1, 2, 3, 4, 5, 6].map(i => `<span class="hint" style="text-align:center">F${i}</span>`).join("")}
+    ${["Black", "Orange", "Green"].map(c => `<span class="die" style="padding:2px 6px"><i class="${c}"></i>${c}</span>${dice.faces[c].map((v, i) => `<select data-face="${c}" data-fi="${i}">${[0, 1, 2, 3].map(n => `<option ${n === v ? "selected" : ""}>${n}</option>`).join("")}</select>`).join("")}`).join("")}
+    </div><button class="tbtn" data-roll="resetfaces" style="margin-top:8px">Reset to placeholders</button></details></div>`;
+  const T = dice.tgt;
+  h += `<div class="dsec"><h3>Targeting Die</h3>
+    <div class="drow"><button class="rollbtn" data-roll="tgt">Roll Targeting Die</button></div>
+    ${T ? `<div class="drow">${T.hit ? `<img class="tdimg" src="${HIT_IMG}" alt="On Target face of the Targeting Die">` : `<div class="tdie">${T.dist}"<span class="arr" style="transform:rotate(${T.dir * 45}deg)"><i>▲</i></span></div>`}
+      <div>${T.hit ? "<b>On Target!</b><br><span class='hint'>The template doesn't move.</span>" : `<b>Scatter ${T.dist}"</b><br><span class="hint">Direction: ${["N", "NE", "E", "SE", "S", "SW", "W", "NW"][T.dir]} (the arrow on the die)</span>`}</div></div>` : `<p class="hint">Faces: 3 On Target symbols, and scatter distances 3, 3, 4, 5, 6.</p>`}
+  </div>`;
+  $("#diceBody").innerHTML = h;
+}
+
+$("#diceBody").addEventListener("click", e => {
+  const b = e.target.closest("button,[data-cdi]");
+  if (!b) return;
+  if (b.dataset.dn) dice.n = +b.dataset.dn;
+  else if (b.dataset.dstep) dice.n = Math.max(1, Math.min(60, dice.n + +b.dataset.dstep));
+  else if (b.dataset.need) dice.need = +b.dataset.need;
+  else if (b.dataset.cstep) { const c = b.dataset.cstep; dice.cmd[c] = Math.max(0, Math.min(20, (dice.cmd[c] || 0) + +b.dataset.d)); }
+  else if (b.dataset.cdi !== undefined) {
+    if (!dice.rerolls) { toast("No re-rolls left"); return; }
+    const x = dice.rolled[+b.dataset.cdi];
+    x.v = cmdFace(x.c); x.rr = 1; dice.rerolls--;
+  }
+  else if (b.dataset.roll) {
+    const r = b.dataset.roll;
+    if (r === "d8") rollD8();
+    else if (r === "refail") rerollFails();
+    else if (r === "cmd") rollCmd();
+    else if (r === "fromarmy") { const a = armyDice(); dice.cmd = {Black: a.Black, Orange: a.Orange, Green: a.Green}; }
+    else if (r === "spend") dice.spent++;
+    else if (r === "unspend") dice.spent = Math.max(0, dice.spent - 1);
+    else if (r === "tgt") { const f = d(8); dice.tgt = f <= 3 ? {hit: 1} : {hit: 0, dist: [3, 3, 4, 5, 6][f - 4], dir: d(8) - 1}; }
+    else if (r === "resetfaces") dice.faces = JSON.parse(JSON.stringify(DEFAULT_FACES));
+  }
+  saveDice(); renderDice();
+});
+$("#diceBody").addEventListener("change", e => {
+  if (e.target.id === "dExplode") dice.explode = e.target.checked;
+  if (e.target.dataset.face) dice.faces[e.target.dataset.face][+e.target.dataset.fi] = +e.target.value;
+  saveDice(); renderDice();
+});
+window.addEventListener("keydown", e => { if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
+
+load();
+if (cur) render(); else { cur = newList("asterians"); render(); start(); }
+</script>
+</body>
+</html>
