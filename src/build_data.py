@@ -64,6 +64,21 @@ u['r'] = [[n, 'When activated in the movement phase, this Unit can spend 1 CP to
 mark(u, 'The Spawning rewritten')
 
 fac_ = {f['id']: f for f in out['factions']}
+ORDER_FIX = {
+ ('forge-fathers', 'Born of Fire!'): (None, "Instead of using the Unit's normal weapon profile, use this profile: Incendiary Grenades – Range 9\", ADice 1, AP1, Ignores Cover, Pinning."),
+ ('marauders', 'Hunker down'): ('When an Infantry or Heavy Infantry Unit activates in the movement phase.', 'Place a Status Marker on the Unit as a reminder. The Unit counts as In Cover until the end of the Round.'),
+ ('marauders', 'One Step Ahead'): ('In the End Phase Special Rules step.', 'Choose a Unit within Command Radius of a friendly Command Unit to make an Advance move (for 1 Command Point) or a Sprint move (for 2 Command Points), following the normal rules. One Unit may be moved per friendly Command Unit In Play (pay the points for each Unit moving). If both sides have this ability, the Player with the initiative chooses which player moves all their units first. Units cannot move in Base contact with enemy units and are not given Combat tokens, and a Unit can only move once like this per Round.'),
+ ('plague', 'Infection'): ('When a non-Vehicle, non-Super-Heavy Unit activates in the Movement Phase.', None),
+ ('plague', 'Aura of Terror'): ('When a Unit Sprints and engages an enemy Unit in base-to-base contact. The Unit must be in Command Radius before it moves.', None),
+ ('plague', 'Tear Apart'): ('When an Infantry or Heavy Infantry Unit attacks in an Assault.', None),
+ ('veer-myn', 'Burrowing Attack'): ('When a Unit Sprints and engages an enemy Unit in an Assault in the Movement Phase.', 'The assaulting Unit ignores any Hindered charge modifier (other modifiers still apply). If the enemy Unit has Overwatch, its shooting attack against this Unit suffers a -1 to hit modifier. Now place a Status Marker on the charging Unit. Until the end of the Round, it has the Sustained Attack keyword when rolling to-hit in Assault.'),
+ ('veer-myn', 'Overwhelm'): ('Immediately after another friendly Unit activated using the Keep Going! Tactical Order.', None),
+ ('veer-myn', 'Narcotic Frenzy'): ('When an Infantry or Heavy Infantry Unit Sprints to engage an enemy Unit in an Assault in the Movement Phase.', None),
+}
+for (fid, on), (w, e) in ORDER_FIX.items():
+    o = next(o for o in fac_[fid]['orders'] if o[0] == on)
+    if w: o[2] = w
+    if e: o[3] = e
 fac_['gcps']['rules'][0][1] = fac_['gcps']['rules'][0][1].replace('GCPS Infantry Units', 'Infantry Units')
 fac_['gcps']['rules'][0].append('Errata v1.2: applies to Infantry only — Heavy Infantry are excluded.')
 fac_['veer-myn']['rules'][0][1] = 'When taking a Nerve test, this army\'s Units receive a +1 to the roll for each other friendly Unit within 6", up to a maximum of +2.'
@@ -86,6 +101,8 @@ for g in gl:
         i = g[1].find('original one.')
         g[1] = 'Units with this Keyword that fire Blast weapons, may place additional templates next to any previously placed template in this attack, not just the original one.' + g[1][i + len('original one.'):] + ' [Errata v1.2]'
 gl.append(['Command Radius (n)', "Strategic Orders can only be used on friendly Units within the Command Radius (in inches) of a friendly Command Unit (at least one Base needs to be within range). Strategic Orders can be used on the Command Unit itself. Units out of the Command Radius of every friendly Command Unit cannot have Strategic Orders played on them."])
+for g in gl:
+    g[1] = re.sub(r'\s(4[6-9]|50)(?=\s*(\[Errata v1\.2\])?$)', '', g[1])
 gl.sort(key=lambda g: g[0].lower())
 out['glossary'] = gl
 out['stratagems'] = [

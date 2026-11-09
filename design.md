@@ -62,13 +62,20 @@ The unit picker runs each unit through the same rules *before* you add it: units
 
 - **Share** encodes the list as base64url JSON in the URL hash (`#l=…`). Opening the link imports a copy. Links only work for other people when the page is hosted (e.g. GitHub Pages), not from a local file.
 - **Export** gives a plain-text list (for forums/Discord) and a `.json` download that can be re-imported from *My Lists*.
-- **Print** builds a print-only layout: every unit's full profile, the army rule, Strategic Orders, and only the keywords your list actually uses.
+- **Print** builds a print-only layout, organized top to bottom:
+  1. Centered header with army name, faction, and a stat strip (points, units, Unit Strength, Army Nerve, Command Dice pool).
+  2. **Roster**: one compact table per Company plus Battlefield Stratagems, side by side.
+  3. **Unit Profiles**: two-column cards with centered stat and weapon tables. Identical units are printed once with a ×N badge to save space.
+  4. **Army Rules**: army special rule, Command Pool reminder, and a Strategic Orders table.
+  5. **Keywords Used**: only the keywords in your list, in three columns.
+
+  Long rules text stays left-aligned for readability; headings, stats and tables are centered.
 
 ## Dice roller
 
 - **D8 attack roll**: pick dice count and target number; optional Exploding 8s (each natural 8 that succeeds adds a bonus die, recursively). "Re-roll misses" re-rolls failed dice.
 - **Command Dice**: "Use my army" loads 3 Black plus one die per Tactician colour in the list. After rolling you can tap dice to re-roll them, one per Command Unit in the list (per the rulebook). The CP tracker lets you spend points through the Round.
-- **Targeting Die**: 3 On Target faces, and 5 scatter faces (3, 3, 4, 5, 6) with a random direction. The On Target image is rendered from the supplied Targeting Die STL.
+- **Targeting Die**: 3 On Target faces (shown as a plain "ON TARGET" tile) and 5 scatter faces (3, 3, 4, 5, 6). A scatter result spins in and lands rotated a random 1–179° clockwise or counter-clockwise; the arrow on the tile shows the scatter direction, and the angle is also given in text. The face count was checked against the Targeting Die STL.
 - **Command Dice faces**:
 
   | Colour | Blank | 1 sword | 2 swords | 3 swords | Average CP |
@@ -87,7 +94,7 @@ The source lives in `src/`:
 
 - `src/parse.py` – extracts everything from the rulebook PDF into `data.json` (needs `pdfplumber`). It uses font and position information rather than plain text, because the army list pages are two-column stat cards.
 - `src/build_data.py` – compacts the data and applies the errata.
-- `src/build.py` – injects the data, the unit image URLs (`src/images.json`) and the Targeting Die image into `src/app.html`, writing `index.html`.
+- `src/build.py` – injects the data and the unit image URLs (`src/images.json`) into `src/app.html`, writing `index.html`.
 
 ```
 cd src
@@ -97,6 +104,10 @@ python3 build.py ../index.html
 ```
 
 When new errata comes out, add the changes to `build_data.py` and rebuild.
+
+## Data corrections
+
+A few Strategic Orders tables (Forge Fathers' Born of Fire, Marauders' Hunker Down and One Step Ahead, all of Plague and Veer-Myn) didn't extract cleanly from the PDF, so `build_data.py` overrides them with text transcribed from the page images (`ORDER_FIX`). Stray page numbers are also stripped from glossary text.
 
 ## Legal
 
