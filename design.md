@@ -104,7 +104,7 @@ The fourth dice menu button, **Scenario**, follows the Battle Scenario steps in 
 
   **Cutting**: there are no cut lines. Cards sit edge to edge inside a full-bleed dark frame, so two straight cuts each way separate a sheet and every card keeps an even dark border even if a cut is slightly off. Print at 100% / Actual size with headers and footers off (page margin is 0.2 in).
 
-  **Fitting**: each card's text auto-shrinks (7 pt down to about 5 pt) until it fits. Before going very small it shortens the photo, then drops it; if a card still overflows (very long Super-heavy rules), its special rules continue on a second card marked 1/2 and 2/2. Printing waits up to 4 s for unit photos to load.
+  **Fitting**: each card's body text starts large (11 pt) and steps down only until it fits, so short entries print big. The name, points badge, stat bar and footer are fixed large sizes. With the full photo, text won't go below 7 pt; next the photo is shortened (text 9 down to 6 pt), then dropped (down to 5.5 pt). If a card still doesn't fit, its special rules continue on a second card marked 1/2 and 2/2. Command cards have no photo and shrink from 11 pt as needed. Photos fill the picture box (scaled to cover, centred). In black & white or printer-friendly style the points badge is white with black text for contrast. Printing waits up to 4 s for unit photos to load.
 
 ## Dice roller
 

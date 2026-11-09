@@ -349,6 +349,8 @@ body.noscroll{overflow:hidden}
 .tc.pf.cmd .tc-when{background:#f5f5f5}
 .tc.bw,.tc.cmd.t.bw,.tc.cmd.b.bw{--fc:#6b6b6b!important}
 .tc.bw img{filter:grayscale(1)}
+.tc.bw .tc-pts,.tc.pf .tc-pts{background:#fff;color:#111}
+.tc.bw .tc-pts{border-color:#111}
 .tc.bw .tc-more{color:#555}
 .popt input{accent-color:var(--fac);width:18px;height:18px;margin-top:2px;flex:none}
 .popt small{display:block;color:var(--muted);font-size:12.5px}
@@ -356,19 +358,19 @@ body.noscroll{overflow:hidden}
 .tc{width:2.5in;height:3.5in;box-sizing:border-box;padding:.085in;background:#1b1f25;position:relative;overflow:hidden;font-family:var(--body);color:#1a1a1a;--fs:6.6pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
 .tc-in{height:100%;display:flex;flex-direction:column;border-radius:.09in;background:#f3efe6;overflow:hidden;box-shadow:0 0 0 .025in var(--fc) inset}
 .tc-top{display:flex;align-items:center;gap:.04in;background:linear-gradient(90deg,#23282f,#363c45);color:#fff;padding:.05in .06in .04in .09in;border-bottom:.025in solid var(--fc)}
-.tc-name{flex:1;font-family:var(--head);font-weight:700;font-size:10.5pt;line-height:1.02;letter-spacing:.02em;text-transform:uppercase}
-.tc-pts{flex:none;min-width:.36in;height:.36in;border-radius:50%;background:var(--fc);color:#111;display:grid;place-items:center;align-content:center;font-family:var(--head);font-weight:700;font-size:10.5pt;line-height:.9;border:.02in solid #fff}
-.tc-pts small{display:block;font-size:5pt;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-.tc-sub{font-size:6pt;font-weight:600;color:#444;padding:.025in .09in;background:#e6e0d2;border-bottom:1px solid #cfc6b3;text-align:center}
+.tc-name{flex:1;font-family:var(--head);font-weight:700;font-size:12.5pt;line-height:1.02;letter-spacing:.02em;text-transform:uppercase}
+.tc-pts{flex:none;min-width:.42in;height:.42in;border-radius:50%;background:var(--fc);color:#111;display:grid;place-items:center;align-content:center;font-family:var(--head);font-weight:700;font-size:13pt;line-height:.9;border:.02in solid #fff}
+.tc-pts small{display:block;font-size:6pt;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.tc-sub{font-size:7.5pt;font-weight:600;color:#333;padding:.025in .09in;background:#e6e0d2;border-bottom:1px solid #cfc6b3;text-align:center}
 .tc-art{height:.95in;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:.02in solid var(--fc);flex:none}
 .tc-art.short{height:.55in}
-.tc-art img{width:100%;height:100%;object-fit:contain}
+.tc-art img{width:100%;height:100%;object-fit:cover;object-position:center}
 .tc-art.none span{font-family:var(--head);color:#9aa0a8;font-size:12pt;letter-spacing:.15em;text-transform:uppercase;opacity:.8}
 .tc-stats{display:grid;grid-template-columns:repeat(7,1fr);background:#2a2f37;color:#fff;text-align:center;flex:none}
 .tc-stats div{padding:.015in 0;border-right:1px solid #444b55}
 .tc-stats div:last-child{border-right:0}
-.tc-stats small{display:block;font-size:4.6pt;font-weight:700;color:#bfc6cf;letter-spacing:.05em}
-.tc-stats b{font-family:var(--head);font-size:8.5pt;line-height:1.05}
+.tc-stats small{display:block;font-size:5.8pt;font-weight:700;color:#bfc6cf;letter-spacing:.05em}
+.tc-stats b{font-family:var(--head);font-size:11pt;line-height:1.05}
 .tc-body{flex:1;min-height:0;overflow:hidden;padding:.04in .07in;font-size:var(--fs);line-height:1.22}
 .tc-kw{font-style:italic;text-align:center;font-weight:600;color:#3b3b3b;margin-bottom:.03in}
 .tc-w{width:100%;border-collapse:collapse;font-size:var(--fs)}
@@ -380,17 +382,17 @@ body.noscroll{overflow:hidden}
 .tc-note{margin:.03in 0 0;font-size:calc(var(--fs) * .85);color:#666;font-style:italic;text-align:center}
 .tc-more{font-style:italic;color:#7a5a12}
 .tc-cont{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:calc(var(--fs) * 1.1);text-align:center;margin-bottom:.03in}
-.tc-foot{flex:none;display:flex;justify-content:space-between;background:#23282f;color:#cfd4db;font-size:5.2pt;padding:.02in .09in;letter-spacing:.06em;text-transform:uppercase;border-top:.02in solid var(--fc)}
-.tc.cmd .tc-body{display:flex;flex-direction:column;gap:.05in;padding:.07in .09in;font-size:calc(var(--fs) * 1.25)}
+.tc-foot{flex:none;display:flex;justify-content:space-between;background:#23282f;color:#cfd4db;font-size:6.5pt;padding:.02in .09in;letter-spacing:.06em;text-transform:uppercase;border-top:.02in solid var(--fc)}
+.tc.cmd .tc-body{display:flex;flex-direction:column;gap:.05in;padding:.07in .09in;font-size:calc(var(--fs) * 1.1)}
 .tc.cmd .tc-when{background:#e6e0d2;border-left:.03in solid var(--fc);padding:.04in .06in;border-radius:.03in}
-.tc.cmd .tc-when b{display:block;font-family:var(--head);font-size:7pt;letter-spacing:.08em;text-transform:uppercase;color:#555}
+.tc.cmd .tc-when b{display:block;font-family:var(--head);font-size:8.5pt;letter-spacing:.08em;text-transform:uppercase;color:#555}
 .tc.cmd .tc-eff{line-height:1.3}
 .tc.cmd .tc-pts.cp{border-radius:.08in}
 .tc.cmd.t{--fc:#9aa7b4!important}
 .tc.cmd.b{--fc:#c9a227!important}
 .tc.cmd .tc-top{padding:.08in .06in .07in .1in}
-.tc.cmd .tc-name{font-size:12pt}
-.tc.cmd .tc-sub{font-size:6.5pt}
+.tc.cmd .tc-name{font-size:14pt}
+.tc.cmd .tc-sub{font-size:7.5pt}
 .qr{font-size:8.1pt;line-height:1.3;color:#111}
 .qr-head{text-align:center;font-family:var(--head);font-size:15pt;letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid #111;padding-bottom:3px;margin-bottom:6px}
 .qr-head b{font-size:17pt}
@@ -1315,11 +1317,11 @@ function fitCards(root) {
     if (!body) return;
     const fits = () => body.scrollHeight <= body.clientHeight + 1;
     const tryRange = (hi, lo) => { for (let fs = hi; fs >= lo; fs -= 0.25) { card.style.setProperty("--fs", fs + "pt"); if (fits()) return true; } return false; };
-    if (tryRange(7, 5.75)) return;
     const art = card.querySelector(".tc-art");
-    if (art) { art.classList.add("short"); if (tryRange(7, 5.5)) return; }
-    if (tryRange(5.5, 4.75)) return;
-    if (art) { art.remove(); if (tryRange(6.5, 4.75)) return; }
+    if (card.classList.contains("cmd")) { if (tryRange(11, 4.75)) return; card.classList.add("overflow"); return; }
+    if (tryRange(11, 7)) return;
+    if (art) { art.classList.add("short"); if (tryRange(9, 6)) return; art.remove(); }
+    if (tryRange(9, 5.5)) return;
     card.classList.add("overflow");
   });
 }
