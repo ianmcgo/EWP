@@ -357,10 +357,11 @@ body.noscroll{overflow:hidden}
 .printonly.measuring{display:block!important;position:absolute;left:-30000px;top:0;width:8.1in;visibility:hidden}
 .tc{width:2.5in;height:3.5in;box-sizing:border-box;padding:.085in;background:#1b1f25;position:relative;overflow:hidden;font-family:var(--body);color:#1a1a1a;--fs:6.6pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
 .tc-in{height:100%;display:flex;flex-direction:column;border-radius:.09in;background:#f3efe6;overflow:hidden;box-shadow:0 0 0 .025in var(--fc) inset}
-.tc-top{display:flex;align-items:center;gap:.04in;background:linear-gradient(90deg,#23282f,#363c45);color:#fff;padding:.05in .06in .04in .09in;border-bottom:.025in solid var(--fc)}
+.tc-top{display:flex;align-items:center;gap:.04in;background:linear-gradient(90deg,#23282f,#363c45);color:#fff;padding:.035in .05in .03in .08in;border-bottom:.025in solid var(--fc)}
+.tc-in{position:relative}
 .tc-name{flex:1;font-family:var(--head);font-weight:700;font-size:12.5pt;line-height:1.02;letter-spacing:.02em;text-transform:uppercase}
-.tc-pts{flex:none;min-width:.42in;height:.42in;border-radius:50%;background:var(--fc);color:#111;display:grid;place-items:center;align-content:center;font-family:var(--head);font-weight:700;font-size:13pt;line-height:.9;border:.02in solid #fff}
-.tc-pts small{display:block;font-size:6pt;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.tc-pts{flex:none;display:flex;align-items:baseline;gap:.02in;background:var(--fc);color:#111;border-radius:.07in;padding:.015in .06in .01in;font-family:var(--head);font-weight:700;font-size:13pt;line-height:1;border:.015in solid #fff;white-space:nowrap}
+.tc-pts small{display:inline;font-size:6.5pt;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
 .tc-sub{font-size:7.5pt;font-weight:600;color:#333;padding:.025in .09in;background:#e6e0d2;border-bottom:1px solid #cfc6b3;text-align:center}
 .tc-art{height:.95in;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:.02in solid var(--fc);flex:none}
 .tc-art.short{height:.55in}
@@ -387,10 +388,10 @@ body.noscroll{overflow:hidden}
 .tc.cmd .tc-when{background:#e6e0d2;border-left:.03in solid var(--fc);padding:.04in .06in;border-radius:.03in}
 .tc.cmd .tc-when b{display:block;font-family:var(--head);font-size:8.5pt;letter-spacing:.08em;text-transform:uppercase;color:#555}
 .tc.cmd .tc-eff{line-height:1.3}
-.tc.cmd .tc-pts.cp{border-radius:.08in}
+
 .tc.cmd.t{--fc:#9aa7b4!important}
 .tc.cmd.b{--fc:#c9a227!important}
-.tc.cmd .tc-top{padding:.08in .06in .07in .1in}
+.tc.cmd .tc-top{padding:.05in .05in .045in .09in}
 .tc.cmd .tc-name{font-size:14pt}
 .tc.cmd .tc-sub{font-size:7.5pt}
 .qr{font-size:8.1pt;line-height:1.3;color:#111}
@@ -1313,6 +1314,8 @@ function quickRefHtml() {
 
 function fitCards(root) {
   root.querySelectorAll(".tc").forEach(card => {
+    const nm = card.querySelector(".tc-name");
+    if (nm) { let ns = parseFloat(getComputedStyle(nm).fontSize); const lh = () => parseFloat(getComputedStyle(nm).lineHeight) || ns * 1.05; while (nm.scrollHeight > lh() * 2.2 && ns > 8) { ns -= 0.5; nm.style.fontSize = ns + "px"; } }
     const body = card.querySelector(".tc-body");
     if (!body) return;
     const fits = () => body.scrollHeight <= body.clientHeight + 1;
