@@ -229,6 +229,8 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 .r3-ok{font-size:20px;padding:11px 26px;flex:none}
 .r3-again{flex:none;padding:11px 16px;font-size:15px}
 @media (max-width:600px){.r3-bar{left:12px;right:12px;transform:translateY(30px);max-width:none;gap:10px;padding:10px 10px 10px 14px}.r3-bar.on{transform:none}.r3-bar{flex-wrap:wrap}.r3-sum{font-size:22px;flex:1 1 100%;min-width:0;text-align:center}.r3-sum small{font-size:12px}.r3-ok{font-size:17px;padding:10px 14px;flex:1}.r3-again{padding:10px;font-size:14px;flex:1}.r3-banner{font-size:21px;padding:0 12px}}
+.rlinks{display:flex;gap:8px;flex-wrap:wrap}
+.rlinks a{text-decoration:none;color:var(--text)}
 .dmenu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .dbig{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:132px;border-radius:14px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);padding:12px 6px}
 .dbig:hover,.dbig:focus-visible{border-color:var(--fac);color:var(--fac)}
@@ -354,6 +356,7 @@ footer a{color:var(--muted)}
   </main>
   <footer>
     Created by Ian McGonigal · <a href="https://ianmcgo.github.io/website/" target="_blank" rel="noopener">Website</a> · <a href="https://www.patreon.com/cw/ianmcg" target="_blank" rel="noopener">Patreon</a><br>
+    <a href="https://www.manticgames.com/epic-warpath/epic-warpath-digital-rulebook/" target="_blank" rel="noopener">Rulebook PDF</a> · <a href="https://www.manticgames.com/epic-warpath/getting-started/latest-faq-errata/" target="_blank" rel="noopener">FAQ &amp; Errata</a> · <a href="https://companion.manticgames.com/epic-warpath-rules/" target="_blank" rel="noopener">Free online rules</a><br>
     Unofficial fan tool. Epic Warpath and all related content © Mantic Games. Data from the Epic Warpath Rulebook (1st Edition).
   </footer>
   <nav class="tabs" id="tabs">
@@ -370,6 +373,9 @@ footer a{color:var(--muted)}
 </div>
 <script>
 const DATA = __DATA__;
+const RULES_URL = "https://www.manticgames.com/epic-warpath/epic-warpath-digital-rulebook/";
+const COMPANION_URL = "https://companion.manticgames.com/epic-warpath-rules/";
+const ERRATA_URL = "https://www.manticgames.com/epic-warpath/getting-started/latest-faq-errata/";
 const FAC_COLORS = {"asterians":"#7fd3e6","enforcers":"#5b9be6","forge-fathers":"#e0913f","gcps":"#9cbc5e","marauders":"#d6ad3c","nameless":"#bb7ddb","plague":"#8fcc48","veer-myn":"#df6a58"};
 const CATS = ["HQ","Troop","Specialist","Support","Transport","Super-Heavy"];
 const CAT_LABEL = {"HQ":"HQ","Troop":"Troops","Specialist":"Specialists","Support":"Support","Transport":"Transports","Super-Heavy":"Super-Heavy"};
@@ -789,6 +795,7 @@ function renderInfo() {
     }
   });
   h += `</div>
+    <div class="side-sec"><h3>Rules</h3><div class="rlinks"><a class="tbtn" href="${RULES_URL}" target="_blank" rel="noopener">📖 Rulebook PDF</a><a class="tbtn" href="${ERRATA_URL}" target="_blank" rel="noopener">FAQ &amp; Errata PDF</a><a class="tbtn" href="${COMPANION_URL}" target="_blank" rel="noopener">Free online rules</a></div><p class="hint" style="margin:6px 0 0">Rulebook PDF and FAQ &amp; Errata download from Mantic's store (rulebook £25, errata free). The free online rules need a free Mantic Companion account.</p></div>
     <div class="side-sec"><h3>Army Special Rule</h3>${f.rules.map(([n, t, er]) => `<p style="margin:0;font-size:13px"><b>${esc(n)}:</b> ${esc(t)}${er ? ` <span class="e-badge" title="${esc(er)}">ERRATA</span>` : ""}</p>`).join("")}</div>
     <div class="side-sec"><h3>Strategic Orders</h3>${f.orders.map(([n, c, w, e, er]) => `<div class="order"><span class="cost">${esc(c)} CP</span><b>${esc(n)}</b>${er ? ` <span class="e-badge">ERRATA</span>` : ""}<div class="when">${esc(w)}</div><div>${esc(e)}</div></div>`).join("")}</div>
     <div class="side-sec"><h3>Keywords in this list</h3>${usedGlossary().map(([n, t]) => `<details class="gl"><summary>${esc(n)}</summary><p>${esc(t)}</p></details>`).join("") || `<span class="hint">Add units to see the keywords you'll need.</span>`}</div>
@@ -1104,6 +1111,7 @@ function doPrint() {
   h += `<h2>Army Rules</h2><div class="pr-rules">${f.rules.map(([n, x]) => `<div class="pr-box"><div class="bt">Army Special Rule – ${esc(n)}</div><p>${esc(x)}</p></div>`).join("")}<div class="pr-box"><div class="bt">Command Pool</div><p>Each Round roll ${pool.Black} Black${pool.Orange ? ", " + pool.Orange + " Orange" : ""}${pool.Green ? ", " + pool.Green + " Green" : ""} Command Dice. Re-roll one die per Command Unit In Play. Army Nerve ${esc(f.nerve)}.</p></div></div>`;
   h += `<h3>Strategic Orders</h3><table class="pr-orders"><tr><th>Order</th><th>CP</th><th>When</th><th>Effect</th></tr>${f.orders.map(([n, c, w, e]) => `<tr><td class="nm">${esc(n)}</td><td class="c">${esc(c)}</td><td>${esc(w)}</td><td>${esc(e)}</td></tr>`).join("")}</table>`;
   h += `<h2>Keywords Used</h2><div class="pr-kw">${usedGlossary().map(([n, x]) => `<div><b>${esc(n)}:</b> ${esc(x)}</div>`).join("")}</div>`;
+  h += `<div class="pr-foot">Full rules: Epic Warpath Rulebook PDF ${RULES_URL} · Free online rules ${COMPANION_URL}</div>`;
   h += `<div class="pr-foot">Epic Warpath Army Builder · Created by Ian McGonigal · Rules © Mantic Games, FAQ &amp; Errata v1.2 applied</div></div>`;
   $("#printArea").innerHTML = h;
   window.print();
@@ -1124,8 +1132,8 @@ $("#btnDice").onclick = () => openDice();
 $("#closeDice").onclick = () => $("#drawer").classList.remove("open");
 
 const DEFAULT_FACES = {Black: [0, 0, 1, 1, 1, 2], Orange: [0, 1, 1, 1, 2, 2], Green: [1, 1, 2, 2, 2, 3]};
-let dice = {n: 6, need: 5, explode: true, last: null, cmd: {Black: 3, Orange: 0, Green: 0}, rolled: [], rerolls: 0, spent: 0, tgt: null, faces: JSON.parse(JSON.stringify(DEFAULT_FACES))};
-try { const sd = JSON.parse(store(true, "ewp_dice_v2") || "null"); if (sd) dice = Object.assign(dice, sd, {last: null, rolled: [], tgt: null}); } catch (e) {}
+let dice = {n: 6, need: 5, explode: false, last: null, cmd: {Black: 3, Orange: 0, Green: 0}, rolled: [], rerolls: 0, spent: 0, tgt: null, faces: JSON.parse(JSON.stringify(DEFAULT_FACES))};
+try { const sd = JSON.parse(store(true, "ewp_dice_v2") || "null"); if (sd) dice = Object.assign(dice, sd, {last: null, rolled: [], tgt: null, explode: false}); } catch (e) {}
 if (dice.anim3d === undefined) dice.anim3d = true;
 if (dice.sound === undefined) dice.sound = true;
 const saveDice = () => store(false, "ewp_dice_v2", JSON.stringify({n: dice.n, need: dice.need, explode: dice.explode, cmd: dice.cmd, faces: dice.faces, anim3d: dice.anim3d, sound: dice.sound}));
@@ -1310,7 +1318,7 @@ function renderDice() {
 $("#diceBody").addEventListener("click", e => {
   const b = e.target.closest("button,[data-lcr]");
   if (!b) return;
-  if (b.dataset.view) { dview = b.dataset.view; renderDice(); $("#diceBody").scrollTop = 0; return; }
+  if (b.dataset.view) { dview = b.dataset.view; if (dview === "d8") dice.explode = false; renderDice(); $("#diceBody").scrollTop = 0; return; }
   if (b.dataset.lcr !== undefined) { doRoll("cmdOne", +b.dataset.lcr); return; }
   if (b.dataset.dn) dice.n = +b.dataset.dn;
   else if (b.dataset.dstep) dice.n = Math.max(1, Math.min(60, dice.n + +b.dataset.dstep));

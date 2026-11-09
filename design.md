@@ -58,6 +58,15 @@ The unit picker runs each unit through the same rules *before* you add it: units
 - Rendering is plain template strings (`renderBar`, `renderList`, `renderPicker`, `renderInfo`) re-run on every change; clicks are handled by one delegated listener keyed on `data-act`.
 - `glossFor(keyword)` maps a keyword (including variants like `AP2`, `Blast (3)`, `Indirect (only)`) to its glossary entry for the tap-to-read popovers and the "Keywords in this list" section.
 
+## Rules links
+
+The Summary panel's **Rules** section, the footer and the printout link to:
+- **Rulebook PDF**: Mantic's store page (£25 digital rulebook and tokens).
+- **FAQ & Errata PDF**: free from Mantic's store.
+- **Free online rules**: the Mantic Companion rules (free account required).
+
+The rulebook itself isn't included or hosted here.
+
 ## Sharing, export, print
 
 - **Share** encodes the list as base64url JSON in the URL hash (`#l=…`). Opening the link imports a copy. Links only work for other people when the page is hosted (e.g. GitHub Pages), not from a local file.
@@ -75,7 +84,7 @@ The unit picker runs each unit through the same rules *before* you add it: units
 
 The dice panel opens on a menu of three big buttons:
 
-- **D8** opens its options: number of dice, the target number, and Exploding 8s, then Roll. If the last roll had misses, there's also "Re-roll misses from last roll".
+- **D8** opens its options: number of dice, the target number, and Exploding 8s, then Roll. Exploding 8s starts unchecked every time the D8 screen opens, since few weapons have Sustained Attack or Vicious. If the last roll had misses, there's also "Re-roll misses from last roll".
 - **Command** opens its options: Black/Orange/Green counts, "Use my army" (3 Black plus one die per Tactician colour in the list), the face settings, then Roll.
 - **Target** rolls the Targeting Die straight away (3 On Target faces; scatter 3, 3, 4, 5, 6 with a random direction).
 
