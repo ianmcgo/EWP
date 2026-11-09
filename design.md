@@ -69,7 +69,15 @@ The unit picker runs each unit through the same rules *before* you add it: units
 - **D8 attack roll**: pick dice count and target number; optional Exploding 8s (each natural 8 that succeeds adds a bonus die, recursively). "Re-roll misses" re-rolls failed dice.
 - **Command Dice**: "Use my army" loads 3 Black plus one die per Tactician colour in the list. After rolling you can tap dice to re-roll them, one per Command Unit in the list (per the rulebook). The CP tracker lets you spend points through the Round.
 - **Targeting Die**: 3 On Target faces, and 5 scatter faces (3, 3, 4, 5, 6) with a random direction. The On Target image is rendered from the supplied Targeting Die STL.
-- **Command Dice faces are user-set.** The rulebook doesn't say how many swords each colour's faces have. The defaults (Black 0,0,0,1,1,2 · Orange 0,0,1,1,2,2 · Green 0,1,1,2,2,2) are **placeholders**. Set the real faces under "Command dice faces"; the setting is saved in the browser.
+- **Command Dice faces**:
+
+  | Colour | Blank | 1 sword | 2 swords | 3 swords | Average CP |
+  |---|---|---|---|---|---|
+  | Black | 2 | 3 | 1 | – | 0.83 |
+  | Orange | 1 | 3 | 2 | – | 1.17 |
+  | Green | – | 2 | 3 | 1 | 1.83 |
+
+  The faces can still be edited under "Command dice faces" if needed; the setting is saved in the browser (key `ewp_dice_v2`).
 
 Randomness uses `crypto.getRandomValues`.
 

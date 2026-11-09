@@ -197,6 +197,9 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 .cd svg{width:34px;height:34px}
 .cd.Black svg{fill:#e8e8e8}.cd.Orange svg,.cd.Green svg{fill:#141414}
 .cd.spent{opacity:.28}
+.cd .tri{display:flex;align-items:center}
+.cd .tri svg{width:24px;height:24px}
+.cd .tri svg+svg{margin-left:-6px}
 .cd.rr::after{content:"↻";position:absolute;top:-7px;right:-7px;background:var(--fac);color:#111;border-radius:50%;width:17px;height:17px;font-size:12px;display:grid;place-items:center;font-weight:700}
 .cpbox{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap}
 .cpbox .big{font-family:var(--head);font-size:30px;font-weight:700;color:var(--fac);line-height:1}
@@ -998,10 +1001,10 @@ $("#closeDice").onclick = () => $("#drawer").classList.remove("open");
 
 const SWORD = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></svg>`;
 const SWORDS2 = `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-8 12 12)"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></g><g transform="scale(-1 1) translate(-24 0) rotate(-8 12 12)"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></g></svg>`;
-const DEFAULT_FACES = {Black: [0, 0, 0, 1, 1, 2], Orange: [0, 0, 1, 1, 2, 2], Green: [0, 1, 1, 2, 2, 2]};
+const DEFAULT_FACES = {Black: [0, 0, 1, 1, 1, 2], Orange: [0, 1, 1, 1, 2, 2], Green: [1, 1, 2, 2, 2, 3]};
 let dice = {n: 6, need: 5, explode: true, last: null, cmd: {Black: 3, Orange: 0, Green: 0}, rolled: [], rerolls: 0, spent: 0, tgt: null, faces: JSON.parse(JSON.stringify(DEFAULT_FACES))};
-try { const sd = JSON.parse(store(true, "ewp_dice_v1") || "null"); if (sd) dice = Object.assign(dice, sd, {last: null, rolled: [], tgt: null}); } catch (e) {}
-const saveDice = () => store(false, "ewp_dice_v1", JSON.stringify({n: dice.n, need: dice.need, explode: dice.explode, cmd: dice.cmd, faces: dice.faces}));
+try { const sd = JSON.parse(store(true, "ewp_dice_v2") || "null"); if (sd) dice = Object.assign(dice, sd, {last: null, rolled: [], tgt: null}); } catch (e) {}
+const saveDice = () => store(false, "ewp_dice_v2", JSON.stringify({n: dice.n, need: dice.need, explode: dice.explode, cmd: dice.cmd, faces: dice.faces}));
 const d = n => 1 + Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296 * n);
 
 function openDice() { renderDice(); $("#drawer").classList.add("open"); }
@@ -1050,7 +1053,7 @@ function rollCmd() {
   dice.spent = 0;
 }
 
-function faceSvg(v) { return v === 2 ? SWORDS2 : v === 1 ? SWORD : ""; }
+function faceSvg(v) { return v >= 3 ? `<span class="tri">${SWORDS2}${SWORD}</span>` : v === 2 ? SWORDS2 : v === 1 ? SWORD : ""; }
 
 function renderDice() {
   const L = dice.last;
@@ -1081,11 +1084,11 @@ function renderDice() {
       <div class="cpbox"><span class="big">${Math.max(0, cp - dice.spent)}</span><span>of ${cp} Command Points left</span>
       <button class="tbtn" data-roll="spend" ${cp - dice.spent <= 0 ? "disabled" : ""}>Spend 1</button><button class="tbtn" data-roll="unspend" ${dice.spent <= 0 ? "disabled" : ""}>Undo</button></div>`;
   }
-  h += `<details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Command dice faces (set these to match your dice)</summary>
-    <p class="hint">The rulebook doesn't list how many swords are on each face, so these are placeholders. Check your dice and set the six faces for each colour (0 = blank).</p>
+  h += `<details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Command dice faces</summary>
+    <p class="hint">Black: 2 blank, 3 × one sword, 1 × two swords. Orange: 1 blank, 3 × one, 2 × two. Green: 2 × one, 3 × two, 1 × three. Edit if your dice differ (0 = blank).</p>
     <div class="faces"><span></span>${[1, 2, 3, 4, 5, 6].map(i => `<span class="hint" style="text-align:center">F${i}</span>`).join("")}
     ${["Black", "Orange", "Green"].map(c => `<span class="die" style="padding:2px 6px"><i class="${c}"></i>${c}</span>${dice.faces[c].map((v, i) => `<select data-face="${c}" data-fi="${i}">${[0, 1, 2, 3].map(n => `<option ${n === v ? "selected" : ""}>${n}</option>`).join("")}</select>`).join("")}`).join("")}
-    </div><button class="tbtn" data-roll="resetfaces" style="margin-top:8px">Reset to placeholders</button></details></div>`;
+    </div><button class="tbtn" data-roll="resetfaces" style="margin-top:8px">Reset to standard dice</button></details></div>`;
   const T = dice.tgt;
   h += `<div class="dsec"><h3>Targeting Die</h3>
     <div class="drow"><button class="rollbtn" data-roll="tgt">Roll Targeting Die</button></div>
