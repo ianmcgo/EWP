@@ -45,7 +45,7 @@ Every Company is validated live. Slot counting:
 | Transport | Up to 1 per unit that is not a Walker, Vehicle, Super-heavy or Bike |
 | Unique `[U]` | Once per army |
 
-Command Transports are an option on the HQ unit itself (checkbox) and don't use a Transport slot.
+Command Transports are an option on the HQ unit itself (checkbox) and don't use a Transport slot. When ticked, the transport also appears as its own entry with a cost of "–" (its points are already in the HQ's cost): an indented ↳ line under the HQ in the army list (tap for the full profile), its own line in the printed roster, its own profile, its own unit card, and its own line in the text export. `ctUnit()` finds the matching Transport unit in the faction (e.g. Wraith, Panther APC, Slug → Slugs) and shows it as a single vehicle (1 base) under the option's name.
 
 The unit picker runs each unit through the same rules *before* you add it: units you can't take are greyed out with the exact reason ("Needs 1 more Troop/Specialist (1 Support per 2)"), so you never build an illegal list by accident.
 

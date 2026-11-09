@@ -85,6 +85,9 @@ main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(330px,1fr);gap:1
 .row .nm{flex:1;min-width:0;cursor:pointer}
 .row .nm b{font-weight:600}
 .row .sub,.prow .sub{display:block;font-size:12px;color:var(--muted)}
+.ctrow{padding-left:30px}
+.ctrow .thumb{width:36px;height:36px}
+.ctrow .p{color:var(--muted)}
 .row .p{font-family:var(--head);font-weight:600;font-size:17px;min-width:44px;text-align:right}
 .u-badge{font-size:10px;font-weight:700;border:1px solid var(--muted);color:var(--muted);border-radius:4px;padding:0 4px;margin-left:4px;vertical-align:1px}
 .ct{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:3px;cursor:pointer;width:max-content}
@@ -830,7 +833,25 @@ function slotChips(co) {
     chip("Support", c.Support, cp.Support) + chip("Super-Heavy", c["Super-Heavy"], 1) + chip("Transport", c.Transport, cp.Transport);
 }
 
+function ctUnit(u) {
+  if (!u || !u.ct) return null;
+  const nm = u.ct.name.toLowerCase();
+  const t = fac().units.find(x => x.n.toLowerCase() === nm) || fac().units.find(x => x.c === "Transport" && (x.n.toLowerCase().startsWith(nm) || nm.startsWith(x.n.toLowerCase().replace(/s$/, ""))));
+  if (!t) return null;
+  return Object.assign({}, t, {n: u.ct.name, b: 1, isCT: 1, ctOf: u.n, c: "Transport", u: 0, e: null});
+}
+
+function addCTs(list) {
+  const out = [];
+  list.forEach(it => {
+    out.push(it);
+    if (it.e && it.e.ct && it.u.ct) { const t = ctUnit(it.u); if (t) out.push({u: t, e: {ct: 0, key: t.id, isCT: 1}, n: it.n, ct: 1}); }
+  });
+  return out;
+}
+
 function sortKey(u) {
+  if (u.isCT) return 0.5;
   const r = roles(u);
   if (r.includes("HQ")) return 0;
   if (r.includes("Super-Heavy")) return 4;
@@ -874,6 +895,14 @@ function renderList() {
         <button class="ibtn danger" data-act="del" data-ci="${ci}" data-i="${i}" title="Remove">✕</button>
       </div>`;
       if (openCards.has(ck)) h += unitCard(u);
+      if (e.ct && u.ct) {
+        const t = ctUnit(u);
+        if (t) {
+          const ckc = ck + "ct";
+          h += `<div class="row ctrow">${thumbHtml(t, ckc)}<div class="nm" data-act="toggle" data-ck="${ckc}"><b>↳ ${esc(t.n)}</b><span class="sub">Command Transport for ${esc(u.n)} · ${esc(t.t)} · 1 base · cost included above</span></div><span class="p">–</span></div>`;
+          if (openCards.has(ckc)) h += unitCard(t);
+        }
+      }
     });
     h += `</div></div>`;
   });
@@ -893,7 +922,7 @@ function typeLabel(u) {
 
 function unitCard(u) {
   const s = u.s;
-  let h = `<div class="card">${u.img ? `<div class="uimg"><img src="${esc(u.img)}" alt="${esc(u.n)} miniatures" loading="lazy" onerror="this.parentNode.remove()">${u.imgNote ? `<span class="imgnote">${esc(u.imgNote)}</span>` : ""}</div>` : ""}<div class="chd"><b>${esc(u.n)} (${u.b})</b><span>${esc(typeLabel(u))}</span><span style="margin-left:auto">${u.p} pts</span></div>
+  let h = `<div class="card">${u.img ? `<div class="uimg"><img src="${esc(u.img)}" alt="${esc(u.n)} miniatures" loading="lazy" onerror="this.parentNode.remove()">${u.imgNote ? `<span class="imgnote">${esc(u.imgNote)}</span>` : ""}</div>` : ""}<div class="chd"><b>${esc(u.n)} (${u.b})</b><span>${esc(typeLabel(u))}</span><span style="margin-left:auto">${u.isCT ? "Command Transport · – pts" : u.p + " pts"}</span></div>
     <div class="stats">${[["SP", s[0]], ["SH", s[1]], ["AS", s[2]], ["AR", s[3]], ["SV", s[4]], ["HT", u.ht], ["US", u.us], ["Bases", u.b]].map(([k, v]) => `<div><small>${k}</small><strong>${esc(v || "-")}</strong></div>`).join("")}</div>
     <div class="kws">${u.k.length ? u.k.map(k => kwChip(k)).join("") : `<span class="kw none">No keywords</span>`}</div>
     <table class="wp"><tr><th>Weapon</th><th>Range</th><th>ADice</th><th>Keywords</th></tr>`;
@@ -1177,7 +1206,8 @@ function textExport() {
     L.push("");
     L.push("== Company " + (ci + 1) + " (" + companyPts(co) + " pts) ==");
     co.units.map(e => ({e, u: unitOf(e)})).filter(x => x.u).sort((a, b) => sortKey(a.u) - sortKey(b.u)).forEach(({e, u}) => {
-      L.push("- " + u.n + " (" + u.b + ") [" + u.c + "] " + u.p + " pts" + (e.ct && u.ct ? " + " + u.ct.name + " Command Transport (" + u.ct.p + ")" : ""));
+      L.push("- " + u.n + " (" + u.b + ") [" + u.c + "] " + unitPts(e) + " pts" + (e.ct && u.ct ? " (incl. +" + u.ct.p + " Command Transport)" : ""));
+      if (e.ct && u.ct) L.push("  ↳ " + u.ct.name + " (1) [Command Transport] –");
     });
   });
   const s = cur.strat;
@@ -1262,8 +1292,8 @@ function cardFrame(inner, cls) { return `<div class="tc ${cls || ""} ${cardMode}
 
 function unitCardHtml(u, e, n, part) {
   const f = fac();
-  const head = `<div class="tc-top"><span class="tc-name">${esc(u.n)}</span><span class="tc-pts">${unitPts(e)}<small>pts</small></span></div>
-    <div class="tc-sub">${esc(typeLabel(u))} · ${u.b} base${u.b > 1 ? "s" : ""} · ${esc(roles(u).includes("HQ") ? "HQ" : u.c)}${u.u ? " · Unique" : ""}${n > 1 ? ` · ×${n}` : ""}</div>`;
+  const head = `<div class="tc-top"><span class="tc-name">${esc(u.n)}</span><span class="tc-pts">${u.isCT ? "–" : unitPts(e)}<small>pts</small></span></div>
+    <div class="tc-sub">${esc(typeLabel(u))} · ${u.b} base${u.b > 1 ? "s" : ""} · ${u.isCT ? "Command Transport (" + esc(u.ctOf) + ")" : esc(roles(u).includes("HQ") ? "HQ" : u.c)}${u.u ? " · Unique" : ""}${n > 1 ? ` · ×${n}` : ""}</div>`;
   if (part === 2) {
     return cardFrame(head + `<div class="tc-body"><div class="tc-cont">Special Rules (continued)</div>${(u.r || []).map(([rn, x]) => `<p class="tc-rule"><b>${esc(rn)}:</b> ${esc(x)}</p>`).join("")}</div><div class="tc-foot"><span>${esc(f.n)}</span><span>2/2</span></div>`, "unit");
   }
@@ -1307,7 +1337,7 @@ function unitCardList(perUnit) {
     if (seen.has(k)) seen.get(k).n++; else { const it = {u, e, n: 1}; seen.set(k, it); items.push(it); }
   }));
   items.sort((a, b) => sortKey(a.u) - sortKey(b.u));
-  return items;
+  return addCTs(items);
 }
 
 function pages(cards) {
@@ -1455,7 +1485,9 @@ function rosterHtml(opts) {
   cur.companies.forEach((co, ci) => {
     h += `<table><caption>Company ${ci + 1}</caption><tr><th>Unit</th><th>Slot</th><th>Bases</th><th>Pts</th></tr>`;
     entries(co).forEach(({e, u}) => {
-      h += `<tr><td class="n">${esc(u.n)}${u.u ? " [U]" : ""}${e.ct && u.ct ? `<br><small>+ ${esc(u.ct.name)} (Command Transport)</small>` : ""}</td><td>${esc(roles(u).includes("HQ") ? "HQ" : u.c)}</td><td>${u.b}</td><td>${unitPts(e)}</td></tr>`;
+      h += `<tr><td class="n">${esc(u.n)}${u.u ? " [U]" : ""}</td><td>${esc(roles(u).includes("HQ") ? "HQ" : u.c)}</td><td>${u.b}</td><td>${unitPts(e)}</td></tr>`;
+      const ctu = e.ct ? ctUnit(u) : null;
+      if (ctu) h += `<tr><td class="n">↳ ${esc(ctu.n)} <small>(Command Transport, cost in HQ)</small></td><td>Transport</td><td>1</td><td>–</td></tr>`;
     });
     h += `<tr class="tot"><td class="n" colspan="3">Company total</td><td>${companyPts(co)}</td></tr></table>`;
   });
@@ -1477,8 +1509,8 @@ function rosterHtml(opts) {
     if (seen.has(k)) seen.get(k).n++; else seen.set(k, {u, e, n: 1});
   }));
   h += `<div class="pr-units">`;
-  [...seen.values()].sort((a, b) => sortKey(a.u) - sortKey(b.u)).forEach(({u, e, n}) => {
-    h += `<div class="pu"><div class="t"><b>${esc(u.n)} (${u.b})</b><span>${esc(typeLabel(u))}${u.u ? " · Unique" : ""}</span>${n > 1 ? `<span class="x">×${n}</span>` : ""}<em>${unitPts(e)} pts</em></div>
+  addCTs([...seen.values()].sort((a, b) => sortKey(a.u) - sortKey(b.u))).forEach(({u, e, n}) => {
+    h += `<div class="pu"><div class="t"><b>${esc(u.n)} (${u.b})</b><span>${u.isCT ? "Command Transport for " + esc(u.ctOf) + " · " : ""}${esc(typeLabel(u))}${u.u ? " · Unique" : ""}</span>${n > 1 ? `<span class="x">×${n}</span>` : ""}<em>${u.isCT ? "–" : unitPts(e) + " pts"}</em></div>
       ${e.ct && u.ct ? `<div class="ct">Includes ${esc(u.ct.name)} Command Transport (+${u.ct.p} pts)</div>` : ""}
       <table><tr>${["SP", "SH", "AS", "AR", "SV", "HT", "US"].map(k => `<th>${k}</th>`).join("")}</tr><tr>${[...u.s, u.ht, u.us].map(v => `<td>${esc(v || "-")}</td>`).join("")}</tr></table>
       <span class="kw">${esc(u.k.join(", ") || "No keywords")}</span>
