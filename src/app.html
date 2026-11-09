@@ -236,7 +236,14 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 body.noscroll{overflow:hidden}
 .rd-top{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0b0e12;border-bottom:1px solid var(--line)}
 .rd-title{font-family:var(--head);font-size:20px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
-#rdChSel{display:none;max-width:44%}
+.rdd{display:none;position:relative;flex:1;min-width:0}
+.rdd-btn{width:100%;display:flex;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line2);border-radius:9px;padding:9px 12px;font-size:16px;font-weight:600;text-align:left}
+.rdd-btn span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rdd-btn i{font-style:normal;color:var(--fac);transition:transform .2s}
+.rdd.open .rdd-btn{border-color:var(--fac)}
+.rdd.open .rdd-btn i{transform:rotate(180deg)}
+.rdd-menu{position:absolute;left:0;top:calc(100% + 6px);width:min(92vw,360px);max-height:68vh;overflow:auto;z-index:5;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:6px;box-shadow:0 16px 40px rgba(0,0,0,.6)}
+.rdd-menu .rn{padding:11px 10px;font-size:15px}
 .rd-top .search{flex:1;min-width:0}
 .rd-top .ibtn{font-size:18px}
 .rd-body{flex:1;display:grid;grid-template-columns:250px minmax(0,1fr);min-height:0}
@@ -283,7 +290,7 @@ body.noscroll{overflow:hidden}
 .rhit span{color:var(--muted);font-size:13px}
 .rhit mark{background:rgba(224,166,58,.35);color:var(--text);border-radius:3px}
 .rhit:hover{border-color:var(--fac)}
-@media (max-width:900px){.rd-body{grid-template-columns:1fr}.rd-nav{display:none}#rdChSel{display:block}.rd-main{padding:12px 16px 50px}.rd-title{display:none}.rd-top{flex-wrap:wrap}.rd-top .search{order:3;flex:1 1 100%}#rdChSel{flex:1;max-width:none}.rd-main h2{font-size:25px}}
+@media (max-width:900px){.rd-body{grid-template-columns:1fr}.rd-nav{display:none}.rdd{display:block}.rd-main{padding:12px 16px 50px}.rd-title{display:none}.rd-top{flex-wrap:wrap}.rd-top .search{order:3;flex:1 1 100%}.rd-main h2{font-size:25px}}
 .dmenu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .scard{display:flex;flex-direction:column;gap:8px}
 .sp{border:1px solid var(--line);border-radius:10px;background:var(--panel2);padding:10px 12px}
@@ -541,7 +548,7 @@ footer a{color:var(--muted)}
     <button data-rules>Rules</button>
   </nav>
   <div class="reader" id="reader" role="dialog" aria-label="Rules reference">
-    <div class="rd-top"><b class="rd-title">📖 Rules</b><select id="rdChSel" aria-label="Chapter"></select><input id="rdSearch" class="search" type="search" placeholder="Search the rules…" aria-label="Search the rules"><button class="tbtn" id="rdPrint" title="Print a one-page rules reference">🖨 Quick ref</button><button class="ibtn" data-rclose aria-label="Close rules">✕</button></div>
+    <div class="rd-top"><b class="rd-title">📖 Rules</b><div class="rdd" id="rdd"><button class="rdd-btn" id="rdChBtn" aria-haspopup="true" aria-expanded="false"><span id="rdChLbl">Contents</span><i>▾</i></button><div class="rdd-menu" id="rdChMenu" hidden></div></div><input id="rdSearch" class="search" type="search" placeholder="Search the rules…" aria-label="Search the rules"><button class="tbtn" id="rdPrint" title="Print a one-page rules reference">🖨 Quick ref</button><button class="ibtn" data-rclose aria-label="Close rules">✕</button></div>
     <div class="rd-body"><nav class="rd-nav" id="rdNav"></nav><article class="rd-main" id="rdMain"></article></div>
   </div>
   <aside class="drawer" id="drawer" aria-label="Dice roller">
@@ -2548,7 +2555,7 @@ function renderReader() {
     }).join("") || `<p class="hint">Nothing found. Try a single word like “pinned” or “assault”.</p>`;
   } else if (rd.ch < 0 || rd.ch >= RCH.length) {
     main = `<h2>${esc(RULES.v || "Epic Warpath Rules")}</h2><p class="hint">From the Mantic Companion online rules, with FAQ &amp; Errata v1.2 keyword changes. Tap a chapter or search above.</p><div class="rtoc">` +
-      RCH.map((c, i) => `<button class="rtc" data-rch="${i}"><span>${i + 1}</span><b>${esc(c.t)}</b><small>${c.s.filter(s => s.t && s.l === 1).length || c.s.length} sections</small></button>`).join("") +
+      RCH.map((c, i) => `<button class="rtc" data-rch="${i}"><span>${i + 1}</span><b>${esc(c.t)}</b><small>${(k => k + " section" + (k === 1 ? "" : "s"))(c.s.filter(s => s.t && s.l === 1).length || c.s.length)}</small></button>`).join("") +
       `<a class="rtc ext" href="${RULES_URL}" target="_blank" rel="noopener"><span>${n + 1}</span><b>Rulebook PDF ↗</b><small>Full Epic Warpath rulebook (Mantic)</small></a>` +
       `<a class="rtc ext" href="${ERRATA_URL}" target="_blank" rel="noopener"><span>${n + 2}</span><b>FAQ &amp; Errata PDF ↗</b><small>v1.2 – free download from Mantic's store</small></a>` + `</div>`;
   } else {
@@ -2560,7 +2567,8 @@ function renderReader() {
   }
   $("#rdNav").innerHTML = nav;
   $("#rdMain").innerHTML = main;
-  $("#rdChSel").innerHTML = `<option value="-1">Contents</option>` + RCH.map((c, i) => `<option value="${i}" ${!q && rd.ch === i ? "selected" : ""}>${i + 1}. ${esc(c.t)}</option>`).join("") + `<option value="pdf">${n + 1}. Rulebook PDF ↗</option><option value="errata">${n + 2}. FAQ &amp; Errata PDF ↗</option>`;
+  $("#rdChMenu").innerHTML = nav;
+  $("#rdChLbl").textContent = q ? "Search results" : rd.ch >= 0 && rd.ch < n ? (rd.ch + 1) + ". " + RCH[rd.ch].t : "Contents";
   $("#rdMain").querySelectorAll("img").forEach(im => im.addEventListener("error", () => im.remove()));
 }
 
@@ -2572,7 +2580,10 @@ $("#reader").addEventListener("click", e => {
   if (t.dataset.go) { const [ci, si] = t.dataset.go.split(":").map(Number); rd.ch = ci; rd.q = ""; $("#rdSearch").value = ""; renderReader(); setTimeout(() => goSection(si), 20); }
 });
 $("#rdSearch").addEventListener("input", e => { rd.q = e.target.value; renderReader(); $("#rdMain").scrollTop = 0; });
-$("#rdChSel").addEventListener("change", e => { if (e.target.value === "pdf" || e.target.value === "errata") { window.open(e.target.value === "pdf" ? RULES_URL : ERRATA_URL, "_blank", "noopener"); renderReader(); return; } rd.ch = +e.target.value; rd.q = ""; $("#rdSearch").value = ""; renderReader(); $("#rdMain").scrollTop = 0; });
+function rddOpen(on) { $("#rdChMenu").hidden = !on; $("#rdChBtn").setAttribute("aria-expanded", on ? "true" : "false"); $("#rdd").classList.toggle("open", on); if (on) { const cur = $("#rdChMenu").querySelector("[aria-current]"); if (cur) cur.scrollIntoView({block: "nearest"}); } }
+$("#rdChBtn").addEventListener("click", e => { e.stopPropagation(); rddOpen($("#rdChMenu").hidden); });
+$("#rdChMenu").addEventListener("click", e => { if (e.target.closest("a,button")) setTimeout(() => rddOpen(false), 0); });
+document.addEventListener("click", e => { if (!e.target.closest("#rdd")) rddOpen(false); });
 $("#btnRules").onclick = () => openRules();
 $("#rdPrint").onclick = () => { closeRules(); runPrint({ref: 1}); };
 document.querySelector("#tabs [data-rules]").onclick = () => openRules();

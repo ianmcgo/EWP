@@ -73,7 +73,7 @@ The rulebook itself isn't copied into this repo; the link points at Mantic's cop
 
 
 **📖 Rules** (header button, or the Rules tab on phones) opens a full-screen reader with all 15 chapters of the Epic Warpath Rules (version 1.1) from the Mantic Companion online rules:
-- Chapter list on the left (a dropdown on phones), a Contents page, items **16 Rulebook PDF** (opens Mantic's PDF directly) and **17 FAQ & Errata PDF** (opens Mantic's free download page; there's no public direct PDF link) in both the list and the Contents grid, section jump buttons at the top of each chapter, and previous/next chapter buttons.
+- Chapter list on the left (on phones, an in-app dropdown menu – not the browser's native picker – that opens under the chapter button, scrolls, highlights the current chapter and closes on selection or a tap outside), a Contents page, items **16 Rulebook PDF** (opens Mantic's PDF directly) and **17 FAQ & Errata PDF** (opens Mantic's free download page; there's no public direct PDF link) in both the list and the Contents grid, section jump buttons at the top of each chapter, and previous/next chapter buttons.
 - **Search** across every section; results show the chapter, page and a highlighted snippet, and tapping one jumps to that section.
 - The Keywords chapter is filled from the keyword glossary with FAQ & Errata v1.2 changes marked (the saved Companion page only had the heading).
 - Diagrams are linked from the Companion site (`companion.manticgames.com/uploads/ewp/rules/…`), which serves them publicly. The saved pages' copies of the images were damaged by line-ending conversion when the pages were saved, so they aren't used.
