@@ -100,6 +100,8 @@ The fourth dice menu button, **Scenario**, follows the Battle Scenario steps in 
   3. **Command cards**: the same card frame for your faction's Strategic Orders (CP badge, When box, effect), your Battlefield Stratagems (points badge, gold frame) and, if chosen, the Tactical Orders (grey frame).
   4. **One-page rules reference**: a three-column Letter/A4 sheet based on the rulebook's Quick Reference Sheets: round sequence, Command Phase, Action Tokens, Tactical Orders, Movement, Shooting with modifiers, Blast weapons, Assault with modifiers, Pinning, End Phase, key keywords, objectives and game end. Also available from the 🖨 Quick ref button in the rules reader.
 
+  **Card style** (applies to unit and command cards): **Full colour** is the trading-card look with a dark frame and banners; **Printer friendly** is a white card with a soft grey outline, thin faction-colour accents and light rule lines, which uses far less ink; **Black & white** (works with either style) turns the faction colours grey and the photos greyscale. Unit photos sit on a white background and are shown whole (not cropped).
+
   **Cutting**: there are no cut lines. Cards sit edge to edge inside a full-bleed dark frame, so two straight cuts each way separate a sheet and every card keeps an even dark border even if a cut is slightly off. Print at 100% / Actual size with headers and footers off (page margin is 0.2 in).
 
   **Fitting**: each card's text auto-shrinks (7 pt down to about 5 pt) until it fits. Before going very small it shortens the photo, then drops it; if a card still overflows (very long Super-heavy rules), its special rules continue on a second card marked 1/2 and 2/2. Printing waits up to 4 s for unit photos to load.

@@ -329,6 +329,27 @@ body.noscroll{overflow:hidden}
 .popt{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;background:var(--panel2);cursor:pointer}
 .popt.ind{margin-left:26px;background:transparent;padding:6px 10px;margin-bottom:5px}
 .psub[hidden]{display:none}
+.pstyle{margin:0 0 7px 26px;padding:8px 10px;border:1px dashed var(--line2);border-radius:9px;display:flex;flex-direction:column;gap:5px;font-size:14px}
+.pstyle b{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.pstyle label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.pstyle input{accent-color:var(--fac);width:16px;height:16px}
+.pstyle small{color:var(--muted)}
+.tc.pf{background:#fff;padding:.06in}
+.tc.pf .tc-in{background:#fff;box-shadow:none;border:1px solid #c8c8c8;border-radius:.1in}
+.tc.pf .tc-top{background:none;color:#151515;border-bottom:1.5px solid var(--fc)}
+.tc.pf .tc-pts{background:#fff;color:#151515;border:1.5px solid var(--fc)}
+.tc.pf .tc-sub{background:none;color:#555;border-bottom:1px solid #e6e6e6}
+.tc.pf .tc-art{border-bottom:1px solid #e6e6e6}
+.tc.pf .tc-stats{background:none;color:#151515;border-bottom:1px solid #e6e6e6}
+.tc.pf .tc-stats div{border-right:1px solid #efefef}
+.tc.pf .tc-stats small{color:#777}
+.tc.pf .tc-w th{border-bottom:1px solid #dcdcdc;color:#666}
+.tc.pf .tc-w td{border-bottom:1px solid #f1f1f1}
+.tc.pf .tc-foot{background:none;color:#888;border-top:1px solid #e6e6e6}
+.tc.pf.cmd .tc-when{background:#f5f5f5}
+.tc.bw,.tc.cmd.t.bw,.tc.cmd.b.bw{--fc:#6b6b6b!important}
+.tc.bw img{filter:grayscale(1)}
+.tc.bw .tc-more{color:#555}
 .popt input{accent-color:var(--fac);width:18px;height:18px;margin-top:2px;flex:none}
 .popt small{display:block;color:var(--muted);font-size:12.5px}
 .printonly.measuring{display:block!important;position:absolute;left:-30000px;top:0;width:8.1in;visibility:hidden}
@@ -339,10 +360,10 @@ body.noscroll{overflow:hidden}
 .tc-pts{flex:none;min-width:.36in;height:.36in;border-radius:50%;background:var(--fc);color:#111;display:grid;place-items:center;align-content:center;font-family:var(--head);font-weight:700;font-size:10.5pt;line-height:.9;border:.02in solid #fff}
 .tc-pts small{display:block;font-size:5pt;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
 .tc-sub{font-size:6pt;font-weight:600;color:#444;padding:.025in .09in;background:#e6e0d2;border-bottom:1px solid #cfc6b3;text-align:center}
-.tc-art{height:.95in;background:#11151a;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:.02in solid var(--fc);flex:none}
+.tc-art{height:.95in;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:.02in solid var(--fc);flex:none}
 .tc-art.short{height:.55in}
-.tc-art img{width:100%;height:100%;object-fit:cover}
-.tc-art.none span{font-family:var(--head);color:var(--fc);font-size:12pt;letter-spacing:.15em;text-transform:uppercase;opacity:.8}
+.tc-art img{width:100%;height:100%;object-fit:contain}
+.tc-art.none span{font-family:var(--head);color:#9aa0a8;font-size:12pt;letter-spacing:.15em;text-transform:uppercase;opacity:.8}
 .tc-stats{display:grid;grid-template-columns:repeat(7,1fr);background:#2a2f37;color:#fff;text-align:center;flex:none}
 .tc-stats div{padding:.015in 0;border-right:1px solid #444b55}
 .tc-stats div:last-child{border-right:0}
@@ -1209,10 +1230,11 @@ const TACTICAL = [
   {n: "Fight On!", sub: "Re-roll", c: "1", w: "After rolling to hit or to damage a target.", e: "Re-roll up to two dice in a Unit's roll that failed to hit or damage a target with a Shooting or Assault attack. Dice already re-rolled for other reasons can't be re-rolled. Only once per roll against a specific target (with all the involved weapons) – but you may spend another CP on the damage roll, or on a roll against a different target."},
   {n: "Courage!", sub: "Clear Pin marker", c: "1+", w: "In the End Phase (Roll for Pin markers removal step), before any dice are rolled.", e: "Each Command Point spent removes one Pin marker from one friendly Unit."},
 ];
-let popts = {roster: 1, rHead: 1, rRoster: 1, rProfiles: 1, rRules: 1, rOrders: 1, rKeywords: 1, tactical: 1, units: 0, perUnit: 0, cmds: 0, ref: 0};
+let popts = {cardStyle: "color", bw: 0, roster: 1, rHead: 1, rRoster: 1, rProfiles: 1, rRules: 1, rOrders: 1, rKeywords: 1, tactical: 1, units: 0, perUnit: 0, cmds: 0, ref: 0};
 try { popts = Object.assign(popts, JSON.parse(store(true, "ewp_print_v1") || "{}")); } catch (e) {}
 
-function cardFrame(inner, cls) { return `<div class="tc ${cls || ""}" style="--fc:${FAC_COLORS[cur.faction] || "#e0a63a"}"><div class="tc-in">${inner}</div></div>`; }
+let cardMode = "";
+function cardFrame(inner, cls) { return `<div class="tc ${cls || ""} ${cardMode}" style="--fc:${FAC_COLORS[cur.faction] || "#e0a63a"}"><div class="tc-in">${inner}</div></div>`; }
 
 function unitCardHtml(u, e, n, part) {
   const f = fac();
@@ -1303,6 +1325,7 @@ function fitCards(root) {
 }
 
 function buildPrint(o) {
+  cardMode = (o.cardStyle === "pf" ? "pf" : "") + (o.bw ? " bw" : "");
   const parts = [];
   if (o.roster && (o.rHead || o.rRoster || o.rProfiles || o.rRules || o.rOrders || o.rKeywords || o.tactical)) parts.push(`<div class="pr-sec">${rosterHtml(o)}</div>`);
   if (o.units) {
@@ -1360,12 +1383,18 @@ function openPrintDialog(preset) {
     </div>
     ${ck("units", "Unit reference cards", "Trading-card size, 2.5 × 3.5 in, nine per page.")}
     ${ck("perUnit", "One card per unit taken (instead of one per unit type)", "", true)}
+    <div class="pstyle"><b>Card style</b>
+      <label><input type="radio" name="cstyle" value="color" ${popts.cardStyle !== "pf" ? "checked" : ""}> Full colour <small>trading-card frame</small></label>
+      <label><input type="radio" name="cstyle" value="pf" ${popts.cardStyle === "pf" ? "checked" : ""}> Printer friendly <small>white card, soft outline, light lines</small></label>
+      <label><input type="checkbox" data-po="bw" ${popts.bw ? "checked" : ""}> Black &amp; white <small>greyscale colours and photos</small></label>
+    </div>
     ${ck("cmds", "Command cards", "Your Strategic Orders, Battlefield Stratagems bought, and Tactical Orders if included above.")}
     ${ck("ref", "One-page rules reference", "Turn sequence, tokens, orders, shooting, assault, pinning and scoring on one sheet.")}
     <p class="hint">For cards: print at <b>100% / Actual size</b> with headers &amp; footers off so each card measures exactly 2.5 × 3.5 in. Cards sit edge to edge – cut straight along the joins between the dark frames.</p>
     <div style="display:flex;gap:8px;margin-top:12px"><button class="tbtn primary" data-go-print>Print</button><button class="tbtn" data-close>Cancel</button></div>`;
   modal("Print", body, o => {
     o.querySelectorAll("[data-po]").forEach(inp => inp.onchange = () => { popts[inp.dataset.po] = inp.checked ? 1 : 0; store(false, "ewp_print_v1", JSON.stringify(popts)); if (inp.dataset.po === "roster") o.querySelector(".psub").hidden = !inp.checked; });
+    o.querySelectorAll('input[name="cstyle"]').forEach(r => r.onchange = () => { popts.cardStyle = r.value; store(false, "ewp_print_v1", JSON.stringify(popts)); });
     o.querySelector("[data-go-print]").onclick = () => {
       if (!popts.roster && !popts.units && !popts.cmds && !popts.ref) { toast("Pick something to print"); return; }
       o.remove();

@@ -64,6 +64,8 @@ u['r'] = [[n, 'When activated in the movement phase, this Unit can spend 1 CP to
 mark(u, 'The Spawning rewritten')
 
 fac_ = {f['id']: f for f in out['factions']}
+u = unit('plague', 'plague-colossus')
+u['r'] = [[n, t.replace('Murderous Claws. Weapons Range ADice Keywords Thunderstomp A 1 AP3, Demolisher', 'Murderous Claws: Thunderstomp – Range Assault, ADice 1, AP3, Demolisher.')] for n, t in u['r']]
 ORDER_FIX = {
  ('forge-fathers', 'Born of Fire!'): (None, "Instead of using the Unit's normal weapon profile, use this profile: Incendiary Grenades – Range 9\", ADice 1, AP1, Ignores Cover, Pinning."),
  ('marauders', 'Hunker down'): ('When an Infantry or Heavy Infantry Unit activates in the movement phase.', 'Place a Status Marker on the Unit as a reminder. The Unit counts as In Cover until the end of the Round.'),
