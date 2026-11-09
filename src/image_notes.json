@@ -1,0 +1,48 @@
+{
+ "enforcers": {
+  "enforcer-strider": "Reinforcements box photo",
+  "peacekeeper-captain": "Stand-in: Peacekeepers unit"
+ },
+ "gcps": {
+  "veterans": "Reinforcements box photo",
+  "ranger-tank-hunters": "Reinforcements box photo",
+  "gcps-ajax-strider": "Reinforcements box photo",
+  "gcps-hornets": "Reinforcements box photo",
+  "gcps-hornet-gunships": "Reinforcements box photo",
+  "wolverine-tank": "Reinforcements box photo",
+  "onager-artillery-vehicle": "Reinforcements box photo",
+  "wolverine-apc": "Reinforcements box photo",
+  "major": "Reinforcements box photo",
+  "canis-command-vehicle": "Reinforcements box photo"
+ },
+ "marauders": {
+  "skyscrapers": "Reinforcements box photo",
+  "marauder-weapon-teams": "Reinforcements box photo",
+  "marauder-hornets": "Reinforcements box photo",
+  "marauder-hornet-gunships": "Reinforcements box photo",
+  "wolverine-tank": "Reinforcements box photo",
+  "marauder-thumper": "Reinforcements box photo",
+  "rippermech": "Reinforcements box photo",
+  "ripper-warlord": "Reinforcements box photo"
+ },
+ "nameless": {
+  "gunslingers": "Reinforcements box photo",
+  "magnumites": "Reinforcements box photo",
+  "bathomites": "Reinforcements box photo",
+  "goliath": "Reinforcements box photo",
+  "bargocysts": "Reinforcements box photo",
+  "psychotroid": "Reinforcements box photo",
+  "kuttunid": "Reinforcements box photo"
+ },
+ "veer-myn": {
+  "brood-guard": "Reinforcements box photo",
+  "night-terrors": "Reinforcements box photo",
+  "creepers": "Reinforcements box photo",
+  "mutant-rat-fiends": "Reinforcements box photo",
+  "death-engines": "Reinforcements box photo",
+  "brood-mother": "Reinforcements box photo",
+  "tangle": "Reinforcements box photo",
+  "saturation-tunneller": "Stand-in: regular Tunneller model",
+  "shield-tunneller": "Stand-in: regular Tunneller model"
+ }
+}

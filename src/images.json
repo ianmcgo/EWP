@@ -40,7 +40,8 @@
   "captain": "https://www.manticgames.com/wp-content/uploads/2025/08/eipc-warpath-enforcer-captain-render-944x944.webp",
   "victor-mkii-tank-hq": "https://www.manticgames.com/wp-content/uploads/2025/08/epic-warpath-enforcers-victor-tank-render-944x944.webp",
   "drakon-light-cruiser": "https://www.manticgames.com/wp-content/uploads/2025/07/ewp-enforcer-drakon-500x500.webp",
-  "maven-iv-command-tank": "https://www.manticgames.com/wp-content/uploads/2026/07/maven-iv-command-tank-v2-500x500.webp"
+  "maven-iv-command-tank": "https://www.manticgames.com/wp-content/uploads/2026/07/maven-iv-command-tank-v2-500x500.webp",
+  "peacekeeper-captain": "https://www.manticgames.com/wp-content/uploads/2025/09/ewp-enforcer-peacekeeper-squad-944x944.webp"
  },
  "forge-fathers": {
   "steel-warriors": "https://www.manticgames.com/wp-content/uploads/2025/09/ewp-forge-father-steel-warriors-944x944.webp",
@@ -80,7 +81,17 @@
   "lancer-apc": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-lancer-apc-944x944.webp",
   "lieutenant": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-command-944x944.webp",
   "gcps-battle-mech": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-mech-500x500.webp",
-  "maul-battleship": "https://www.manticgames.com/wp-content/uploads/2026/07/maul-v2-500x500.webp"
+  "maul-battleship": "https://www.manticgames.com/wp-content/uploads/2026/07/maul-v2-500x500.webp",
+  "veterans": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "ranger-tank-hunters": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "gcps-ajax-strider": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "gcps-hornets": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "gcps-hornet-gunships": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "wolverine-tank": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "onager-artillery-vehicle": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "wolverine-apc": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "major": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp",
+  "canis-command-vehicle": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-reinforcement-web-image-1.webp"
  },
  "marauders": {
   "commandos": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauder-commandos-isolated-944x944.webp",
@@ -95,7 +106,15 @@
   "marauder-mule": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauder-mule-isolated-944x944.webp",
   "commando-captain": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauder-command-isolated-944x944.webp",
   "kymera-gunship": "https://www.manticgames.com/wp-content/uploads/2026/07/kymera-gunship-v2-944x944.webp",
-  "wolfcrawler-mech": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauder-wolfcrawler-isolated-944x944.webp"
+  "wolfcrawler-mech": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauder-wolfcrawler-isolated-944x944.webp",
+  "skyscrapers": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp",
+  "marauder-weapon-teams": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp",
+  "marauder-hornets": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp",
+  "marauder-hornet-gunships": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp",
+  "wolverine-tank": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp",
+  "marauder-thumper": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp",
+  "rippermech": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp",
+  "ripper-warlord": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-marauders-reinforcements.webp"
  },
  "nameless": {
   "swarms": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-swarms-944x944.webp",
@@ -109,7 +128,14 @@
   "slugs": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-slug-944x944.webp",
   "feromite-prime": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-command-944x944.webp",
   "psychomolsc": "https://www.manticgames.com/wp-content/uploads/2026/07/psychomolsc-v2-944x944.webp",
-  "latropod": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-latropod-944x944.webp"
+  "latropod": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-latropod-944x944.webp",
+  "gunslingers": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-reinforcements-1.webp",
+  "magnumites": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-reinforcements-1.webp",
+  "bathomites": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-reinforcements-1.webp",
+  "goliath": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-reinforcements-1.webp",
+  "bargocysts": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-reinforcements-1.webp",
+  "psychotroid": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-reinforcements-1.webp",
+  "kuttunid": "https://www.manticgames.com/wp-content/uploads/2025/09/nameless-reinforcements-1.webp"
  },
  "plague": {
   "stage-3a-ghouls": "https://www.manticgames.com/wp-content/uploads/2025/09/ewp-plague-ghouls-3a-944x944.webp",
@@ -143,6 +169,15 @@
   "tunneller": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-veer-myn-tunneler-isolated-944x944.webp",
   "progenitor": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-veer-myn-progenitor-isolated-944x944.webp",
   "the-great-underminer": "https://www.manticgames.com/wp-content/uploads/2026/07/great-underminer-v2-944x944.webp",
-  "the-technonest": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-technonest-isolated-944x944.webp"
+  "the-technonest": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-technonest-isolated-944x944.webp",
+  "brood-guard": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-reinforcements-v3.webp",
+  "night-terrors": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-reinforcements-v3.webp",
+  "creepers": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-reinforcements-v3.webp",
+  "mutant-rat-fiends": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-reinforcements-v3.webp",
+  "death-engines": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-reinforcements-v3.webp",
+  "brood-mother": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-reinforcements-v3.webp",
+  "tangle": "https://www.manticgames.com/wp-content/uploads/2026/03/veer-myn-reinforcements-v3.webp",
+  "saturation-tunneller": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-veer-myn-tunneler-isolated-944x944.webp",
+  "shield-tunneller": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-veer-myn-tunneler-isolated-944x944.webp"
  }
 }

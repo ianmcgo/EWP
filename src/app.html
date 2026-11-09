@@ -172,6 +172,8 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 .thumb{width:44px;height:44px;border-radius:7px;object-fit:cover;background:#0d1014;border:1px solid var(--line);flex:none;cursor:pointer}
 .thumb.none{display:inline-block;background:repeating-linear-gradient(45deg,#14181d,#14181d 4px,#181d23 4px,#181d23 8px)}
 .uimg{background:#0d1014;border-bottom:1px solid var(--line);display:flex;justify-content:center}
+.uimg{position:relative}
+.imgnote{position:absolute;left:8px;bottom:8px;font-size:11px;font-weight:600;background:rgba(0,0,0,.7);color:#e6e9ee;padding:2px 7px;border-radius:5px}
 .uimg img{max-width:100%;max-height:260px;object-fit:contain;display:block}
 .e-badge{font-size:9.5px;font-weight:700;letter-spacing:.05em;border:1px solid var(--warn);color:var(--warn);border-radius:4px;padding:0 4px;margin-left:5px;vertical-align:1px;font-style:normal}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(460px,100%);background:var(--panel);border-left:1px solid var(--line2);z-index:95;display:flex;flex-direction:column;box-shadow:-20px 0 40px rgba(0,0,0,.5);transform:translateX(105%);transition:transform .22s}
@@ -663,7 +665,7 @@ function typeLabel(u) {
 
 function unitCard(u) {
   const s = u.s;
-  let h = `<div class="card">${u.img ? `<div class="uimg"><img src="${esc(u.img)}" alt="${esc(u.n)} miniatures" loading="lazy" onerror="this.parentNode.remove()"></div>` : ""}<div class="chd"><b>${esc(u.n)} (${u.b})</b><span>${esc(typeLabel(u))}</span><span style="margin-left:auto">${u.p} pts</span></div>
+  let h = `<div class="card">${u.img ? `<div class="uimg"><img src="${esc(u.img)}" alt="${esc(u.n)} miniatures" loading="lazy" onerror="this.parentNode.remove()">${u.imgNote ? `<span class="imgnote">${esc(u.imgNote)}</span>` : ""}</div>` : ""}<div class="chd"><b>${esc(u.n)} (${u.b})</b><span>${esc(typeLabel(u))}</span><span style="margin-left:auto">${u.p} pts</span></div>
     <div class="stats">${[["SP", s[0]], ["SH", s[1]], ["AS", s[2]], ["AR", s[3]], ["SV", s[4]], ["HT", u.ht], ["US", u.us], ["Bases", u.b]].map(([k, v]) => `<div><small>${k}</small><strong>${esc(v || "-")}</strong></div>`).join("")}</div>
     <div class="kws">${u.k.length ? u.k.map(k => kwChip(k)).join("") : `<span class="kw none">No keywords</span>`}</div>
     <table class="wp"><tr><th>Weapon</th><th>Range</th><th>ADice</th><th>Keywords</th></tr>`;

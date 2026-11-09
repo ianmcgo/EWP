@@ -3,12 +3,16 @@ import json, os, sys
 data = json.load(open('data.min.json'))
 if os.path.exists('images.json'):
     imgs = json.load(open('images.json'))
+    notes = json.load(open('image_notes.json')) if os.path.exists('image_notes.json') else {}
     n = 0
     for f in data['factions']:
         for u in f['units']:
             url = imgs.get(f['id'], {}).get(u['id'])
             if url and url.startswith(('https://www.manticgames.com/', 'https://vault.manticgames.com/')):
                 u['img'] = url
+                note = notes.get(f['id'], {}).get(u['id'])
+                if note:
+                    u['imgNote'] = note
                 n += 1
     print('images attached:', n)
 html = open('app.html').read()

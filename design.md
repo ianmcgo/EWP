@@ -6,7 +6,7 @@ A single-file web app (`index.html`) for building Epic Warpath armies. No server
 
 - **Unit profiles, points, keywords, weapons, special rules, army rules, Strategic Orders, Battlefield Stratagems and the keyword glossary** were extracted from the *Epic Warpath Rulebook (1st Edition, MGEWM101)* PDF.
 - **FAQ & Errata v1.2 (July 2026)** is applied on top. Units changed by errata show an orange `ERRATA` badge and a note in their profile listing exactly what changed.
-- **Unit pictures** are linked (not copied) from Mantic's web store product galleries and the Mantic Vault (STL store) product images, using only images whose product is marked Epic Warpath. Units sold only in Reinforcement boxes have no individual photo and show a blank thumbnail. If an image fails to load it is simply hidden.
+- **Unit pictures** are linked (not copied) from Mantic's web store product galleries and the Mantic Vault (STL store) product images, using only images whose product is marked Epic Warpath. Units sold only in Reinforcement boxes use the box photo, captioned "Reinforcements box photo". Three units with no photo anywhere use a stand-in, also captioned: Saturation and Shield Tunnellers use the regular Tunneller, and the Peacekeeper Captain uses the Peacekeepers squad. Captions come from `src/image_notes.json`. If an image fails to load it is simply hidden.
 - Checked against a Mantic Companion export of a Marauders list: all 21 units match on points, stats and weapons once errata v1.2 is applied.
 
 ### Errata v1.2 changes applied
