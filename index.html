@@ -420,7 +420,7 @@ footer a{color:var(--muted)}
   .app{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
   .tabs{padding-bottom:env(safe-area-inset-bottom)}
   .tabs{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;background:#0b0e12;border-top:1px solid var(--line)}
-  .tabs button{flex:1;padding:12px 4px;background:transparent;border:0;font-family:var(--head);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .tabs button{flex:1;min-width:0;padding:10px 2px;line-height:1.15;background:transparent;border:0;font-family:var(--head);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
   .tabs button.on{color:var(--fac);box-shadow:0 -2px 0 var(--fac) inset}
   .col[data-tab]{display:none}
   .col[data-tab].on{display:block}
@@ -431,12 +431,6 @@ footer a{color:var(--muted)}
   .listname{flex:1 1 0;min-width:0;font-size:18px;padding:5px 4px;text-overflow:ellipsis}
   header.top .tbtn{flex:none;padding:6px 9px;font-size:13px}
   header.top .tbtn .my{display:none}
-}
-@media (max-width:370px){
-  header.top{padding:8px 8px;gap:5px}
-  header.top .tbtn{padding:6px 7px;font-size:12px}
-  header.top .tbtn .my{display:none}
-  .listname{font-size:16px}
   .toast{bottom:74px}
   .tabs small{display:block;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:0;color:var(--muted)}
   header.top{padding:8px 12px}
@@ -445,6 +439,11 @@ footer a{color:var(--muted)}
   .stats div:nth-child(4){border-right:0}
   .stats div:nth-child(-n+4){border-bottom:1px solid var(--line)}
   .kv{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:370px){
+  header.top{padding:8px 8px;gap:5px}
+  header.top .tbtn{padding:6px 7px;font-size:12px}
+  .listname{font-size:16px}
 }
 @media print{
   @page{margin:.2in}
