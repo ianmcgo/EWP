@@ -17,7 +17,8 @@
   "narsa": "https://www.manticgames.com/wp-content/uploads/2025/08/narsa.webp",
   "cypher-prime": "https://www.manticgames.com/wp-content/uploads/2025/09/ewp-asterian-cypher-prime-944x944.webp",
   "aedis-clade-warden": "https://www.manticgames.com/wp-content/uploads/2026/07/asterian-clade-warden-v2-500x500.webp",
-  "cairn-command-centre": "https://www.manticgames.com/wp-content/uploads/2025/07/ewp-asterian-cairn-500x500.webp"
+  "cairn-command-centre": "https://www.manticgames.com/wp-content/uploads/2025/07/ewp-asterian-cairn-500x500.webp",
+  "spectra-blademaster": "https://vault.manticgames.com/uploads/packs/EWP/Asterians/spectra.webp"
  },
  "enforcers": {
   "operatives": "https://www.manticgames.com/wp-content/uploads/2025/09/ewp-enforcer-operatives-944x944.webp",
@@ -63,7 +64,9 @@
   "forge-lord": "https://www.manticgames.com/wp-content/uploads/2025/08/epic-warpath-forge-fathers-forge-lord-render-944x944.webp",
   "iron-ancestor-commander": "https://www.manticgames.com/wp-content/uploads/2025/08/epic-warpath-forge-fathers-command-iron-ancestor-render-944x944.webp",
   "hrungnir-magma-destroyer": "https://www.manticgames.com/wp-content/uploads/2025/07/ewp-forge-father-hrungnir-magma-destroyer-500x500.webp",
-  "nidavellir-drop-fortress": "https://www.manticgames.com/wp-content/uploads/2026/07/nidavellir-drop-fortress-v2-500x500.webp"
+  "nidavellir-drop-fortress": "https://www.manticgames.com/wp-content/uploads/2026/07/nidavellir-drop-fortress-v2-500x500.webp",
+  "heavy-inferno-drills": "https://www.manticgames.com/wp-content/uploads/2026/07/ewp-heavy-inferno-drill-webp-768x768.webp",
+  "sigr-nn-pattern-dropship": "https://vault.manticgames.com/uploads/packs/EWP/forgefathers/sigrunn-dropship.webp"
  },
  "gcps": {
   "marines": "https://www.manticgames.com/wp-content/uploads/2025/09/gcps-marines-944x944.webp",
@@ -120,7 +123,15 @@
   "plague-mule": "https://www.manticgames.com/wp-content/uploads/2025/09/ewp-plague-mule-944x944.webp",
   "stage-3a-command": "https://www.manticgames.com/wp-content/uploads/2025/09/ewp-plague-general-944x944.webp",
   "plague-colossus": "https://www.manticgames.com/wp-content/uploads/2025/07/ewp-plague-colossus-944x944.webp",
-  "plague-battle-mech": "https://www.manticgames.com/wp-content/uploads/2026/07/plague-battle-mech-v2-944x944.webp"
+  "plague-battle-mech": "https://www.manticgames.com/wp-content/uploads/2026/07/plague-battle-mech-v2-944x944.webp",
+  "aberration": "https://vault.manticgames.com/uploads/packs/EWP/plague/aberration.webp",
+  "corruption": "https://vault.manticgames.com/uploads/packs/EWP/plague/corruption.webp",
+  "plague-hornets": "https://vault.manticgames.com/uploads/packs/EWP/plague/hornets-plague.webp",
+  "plague-hornet-gunships": "https://vault.manticgames.com/uploads/packs/EWP/plague/hornets-plague.webp",
+  "plague-wolverine-tank": "https://vault.manticgames.com/uploads/packs/EWP/plague/plague-wolverine.webp",
+  "plague-wolverine-apc": "https://vault.manticgames.com/uploads/packs/EWP/plague/plague-wolverine.webp",
+  "stage-1a-lord": "https://vault.manticgames.com/uploads/packs/EWP/plague/plague-lord.webp",
+  "weapon-teams": "https://vault.manticgames.com/uploads/packs/EWP/plague/mortar.webp"
  },
  "veer-myn": {
   "crawlers": "https://www.manticgames.com/wp-content/uploads/2026/03/ewp-veer-myn-crawlers-isolated-944x944.webp",

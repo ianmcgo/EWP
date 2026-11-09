@@ -224,7 +224,8 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 .r3-sum b{color:var(--fac)}
 .r3-sum small{display:block;font-family:var(--body);font-size:13px;font-weight:400;color:var(--muted)}
 .r3-ok{font-size:20px;padding:11px 26px;flex:none}
-@media (max-width:600px){.r3-bar{left:12px;right:12px;transform:translateY(30px);max-width:none;gap:10px;padding:10px 10px 10px 14px}.r3-bar.on{transform:none}.r3-sum{font-size:21px;flex:1;min-width:0}.r3-sum small{font-size:12px}.r3-ok{font-size:17px;padding:10px 16px}.r3-banner{font-size:21px;padding:0 12px}}
+.r3-again{flex:none;padding:11px 16px;font-size:15px}
+@media (max-width:600px){.r3-bar{left:12px;right:12px;transform:translateY(30px);max-width:none;gap:10px;padding:10px 10px 10px 14px}.r3-bar.on{transform:none}.r3-bar{flex-wrap:wrap}.r3-sum{font-size:22px;flex:1 1 100%;min-width:0;text-align:center}.r3-sum small{font-size:12px}.r3-ok{font-size:17px;padding:10px 14px;flex:1}.r3-again{padding:10px;font-size:14px;flex:1}.r3-banner{font-size:21px;padding:0 12px}}
 footer{padding:16px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line)}
 footer a{color:var(--muted)}
 .hint{font-size:12.5px;color:var(--muted)}
@@ -1140,6 +1141,21 @@ function rerollFails() {
 
 function cmdRoll(c) { const i = d(6) - 1; return {i, v: dice.faces[c][i]}; }
 
+function rollTgt() {
+  const f = d(8), rot = d(179) * (d(2) === 1 ? 1 : -1), spin = (rot >= 0 ? 1 : -1) * (360 + d(180));
+  dice.tgt = f <= 3 ? {hit: 1, n: Date.now(), rot: rot} : {hit: 0, dist: [3, 3, 4, 5, 6][f - 4], rot: rot, spin: spin, n: Date.now()};
+}
+
+function rollAgain(kind, arg) {
+  if (kind === "d8" || kind === "refail") { rollD8(); saveDice(); renderDice(); play3D("d8"); }
+  else if (kind === "cmd") { rollCmd(); saveDice(); renderDice(); play3D("cmd"); }
+  else if (kind === "cmdOne") {
+    if (!dice.rerolls) { rollCmd(); saveDice(); renderDice(); play3D("cmd"); return; }
+    Object.assign(arg, cmdRoll(arg.c)); arg.rr = 1; dice.rerolls--; saveDice(); renderDice(); play3D("cmdOne", arg);
+  }
+  else if (kind === "tgt") { rollTgt(); saveDice(); renderDice(); play3D("tgt"); }
+}
+
 function rollCmd() {
   dice.rolled = [];
   ["Black", "Orange", "Green"].forEach(c => { for (let i = 0; i < (dice.cmd[c] || 0); i++) dice.rolled.push(Object.assign({c, rr: 0}, cmdRoll(c))); });
@@ -1217,7 +1233,7 @@ $("#diceBody").addEventListener("click", e => {
     else if (r === "fromarmy") { const a = armyDice(); dice.cmd = {Black: a.Black, Orange: a.Orange, Green: a.Green}; }
     else if (r === "spend") dice.spent++;
     else if (r === "unspend") dice.spent = Math.max(0, dice.spent - 1);
-    else if (r === "tgt") { const f = d(8); const rot = d(179) * (d(2) === 1 ? 1 : -1); const spin = (rot >= 0 ? 1 : -1) * (360 + d(180)); dice.tgt = f <= 3 ? {hit: 1, n: Date.now(), rot: rot} : {hit: 0, dist: [3, 3, 4, 5, 6][f - 4], rot: rot, spin: spin, n: Date.now()}; saveDice(); renderDice(); play3D("tgt"); return; }
+    else if (r === "tgt") { rollTgt(); saveDice(); renderDice(); play3D("tgt"); return; }
     else if (r === "resetfaces") dice.faces = JSON.parse(JSON.stringify(DEFAULT_FACES));
   }
   saveDice(); renderDice();
@@ -1463,7 +1479,7 @@ function setupScene() {
   if (R3.el) return;
   const el = document.createElement("div");
   el.className = "roll3d";
-  el.innerHTML = `<canvas></canvas><div class="r3-banner"></div><div class="r3-hint">Tap to skip</div><div class="r3-bar"><div class="r3-sum"></div><button class="rollbtn r3-ok">Confirm</button></div>`;
+  el.innerHTML = `<canvas></canvas><div class="r3-banner"></div><div class="r3-hint">Tap to skip</div><div class="r3-bar"><div class="r3-sum"></div><button class="tbtn r3-again">↻ Roll Again</button><button class="rollbtn r3-ok">Confirm</button></div>`;
   document.body.appendChild(el);
   R3.el = el;
   const canvas = el.querySelector("canvas");
@@ -1503,6 +1519,7 @@ function setupScene() {
   R3.resize = resize;
   el.addEventListener("pointerdown", e => { if (!e.target.closest(".r3-bar")) R3.skip = true; });
   el.querySelector(".r3-ok").onclick = closeRoll3D;
+  el.querySelector(".r3-again").onclick = () => { const k = R3.kind, a = R3.arg; closeRoll3D(); rollAgain(k, a); };
 }
 
 const VIEW = () => new THREE.Vector3(0, 22, 9).normalize();
@@ -1723,6 +1740,7 @@ async function play3D(kind, arg) {
   if (!dice.anim3d || reduce || R3.busy) return;
   if (kind === "refail" && (!arg || !arg.length) && !(dice.last && dice.last.bonus.length)) return;
   R3.busy = true;
+  R3.kind = kind; R3.arg = arg;
   sfx();
   try { await loadThree(); } catch (e) { R3.busy = false; toast("3D dice need an internet connection – showing results instead"); return; }
   buildAssets();
@@ -1754,11 +1772,12 @@ async function play3D(kind, arg) {
   playChime(spec.good);
   R3.el.querySelector(".r3-hint").style.display = "none";
   R3.el.querySelector(".r3-sum").innerHTML = spec.sum;
+  R3.el.querySelector(".r3-again").textContent = kind === "cmdOne" ? (dice.rerolls ? `↻ Re-roll again (${dice.rerolls} left)` : "↻ Roll all again") : kind === "refail" ? "↻ Roll new pool" : "↻ Roll Again";
   R3.el.querySelector(".r3-bar").classList.add("on");
   R3.el.querySelector(".r3-ok").focus();
 }
 
-window.addEventListener("keydown", e => { if (R3.el && R3.el.classList.contains("open") && (e.key === "Enter" || e.key === "Escape") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); closeRoll3D(); return; } if (R3.el && R3.el.classList.contains("open") && e.key === " ") { R3.skip = true; e.preventDefault(); return; } if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
+window.addEventListener("keydown", e => { if (R3.el && R3.el.classList.contains("open") && (e.key === "r" || e.key === "R") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); R3.el.querySelector(".r3-again").click(); return; } if (R3.el && R3.el.classList.contains("open") && (e.key === "Enter" || e.key === "Escape") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); closeRoll3D(); return; } if (R3.el && R3.el.classList.contains("open") && e.key === " ") { R3.skip = true; e.preventDefault(); return; } if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
 
 load();
 if (cur) render(); else { cur = newList("asterians"); render(); start(); }

@@ -6,7 +6,7 @@ A single-file web app (`index.html`) for building Epic Warpath armies. No server
 
 - **Unit profiles, points, keywords, weapons, special rules, army rules, Strategic Orders, Battlefield Stratagems and the keyword glossary** were extracted from the *Epic Warpath Rulebook (1st Edition, MGEWM101)* PDF.
 - **FAQ & Errata v1.2 (July 2026)** is applied on top. Units changed by errata show an orange `ERRATA` badge and a note in their profile listing exactly what changed.
-- **Unit pictures** are linked (not copied) from Mantic's web store product galleries. If an image fails to load it is simply hidden.
+- **Unit pictures** are linked (not copied) from Mantic's web store product galleries and the Mantic Vault (STL store) product images, using only images whose product is marked Epic Warpath. Units sold only in Reinforcement boxes have no individual photo and show a blank thumbnail. If an image fails to load it is simply hidden.
 - Checked against a Mantic Companion export of a Marauders list: all 21 units match on points, stats and weapons once errata v1.2 is applied.
 
 ### Errata v1.2 changes applied
@@ -87,6 +87,9 @@ The unit picker runs each unit through the same rules *before* you add it: units
   The faces can still be edited under "Command dice faces" if needed; the setting is saved in the browser (key `ewp_dice_v2`).
 
 ### 3D roll animation
+
+After a roll, the result bar has **Roll Again** (or press R), which repeats the same kind of roll in place: a new D8 pool with the current settings, a new Command Dice roll, or a new Targeting Die. After tapping a Command Die to re-roll it, the button re-rolls that die again while re-rolls remain, then switches to rolling the whole pool.
+
 
 Every roll (D8 attacks, re-roll misses, Command Dice, a single Command Die re-roll, the Targeting Die) opens a full-screen 3D view:
 

@@ -7,7 +7,7 @@ if os.path.exists('images.json'):
     for f in data['factions']:
         for u in f['units']:
             url = imgs.get(f['id'], {}).get(u['id'])
-            if url and url.startswith('https://www.manticgames.com/'):
+            if url and url.startswith(('https://www.manticgames.com/', 'https://vault.manticgames.com/')):
                 u['img'] = url
                 n += 1
     print('images attached:', n)
