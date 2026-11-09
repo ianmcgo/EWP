@@ -136,7 +136,7 @@ After a roll, the result bar has **Roll Again** (or press R), which repeats the 
 Every roll (D8 attacks, re-roll misses, Command Dice, a single Command Die re-roll, the Targeting Die) opens a full-screen 3D view:
 
 1. **Throw** – dice are thrown up the mat from the bottom of the screen and bounce around inside the visible area: they hit the screen edges like walls, bump into each other, and roll to a stop on a grassland battle mat. A clack plays on each impact. When they stop, each die tips onto its rolled face.
-2. **Line up** – the dice hop into neat rows facing the camera (a rising tick per die), sorted high to low. Hits get a gold ring; misses shrink slightly. The camera pulls back to fit large pools.
+2. **Line up** – the dice hop into neat rows facing the camera (a rising tick per die), sorted high to low. Hits get a halo ring centred on the die (placed just behind it on the camera's line of sight and turned to face the camera) that slowly pulses in size and cycles through colours, each die a little out of step; misses shrink slightly. Dice low in the lineup are lifted so their ring never dips into the mat. The camera pulls back to fit large pools.
 3. **Exploding 8s** – bonus dice are thrown as a second wave with an "Exploding 8s!" banner, then join the lineup on the next row.
 4. **Result** – a chime plays and a result bar shows the total; **Confirm** (or Enter/Esc) returns to the dice options.
 

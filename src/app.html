@@ -2154,8 +2154,9 @@ function makeDie(spec) {
   mesh.castShadow = true;
   const edges = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 20), R3.mats.edge);
   mesh.add(edges);
-  const ring = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.12, 40), R3.mats.ring.clone());
-  ring.rotation.x = -Math.PI / 2;
+  const ring = new THREE.Mesh(new THREE.RingGeometry(1.08, 1.26, 56), R3.mats.ring.clone());
+  ring.renderOrder = -1;
+  ring.material.depthWrite = false;
   R3.scene.add(ring);
   R3.scene.add(mesh);
   return {mesh, frames, rest, ring, spec};
@@ -2179,6 +2180,7 @@ function loop() {
     return true;
   });
   if (R3.sim) R3.sim();
+  if (R3.pulse) R3.pulse(now);
   R3.ren.render(R3.scene, R3.cam);
   R3.raf = requestAnimationFrame(loop);
 }
@@ -2367,7 +2369,12 @@ async function lineUp(s, rowsOf) {
     o.fdir = fdir;
     const qT = restQuat(o.frames[o.spec.face], fdir, screenUp(fdir, ang));
     const from = o.mesh.position.clone(), qF = o.mesh.quaternion.clone();
-    const ringT = target.clone(); ringT.y = 0.02;
+    const camF = VIEW().multiplyScalar(dist);
+    const sight = camF.clone().sub(target).normalize();
+    let ringT = target.clone().addScaledVector(sight, -1.0 * s);
+    const ringLow = ringT.y - 1.3 * s * Math.sqrt(Math.max(0, 1 - sight.y * sight.y));
+    if (ringLow < 0.05) { const lift = 0.05 - ringLow; target.y += lift; ringT.y += lift; }
+    const ringQ = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), sight);
     const idx = k++;
     moves.push(new Promise(res => setTimeout(res, R3.skip ? 0 : idx * 45)).then(() => {
       if (!R3.skip) playTick(idx % 12);
@@ -2377,7 +2384,7 @@ async function lineUp(s, rowsOf) {
         o.mesh.position.y += Math.sin(Math.PI * e) * 1.2 * s;
         o.mesh.quaternion.copy(qF).slerp(qT, e);
         o.ring.position.copy(ringT);
-        o.ring.position.y = 0.02;
+        o.ring.quaternion.copy(ringQ);
         o.ring.scale.setScalar(s);
       });
     }));
@@ -2392,7 +2399,16 @@ function showBanner(txt) {
 }
 
 function lightRings() {
-  R3.dice.forEach(o => { if (o.spec.hit) tween(350, t => { o.ring.material.opacity = 0.85 * t; }); else if (o.spec.dim) tween(350, t => { o.mesh.scale.setScalar(o.s * (1 - 0.12 * t)); }); });
+  R3.dice.forEach(o => { if (o.spec.hit) tween(350, t => { o.ring.material.opacity = 0.9 * t; }); else if (o.spec.dim) tween(350, t => { o.mesh.scale.setScalar(o.s * (1 - 0.12 * t)); }); });
+  const t0 = performance.now();
+  R3.pulse = now => {
+    const t = (now - t0) / 1000;
+    R3.dice.forEach((o, i) => {
+      if (!o.spec.hit) return;
+      o.ring.material.color.setHSL((0.13 + t * 0.07 + i * 0.09) % 1, 0.9, 0.6);
+      o.ring.scale.setScalar(o.s * (1 + 0.07 * Math.sin(t * 2.2 + i * 0.7)));
+    });
+  };
 }
 
 function cmdSum() {
@@ -2449,6 +2465,7 @@ function closeRoll3D() {
   R3.tweens.forEach(tw => tw.res());
   R3.tweens = [];
   R3.sim = null;
+  R3.pulse = null;
   clearDice();
   R3.busy = false;
   renderDice();
@@ -2497,6 +2514,7 @@ async function play3D(kind, arg) {
   if (kind === "refail" && (!arg || !arg.length) && !(dice.last && dice.last.bonus.length)) return;
   if (kind === "recon" && (!scn || !scn.recon || !scn.recon.dice.length)) return;
   R3.busy = true;
+  R3.pulse = null;
   R3.kind = kind; R3.arg = arg;
   sfx();
   try { await loadThree(); } catch (e) { R3.busy = false; toast("3D dice need an internet connection – showing results instead"); return; }
