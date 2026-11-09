@@ -86,6 +86,24 @@ The unit picker runs each unit through the same rules *before* you add it: units
 
   The faces can still be edited under "Command dice faces" if needed; the setting is saved in the browser (key `ewp_dice_v2`).
 
+### 3D roll animation
+
+Every roll (D8 attacks, re-roll misses, Command Dice, a single Command Die re-roll, the Targeting Die) opens a full-screen 3D view:
+
+1. **Throw** – dice fly in from the sides with a shake sound, tumble and bounce (a clack on each bounce), and settle flat on a grassland battle mat with the rolled face up.
+2. **Line up** – the dice hop into neat rows facing the camera (a rising tick per die), sorted high to low. Hits get a gold ring; misses shrink slightly. The camera pulls back to fit large pools.
+3. **Exploding 8s** – bonus dice are thrown as a second wave with an "Exploding 8s!" banner, then join the lineup on the next row.
+4. **Result** – a chime plays and a result bar shows the total; **Confirm** (or Enter/Esc) returns to the dice options.
+
+Tap the screen or press Space during a throw to skip to the lineup.
+
+How it works:
+- **three.js r128** is loaded from cdnjs only the first time you roll, so the builder stays light. If it can't load (offline), you get a toast and the flat results as before. Turning off "3D dice", or having *reduce motion* set in your OS, also uses the flat results.
+- Results are always decided first with `crypto.getRandomValues`; the animation just shows them. Each die's final rotation is computed so the rolled face points at the camera with its text upright (`restQuat` builds the rotation from each face's normal and "up" direction, which `faceFrames` reads from the geometry's UVs). The tumble is a scripted spin and bounce that eases into that rotation, not a physics sim, so it always lands on the true result.
+- Dice faces are drawn on canvases: D8s 1–8 with opposite faces summing to 9; the Targeting Die has 3 starbursts and 3, 3, 4, 5, 6 with a direction chevron (it settles at the same angle shown in the text); Command Dice use the face settings and are re-drawn if you edit them.
+- The grass mat is generated on a canvas (mottled greens, dirt patches, grass strokes, tufts and pebbles), tiled under a vignette and fog.
+- All sounds are synthesised with the Web Audio API (no audio files). There's a **Sound** toggle next to the 3D toggle; both are remembered.
+
 Randomness uses `crypto.getRandomValues`.
 
 ## Rebuilding

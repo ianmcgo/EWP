@@ -210,6 +210,21 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 @keyframes tspin{from{transform:rotate(calc(var(--rot) - var(--spin))) scale(.6);opacity:0}to{transform:rotate(var(--rot));opacity:1}}
 .faces{display:grid;grid-template-columns:auto repeat(6,1fr);gap:4px;align-items:center;font-size:12px;margin-top:6px}
 .faces select{padding:2px;font-size:12px}
+.roll3d{position:fixed;inset:0;z-index:300;display:none;background:#1d2a14}
+.roll3d.open{display:block}
+.roll3d canvas{width:100%;height:100%;display:block}
+.roll3d::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.6))}
+.r3-banner{position:absolute;top:22px;left:0;right:0;text-align:center;font-family:var(--head);font-size:28px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--fac);text-shadow:0 2px 12px rgba(0,0,0,.8);opacity:0;z-index:2;pointer-events:none}
+.r3-banner.on{animation:bann 1.8s ease forwards}
+@keyframes bann{0%{opacity:0;transform:translateY(-12px) scale(.96)}12%{opacity:1;transform:none}80%{opacity:1}100%{opacity:.85}}
+.r3-hint{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:var(--muted);font-size:13px;z-index:2;pointer-events:none}
+.r3-bar{position:absolute;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;pointer-events:none;display:flex;align-items:center;gap:18px;background:rgba(23,27,33,.94);border:1px solid var(--line2);border-radius:14px;padding:12px 14px 12px 20px;z-index:3;transition:.3s;max-width:calc(100% - 32px);box-shadow:0 10px 40px rgba(0,0,0,.6)}
+.r3-bar.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.r3-sum{font-family:var(--head);font-size:26px;font-weight:700;line-height:1.1}
+.r3-sum b{color:var(--fac)}
+.r3-sum small{display:block;font-family:var(--body);font-size:13px;font-weight:400;color:var(--muted)}
+.r3-ok{font-size:20px;padding:11px 26px;flex:none}
+@media (max-width:600px){.r3-bar{left:12px;right:12px;transform:translateY(30px);max-width:none;gap:10px;padding:10px 10px 10px 14px}.r3-bar.on{transform:none}.r3-sum{font-size:21px;flex:1;min-width:0}.r3-sum small{font-size:12px}.r3-ok{font-size:17px;padding:10px 16px}.r3-banner{font-size:21px;padding:0 12px}}
 footer{padding:16px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line)}
 footer a{color:var(--muted)}
 .hint{font-size:12.5px;color:var(--muted)}
@@ -1079,7 +1094,9 @@ const SWORDS2 = `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotat
 const DEFAULT_FACES = {Black: [0, 0, 1, 1, 1, 2], Orange: [0, 1, 1, 1, 2, 2], Green: [1, 1, 2, 2, 2, 3]};
 let dice = {n: 6, need: 5, explode: true, last: null, cmd: {Black: 3, Orange: 0, Green: 0}, rolled: [], rerolls: 0, spent: 0, tgt: null, faces: JSON.parse(JSON.stringify(DEFAULT_FACES))};
 try { const sd = JSON.parse(store(true, "ewp_dice_v2") || "null"); if (sd) dice = Object.assign(dice, sd, {last: null, rolled: [], tgt: null}); } catch (e) {}
-const saveDice = () => store(false, "ewp_dice_v2", JSON.stringify({n: dice.n, need: dice.need, explode: dice.explode, cmd: dice.cmd, faces: dice.faces}));
+if (dice.anim3d === undefined) dice.anim3d = true;
+if (dice.sound === undefined) dice.sound = true;
+const saveDice = () => store(false, "ewp_dice_v2", JSON.stringify({n: dice.n, need: dice.need, explode: dice.explode, cmd: dice.cmd, faces: dice.faces, anim3d: dice.anim3d, sound: dice.sound}));
 const d = n => 1 + Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / 4294967296 * n);
 
 function openDice() { renderDice(); $("#drawer").classList.add("open"); }
@@ -1108,8 +1125,9 @@ function rollD8() {
 }
 
 function rerollFails() {
-  if (!dice.last) return;
-  dice.last.base = dice.last.base.map(v => v >= dice.last.need ? v : d(8));
+  if (!dice.last) return [];
+  const fresh = [];
+  dice.last.base = dice.last.base.map(v => { if (v >= dice.last.need) return v; const r = d(8); fresh.push(r); return r; });
   const bonus = [];
   if (dice.last.explode) {
     let pending = dice.last.base.filter(v => v === 8).length;
@@ -1117,13 +1135,14 @@ function rerollFails() {
     while (pending && guard++ < 200) { const r = d(8); bonus.push(r); pending--; if (r === 8) pending++; }
   }
   dice.last.bonus = bonus;
+  return fresh;
 }
 
-function cmdFace(c) { return dice.faces[c][d(6) - 1]; }
+function cmdRoll(c) { const i = d(6) - 1; return {i, v: dice.faces[c][i]}; }
 
 function rollCmd() {
   dice.rolled = [];
-  ["Black", "Orange", "Green"].forEach(c => { for (let i = 0; i < (dice.cmd[c] || 0); i++) dice.rolled.push({c, v: cmdFace(c), rr: 0}); });
+  ["Black", "Orange", "Green"].forEach(c => { for (let i = 0; i < (dice.cmd[c] || 0); i++) dice.rolled.push(Object.assign({c, rr: 0}, cmdRoll(c))); });
   dice.rerolls = armyDice().cmdUnits;
   dice.spent = 0;
 }
@@ -1132,7 +1151,8 @@ function faceSvg(v) { return v >= 3 ? `<span class="tri">${SWORDS2}${SWORD}</spa
 
 function renderDice() {
   const L = dice.last;
-  let h = `<div class="dsec"><h3>D8 Attack Roll</h3>
+  let h = `<div class="dsec drow" style="margin:0;gap:16px"><label class="ct" style="color:var(--text)"><input type="checkbox" id="d3d" ${dice.anim3d ? "checked" : ""}> 3D dice</label><label class="ct" style="color:var(--text)"><input type="checkbox" id="dsnd" ${dice.sound ? "checked" : ""}> Sound</label></div>
+  <div class="dsec"><h3>D8 Attack Roll</h3>
     <div class="drow"><span class="hint">Dice</span>${[1, 2, 3, 4, 6, 8, 10, 12, 16, 20].map(n => `<button class="qn ${dice.n === n ? "on" : ""}" data-dn="${n}">${n}</button>`).join("")}
       <span class="stepper"><button data-dstep="-1">−</button><b style="min-width:24px;text-align:center">${dice.n}</b><button data-dstep="1">+</button></span></div>
     <div class="drow"><span class="hint">Need</span>${[2, 3, 4, 5, 6, 7, 8].map(n => `<button class="qn ${dice.need === n ? "on" : ""}" data-need="${n}">${n}+</button>`).join("")}</div>
@@ -1184,27 +1204,561 @@ $("#diceBody").addEventListener("click", e => {
   else if (b.dataset.cdi !== undefined) {
     if (!dice.rerolls) { toast("No re-rolls left"); return; }
     const x = dice.rolled[+b.dataset.cdi];
-    x.v = cmdFace(x.c); x.rr = 1; dice.rerolls--;
+    Object.assign(x, cmdRoll(x.c)); x.rr = 1; dice.rerolls--;
+    saveDice(); renderDice();
+    play3D("cmdOne", x);
+    return;
   }
   else if (b.dataset.roll) {
     const r = b.dataset.roll;
-    if (r === "d8") rollD8();
-    else if (r === "refail") rerollFails();
-    else if (r === "cmd") rollCmd();
+    if (r === "d8") { rollD8(); saveDice(); renderDice(); play3D("d8"); return; }
+    else if (r === "refail") { const fr = rerollFails(); saveDice(); renderDice(); play3D("refail", fr); return; }
+    else if (r === "cmd") { rollCmd(); saveDice(); renderDice(); play3D("cmd"); return; }
     else if (r === "fromarmy") { const a = armyDice(); dice.cmd = {Black: a.Black, Orange: a.Orange, Green: a.Green}; }
     else if (r === "spend") dice.spent++;
     else if (r === "unspend") dice.spent = Math.max(0, dice.spent - 1);
-    else if (r === "tgt") { const f = d(8); const rot = d(179) * (d(2) === 1 ? 1 : -1); const spin = (rot >= 0 ? 1 : -1) * (360 + d(180)); dice.tgt = f <= 3 ? {hit: 1, n: Date.now()} : {hit: 0, dist: [3, 3, 4, 5, 6][f - 4], rot: rot, spin: spin, n: Date.now()}; }
+    else if (r === "tgt") { const f = d(8); const rot = d(179) * (d(2) === 1 ? 1 : -1); const spin = (rot >= 0 ? 1 : -1) * (360 + d(180)); dice.tgt = f <= 3 ? {hit: 1, n: Date.now(), rot: rot} : {hit: 0, dist: [3, 3, 4, 5, 6][f - 4], rot: rot, spin: spin, n: Date.now()}; saveDice(); renderDice(); play3D("tgt"); return; }
     else if (r === "resetfaces") dice.faces = JSON.parse(JSON.stringify(DEFAULT_FACES));
   }
   saveDice(); renderDice();
 });
 $("#diceBody").addEventListener("change", e => {
   if (e.target.id === "dExplode") dice.explode = e.target.checked;
+  if (e.target.id === "d3d") dice.anim3d = e.target.checked;
+  if (e.target.id === "dsnd") dice.sound = e.target.checked;
   if (e.target.dataset.face) dice.faces[e.target.dataset.face][+e.target.dataset.fi] = +e.target.value;
   saveDice(); renderDice();
 });
-window.addEventListener("keydown", e => { if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
+const R3 = {three: null, ready: null, ctx: null, scene: null, cam: null, ren: null, el: null, dice: [], tweens: [], raf: 0, skip: false, busy: false, mats: {}, geo: {}};
+const SWORD_PATH = "M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z";
+const DIE_COL = {Black: ["#151515", "#eeeeee"], Orange: ["#e8641e", "#151515"], Green: ["#7ccf3a", "#151515"]};
+const TGT_FACES = ["hit", 3, "hit", 4, 3, 5, "hit", 6];
+
+function loadThree() {
+  if (window.THREE) return Promise.resolve(window.THREE);
+  if (R3.ready) return R3.ready;
+  R3.ready = new Promise((res, rej) => {
+    const sc = document.createElement("script");
+    sc.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    sc.onload = () => res(window.THREE);
+    sc.onerror = () => { R3.ready = null; rej(new Error("three")); };
+    document.head.appendChild(sc);
+  });
+  return R3.ready;
+}
+
+function sfx() {
+  if (!dice.sound) return null;
+  try {
+    if (!R3.ctx) R3.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (R3.ctx.state === "suspended") R3.ctx.resume();
+    return R3.ctx;
+  } catch (e) { return null; }
+}
+
+function noiseBuf(ac, len) {
+  const b = ac.createBuffer(1, Math.floor(ac.sampleRate * len), ac.sampleRate);
+  const ch = b.getChannelData(0);
+  for (let i = 0; i < ch.length; i++) ch[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / ch.length, 3);
+  return b;
+}
+
+function playClack(vol, pitch) {
+  const ac = sfx();
+  if (!ac) return;
+  const t = ac.currentTime;
+  const src = ac.createBufferSource();
+  src.buffer = noiseBuf(ac, 0.06);
+  const bp = ac.createBiquadFilter();
+  bp.type = "bandpass"; bp.frequency.value = 1800 + pitch * 2600; bp.Q.value = 2.2;
+  const g = ac.createGain();
+  g.gain.setValueAtTime(Math.min(1, vol) * 0.9, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
+  src.connect(bp); bp.connect(g); g.connect(ac.destination);
+  src.start(t);
+  const o = ac.createOscillator(), og = ac.createGain();
+  o.type = "triangle"; o.frequency.value = 650 + pitch * 900;
+  og.gain.setValueAtTime(Math.min(1, vol) * 0.12, t);
+  og.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+  o.connect(og); og.connect(ac.destination); o.start(t); o.stop(t + 0.06);
+}
+
+function playShake() {
+  const ac = sfx();
+  if (!ac) return;
+  for (let i = 0; i < 9; i++) setTimeout(() => playClack(0.25 + Math.random() * 0.2, Math.random()), i * 32 + Math.random() * 20);
+}
+
+function playTick(i) {
+  const ac = sfx();
+  if (!ac) return;
+  const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+  o.type = "sine"; o.frequency.value = 520 + i * 45;
+  g.gain.setValueAtTime(0.09, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+  o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + 0.1);
+}
+
+function playChime(good) {
+  const ac = sfx();
+  if (!ac) return;
+  const notes = good ? [523.25, 659.25, 783.99, 1046.5] : [392, 349.23];
+  notes.forEach((f, i) => {
+    const t = ac.currentTime + i * 0.09, o = ac.createOscillator(), g = ac.createGain();
+    o.type = "triangle"; o.frequency.value = f;
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.14, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + 0.5);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + 0.55);
+  });
+}
+
+function faceCanvas(bg, fg, draw) {
+  const c = document.createElement("canvas");
+  c.width = c.height = 256;
+  const x = c.getContext("2d");
+  x.fillStyle = bg; x.fillRect(0, 0, 256, 256);
+  x.fillStyle = fg; x.strokeStyle = fg;
+  draw(x);
+  const tx = new THREE.CanvasTexture(c);
+  tx.anisotropy = 4;
+  tx.encoding = THREE.sRGBEncoding;
+  return tx;
+}
+
+function drawSwords(x, n) {
+  const p = new Path2D(SWORD_PATH);
+  const one = (ang, sc) => { x.save(); x.translate(128, 128); x.rotate(ang); x.scale(sc, sc); x.translate(-12, -12); x.fill(p); x.restore(); };
+  if (n === 1) one(0, 7);
+  else if (n === 2) { one(0, 6.6); one(-Math.PI / 2, 6.6); }
+  else if (n >= 3) { one(0, 6); one(-Math.PI / 2, 6); one(-Math.PI / 4, 6.4); }
+}
+
+function drawBurst(x, cx, cy, r) {
+  x.beginPath();
+  for (let i = 0; i < 20; i++) {
+    const a = i / 20 * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? r * 0.45 : r;
+    x.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr);
+  }
+  x.closePath(); x.fill();
+}
+
+function octaGeometry() {
+  const pos = [], uv = [], faces = [];
+  const signs = [];
+  [1, -1].forEach(sx => [1, -1].forEach(sy => [1, -1].forEach(sz => signs.push([sx, sy, sz]))));
+  signs.forEach(([sx, sy, sz], fi) => {
+    const X = [sx, 0, 0], Y = [0, sy, 0], Z = [0, 0, sz];
+    const tri = sx * sy * sz > 0 ? [X, Y, Z] : [X, Z, Y];
+    const rot = fi % 3;
+    const t = [tri[rot], tri[(rot + 1) % 3], tri[(rot + 2) % 3]];
+    t.forEach(v => pos.push(...v));
+    uv.push(0.5, 0.93, 0.07, 0.12, 0.93, 0.12);
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("uv", new THREE.Float32BufferAttribute(uv, 2));
+  for (let i = 0; i < 8; i++) g.addGroup(i * 3, 3, i);
+  g.computeVertexNormals();
+  return g;
+}
+
+function faceFrames(g) {
+  const pos = g.attributes.position, uv = g.attributes.uv, out = [];
+  const idx = g.index ? g.index.array : null;
+  g.groups.forEach(gr => {
+    const ids = [];
+    for (let k = gr.start; k < gr.start + gr.count; k++) ids.push(idx ? idx[k] : k);
+    const uniq = [...new Set(ids)];
+    const P = uniq.map(i => new THREE.Vector3().fromBufferAttribute(pos, i));
+    const V = uniq.map(i => uv.getY(i));
+    const c = P.reduce((a, p) => a.add(p), new THREE.Vector3()).multiplyScalar(1 / P.length);
+    const mv = V.reduce((a, b) => a + b, 0) / V.length;
+    const up = new THREE.Vector3();
+    P.forEach((p, k) => up.addScaledVector(p.clone().sub(c), V[k] - mv));
+    const a = new THREE.Vector3().fromBufferAttribute(pos, ids[0]), b = new THREE.Vector3().fromBufferAttribute(pos, ids[1]), cc = new THREE.Vector3().fromBufferAttribute(pos, ids[2]);
+    const n = b.clone().sub(a).cross(cc.clone().sub(a)).normalize();
+    up.addScaledVector(n, -up.dot(n)).normalize();
+    out[gr.materialIndex] = {n, up};
+  });
+  return out;
+}
+
+function buildAssets() {
+  if (R3.geo.octa) return;
+  R3.geo.octa = octaGeometry();
+  R3.geo.octaF = faceFrames(R3.geo.octa);
+  R3.geo.box = new THREE.BoxGeometry(1.45, 1.45, 1.45);
+  R3.geo.boxF = faceFrames(R3.geo.box);
+  const accent = getComputedStyle(document.documentElement).getPropertyValue("--fac").trim() || "#e0a63a";
+  const std = tx => new THREE.MeshStandardMaterial({map: tx, roughness: 0.42, metalness: 0.05});
+  const d8vals = [1, 2, 3, 4, 5, 6, 7, 8];
+  const order = [];
+  for (let i = 0; i < 4; i++) { order[i] = i + 1; order[7 - i] = 8 - i; }
+  R3.geo.d8vals = order;
+  R3.mats.d8 = order.map(v => std(faceCanvas("#20262f", "#f2f2f2", x => {
+    x.font = "bold 92px Barlow Condensed, Arial Narrow, sans-serif"; x.textAlign = "center"; x.textBaseline = "middle";
+    x.fillText(String(v), 128, 150);
+    if (v === 6) x.fillRect(104, 196, 48, 8);
+    x.strokeStyle = accent; x.lineWidth = 6; x.beginPath(); x.moveTo(128, 18); x.lineTo(18, 225); x.lineTo(238, 225); x.closePath(); x.globalAlpha = 0.5; x.stroke();
+  })));
+  R3.mats.tgt = TGT_FACES.map(v => std(faceCanvas("#e6e2a1", "#1a1a1a", x => {
+    if (v === "hit") drawBurst(x, 128, 150, 62);
+    else {
+      x.font = "bold 84px Barlow Condensed, Arial Narrow, sans-serif"; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(String(v), 128, 160);
+      x.beginPath(); x.moveTo(128, 46); x.lineTo(108, 82); x.lineTo(148, 82); x.closePath(); x.fill();
+    }
+  })));
+
+  R3.mats.edge = new THREE.LineBasicMaterial({color: 0x000000, transparent: true, opacity: 0.35});
+  R3.mats.ring = new THREE.MeshBasicMaterial({color: 0xffd75e, transparent: true, opacity: 0, side: THREE.DoubleSide});
+}
+
+function refreshCmdMats() {
+  ["Black", "Orange", "Green"].forEach(c => {
+    const key = "cmd" + c, sig = dice.faces[c].join("");
+    if (R3.mats[key + "sig"] === sig) return;
+    R3.mats[key] = dice.faces[c].map(v => new THREE.MeshStandardMaterial({map: faceCanvas(DIE_COL[c][0], DIE_COL[c][1], x => drawSwords(x, v)), roughness: 0.85, metalness: 0}));
+    R3.mats[key + "sig"] = sig;
+  });
+}
+
+function grassMat() {
+  const N = 1024, c = document.createElement("canvas");
+  c.width = c.height = N;
+  const x = c.getContext("2d");
+  x.fillStyle = "#4c6a2c";
+  x.fillRect(0, 0, N, N);
+  const wrap = (fn) => { for (const dx of [-N, 0, N]) for (const dy of [-N, 0, N]) fn(dx, dy); };
+  const blob = (cx, cy, r, col) => wrap((dx, dy) => { const g = x.createRadialGradient(cx + dx, cy + dy, 0, cx + dx, cy + dy, r); g.addColorStop(0, col); g.addColorStop(1, "rgba(0,0,0,0)"); x.fillStyle = g; x.fillRect(cx + dx - r, cy + dy - r, r * 2, r * 2); });
+  const R = () => Math.random();
+  for (let i = 0; i < 70; i++) blob(R() * N, R() * N, 60 + R() * 170, R() < 0.5 ? `rgba(98,128,52,${0.25 + R() * 0.3})` : `rgba(44,66,26,${0.25 + R() * 0.35})`);
+  for (let i = 0; i < 14; i++) blob(R() * N, R() * N, 30 + R() * 80, `rgba(120,98,58,${0.18 + R() * 0.25})`);
+  for (let i = 0; i < 26; i++) blob(R() * N, R() * N, 20 + R() * 50, `rgba(150,160,70,${0.15 + R() * 0.2})`);
+  x.lineCap = "round";
+  for (let i = 0; i < 26000; i++) {
+    const px = R() * N, py = R() * N, l = 3 + R() * 7, a = -Math.PI / 2 + (R() - 0.5) * 1.2;
+    const t = R();
+    x.strokeStyle = t < 0.4 ? `rgba(118,150,62,${0.35 + R() * 0.4})` : t < 0.75 ? `rgba(58,84,32,${0.35 + R() * 0.4})` : t < 0.93 ? `rgba(150,170,80,${0.3 + R() * 0.35})` : `rgba(140,120,70,${0.3 + R() * 0.3})`;
+    x.lineWidth = 0.8 + R() * 1.2;
+    x.beginPath(); x.moveTo(px, py); x.lineTo(px + Math.cos(a) * l, py + Math.sin(a) * l); x.stroke();
+  }
+  for (let i = 0; i < 40; i++) {
+    const cx = R() * N, cy = R() * N;
+    for (let k = 0; k < 14; k++) {
+      const a = -Math.PI / 2 + (R() - 0.5) * 1.6, l = 6 + R() * 10;
+      x.strokeStyle = `rgba(${R() < 0.5 ? "160,170,90" : "70,96,36"},0.7)`;
+      x.lineWidth = 1.2;
+      x.beginPath(); x.moveTo(cx, cy); x.quadraticCurveTo(cx + Math.cos(a) * l * 0.5 + 2, cy + Math.sin(a) * l * 0.6, cx + Math.cos(a) * l, cy + Math.sin(a) * l); x.stroke();
+    }
+  }
+  for (let i = 0; i < 9; i++) {
+    const cx = R() * N, cy = R() * N, r = 2 + R() * 4;
+    x.fillStyle = `rgba(${130 + R() * 40},${125 + R() * 30},${110 + R() * 20},0.85)`;
+    x.beginPath(); x.ellipse(cx, cy, r * 1.3, r, R() * 3, 0, Math.PI * 2); x.fill();
+    x.fillStyle = "rgba(0,0,0,0.25)";
+    x.beginPath(); x.ellipse(cx + 1.5, cy + 1.5, r * 1.3, r, 0, 0, Math.PI * 2); x.fill();
+  }
+  return c;
+}
+
+function setupScene() {
+  if (R3.el) return;
+  const el = document.createElement("div");
+  el.className = "roll3d";
+  el.innerHTML = `<canvas></canvas><div class="r3-banner"></div><div class="r3-hint">Tap to skip</div><div class="r3-bar"><div class="r3-sum"></div><button class="rollbtn r3-ok">Confirm</button></div>`;
+  document.body.appendChild(el);
+  R3.el = el;
+  const canvas = el.querySelector("canvas");
+  R3.ren = new THREE.WebGLRenderer({canvas, antialias: true});
+  R3.ren.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  R3.ren.shadowMap.enabled = true;
+  R3.ren.shadowMap.type = THREE.PCFSoftShadowMap;
+  R3.ren.outputEncoding = THREE.sRGBEncoding;
+  R3.scene = new THREE.Scene();
+  R3.scene.background = new THREE.Color(0x1d2a14);
+  R3.scene.fog = new THREE.Fog(0x1d2a14, 34, 70);
+  R3.cam = new THREE.PerspectiveCamera(40, 1, 0.1, 200);
+  R3.scene.add(new THREE.HemisphereLight(0xdfe8ff, 0x101418, 0.85));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.95);
+  sun.position.set(-6, 16, 8);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048);
+  Object.assign(sun.shadow.camera, {left: -18, right: 18, top: 18, bottom: -18, near: 1, far: 50});
+  sun.shadow.radius = 4;
+  R3.scene.add(sun);
+  const ftx = new THREE.CanvasTexture(grassMat());
+  ftx.encoding = THREE.sRGBEncoding;
+  ftx.wrapS = ftx.wrapT = THREE.RepeatWrapping;
+  ftx.repeat.set(3, 3);
+  ftx.anisotropy = 8;
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(90, 90), new THREE.MeshStandardMaterial({map: ftx, roughness: 1}));
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  R3.scene.add(floor);
+  const resize = () => {
+    const w = window.innerWidth, h = window.innerHeight;
+    R3.ren.setSize(w, h, false);
+    R3.cam.aspect = w / h;
+    R3.cam.updateProjectionMatrix();
+  };
+  window.addEventListener("resize", resize);
+  R3.resize = resize;
+  el.addEventListener("pointerdown", e => { if (!e.target.closest(".r3-bar")) R3.skip = true; });
+  el.querySelector(".r3-ok").onclick = closeRoll3D;
+}
+
+const VIEW = () => new THREE.Vector3(0, 22, 9).normalize();
+
+function restQuat(frame, dirWorld, upWorld) {
+  const n = frame.n, u = frame.up, w = n.clone().cross(u);
+  const L = new THREE.Matrix4().makeBasis(n, u, w);
+  const W = new THREE.Matrix4().makeBasis(dirWorld, upWorld, dirWorld.clone().cross(upWorld));
+  const m = W.multiply(L.transpose());
+  return new THREE.Quaternion().setFromRotationMatrix(m);
+}
+
+function screenUp(dir, angleDeg) {
+  const camUp = new THREE.Vector3(0, 1, 0);
+  const s = camUp.clone().addScaledVector(dir, -camUp.dot(dir));
+  if (s.lengthSq() < 1e-6) s.set(0, 0, -1);
+  s.normalize();
+  return s.applyAxisAngle(dir, -angleDeg * Math.PI / 180);
+}
+
+function makeDie(spec) {
+  let mesh, frames, rest;
+  if (spec.kind === "d8" || spec.kind === "tgt") {
+    mesh = new THREE.Mesh(R3.geo.octa, spec.kind === "d8" ? R3.mats.d8 : R3.mats.tgt);
+    frames = R3.geo.octaF; rest = 0.577;
+  } else {
+    mesh = new THREE.Mesh(R3.geo.box, R3.mats["cmd" + spec.color]);
+    frames = R3.geo.boxF; rest = 0.725;
+  }
+  mesh.castShadow = true;
+  const edges = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 20), R3.mats.edge);
+  mesh.add(edges);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.95, 1.12, 40), R3.mats.ring.clone());
+  ring.rotation.x = -Math.PI / 2;
+  R3.scene.add(ring);
+  R3.scene.add(mesh);
+  return {mesh, frames, rest, ring, spec};
+}
+
+function clearDice() {
+  R3.dice.forEach(o => { R3.scene.remove(o.mesh); R3.scene.remove(o.ring); o.mesh.children.forEach(c => c.geometry.dispose()); o.ring.geometry.dispose(); });
+  R3.dice = [];
+}
+
+function tween(dur, fn) {
+  return new Promise(res => R3.tweens.push({t0: performance.now(), dur, fn, res}));
+}
+
+function loop() {
+  const now = performance.now();
+  R3.tweens = R3.tweens.filter(tw => {
+    let t = R3.skip ? 1 : Math.min(1, (now - tw.t0) / tw.dur);
+    tw.fn(t);
+    if (t >= 1) { tw.res(); return false; }
+    return true;
+  });
+  R3.ren.render(R3.scene, R3.cam);
+  R3.raf = requestAnimationFrame(loop);
+}
+
+const ease = t => 1 - Math.pow(1 - t, 3);
+const easeIO = t => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+function camTo(dist, dur) {
+  const from = R3.cam.position.clone(), to = VIEW().multiplyScalar(dist);
+  return tween(dur, t => { R3.cam.position.lerpVectors(from, to, easeIO(t)); R3.cam.lookAt(0, 0, 0); });
+}
+
+function scatterSpots(n, s) {
+  const out = [], minD = 2.0 * s;
+  const W = Math.min(7.5, 2.4 + Math.sqrt(n) * 1.7 * s), H = Math.min(4.6, 1.6 + Math.sqrt(n) * 1.1 * s);
+  for (let i = 0; i < n; i++) {
+    let best = null, bestD = -1;
+    for (let k = 0; k < 40; k++) {
+      const p = new THREE.Vector3((Math.random() * 2 - 1) * W, 0, (Math.random() * 2 - 1) * H + 0.8);
+      const dmin = out.reduce((m, q) => Math.min(m, q.distanceTo(p)), 99);
+      if (dmin > bestD) { best = p; bestD = dmin; }
+      if (dmin >= minD) break;
+    }
+    out.push(best);
+  }
+  return out;
+}
+
+async function throwWave(specs, label, s) {
+  if (label) showBanner(label);
+  const spots = scatterSpots(specs.length, s);
+  const list = specs.map((sp, i) => {
+    const o = makeDie(sp);
+    o.mesh.scale.setScalar(s);
+    o.s = s;
+    o.end = spots[i];
+    const side = Math.random() < 0.5 ? -1 : 1;
+    o.start = new THREE.Vector3(side * (9 + Math.random() * 3), 5 + Math.random() * 3, 7 + Math.random() * 3);
+    const restAng = sp.kind === "tgt" ? sp.rot : (Math.random() * 40 - 20);
+    const floorUp = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), -restAng * Math.PI / 180);
+    o.qRest = restQuat(o.frames[sp.face], new THREE.Vector3(0, 1, 0), floorUp);
+    o.axis = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
+    o.spin = (4 + Math.random() * 4) * Math.PI;
+    o.bounces = 3 + Math.floor(Math.random() * 2);
+    o.dur = 1250 + Math.random() * 600;
+    o.delay = i * Math.min(60, 500 / specs.length);
+    o.mesh.position.copy(o.start);
+    o.mesh.visible = false;
+    R3.dice.push(o);
+    return o;
+  });
+  playShake();
+  await Promise.all(list.map(o => new Promise(res => setTimeout(res, R3.skip ? 0 : o.delay)).then(() => {
+    o.mesh.visible = true;
+    const hits = [];
+    for (let m = 0; m < o.bounces; m++) hits.push({t: (2 * m + 1) / (2 * o.bounces) * 0.82, done: false, v: Math.pow(0.55, m)});
+    return tween(o.dur, t => {
+      const e = ease(t);
+      o.mesh.position.x = o.start.x + (o.end.x - o.start.x) * e;
+      o.mesh.position.z = o.start.z + (o.end.z - o.start.z) * e;
+      const bt = Math.min(1, t / 0.82);
+      const h = o.start.y * Math.abs(Math.cos(Math.PI * o.bounces * bt / 1)) * Math.pow(1 - bt, 2);
+      o.mesh.position.y = o.rest * o.s + h;
+      const spinQ = new THREE.Quaternion().setFromAxisAngle(o.axis, o.spin * Math.pow(1 - e, 1.6));
+      o.mesh.quaternion.copy(o.qRest).premultiply(spinQ);
+      hits.forEach(hh => { if (!hh.done && t >= hh.t) { hh.done = true; if (!R3.skip) playClack(hh.v * (0.6 + Math.random() * 0.4), Math.random()); } });
+    });
+  })));
+}
+
+async function lineUp(s, rowsOf) {
+  const dir = VIEW();
+  const n = R3.dice.length;
+  const aspect = R3.cam.aspect;
+  const maxCols = aspect >= 1 ? 10 : 5;
+  const sp = 2.35 * s, spY = sp * 1.32;
+  let rows = [];
+  rowsOf.forEach(group => { for (let i = 0; i < group.length; i += maxCols) rows.push(group.slice(i, i + maxCols)); });
+  const cols = Math.max(...rows.map(r => r.length));
+  const Wd = cols * sp + 1.2, Hd = rows.length * spY + 1.6;
+  const vf = R3.cam.fov * Math.PI / 180, hf = 2 * Math.atan(Math.tan(vf / 2) * aspect);
+  const dist = Math.max(23.8 * 0.9, (Wd / 2) / Math.tan(hf / 2) + 2, (Hd / 2) / Math.tan(vf / 2) * 1.1 + 4);
+  const camP = camTo(dist, 700);
+  const right = new THREE.Vector3(1, 0, 0), down = new THREE.Vector3().crossVectors(dir, right).normalize().negate();
+  const moves = [];
+  let k = 0;
+  rows.forEach((row, ri) => row.forEach((o, ci) => {
+    const x = (ci - (row.length - 1) / 2) * sp;
+    const y = (ri - (rows.length - 1) / 2) * spY;
+    const target = new THREE.Vector3().addScaledVector(right, x).addScaledVector(down, y).add(new THREE.Vector3(0, 1.0 * s, 0));
+    target.y = Math.max(target.y, 1.0 * s);
+    const ang = o.spec.kind === "tgt" ? o.spec.rot : 0;
+    const fdir = o.spec.kind === "cmd" ? dir.clone().add(new THREE.Vector3(0.22, 0.3, 0)).normalize() : dir;
+    const qT = restQuat(o.frames[o.spec.face], fdir, screenUp(fdir, ang));
+    const from = o.mesh.position.clone(), qF = o.mesh.quaternion.clone();
+    const ringT = target.clone(); ringT.y = 0.02;
+    const idx = k++;
+    moves.push(new Promise(res => setTimeout(res, R3.skip ? 0 : idx * 45)).then(() => {
+      if (!R3.skip) playTick(idx % 12);
+      return tween(520, t => {
+        const e = easeIO(t);
+        o.mesh.position.lerpVectors(from, target, e);
+        o.mesh.position.y += Math.sin(Math.PI * e) * 1.2 * s;
+        o.mesh.quaternion.copy(qF).slerp(qT, e);
+        o.ring.position.copy(ringT);
+        o.ring.position.y = 0.02;
+        o.ring.scale.setScalar(s);
+      });
+    }));
+  }));
+  await Promise.all([camP, ...moves]);
+}
+
+function showBanner(txt) {
+  const b = R3.el.querySelector(".r3-banner");
+  b.textContent = txt;
+  b.classList.remove("on"); void b.offsetWidth; b.classList.add("on");
+}
+
+function lightRings() {
+  R3.dice.forEach(o => { if (o.spec.hit) tween(350, t => { o.ring.material.opacity = 0.85 * t; }); else if (o.spec.dim) tween(350, t => { o.mesh.scale.setScalar(o.s * (1 - 0.12 * t)); }); });
+}
+
+function closeRoll3D() {
+  if (!R3.el) return;
+  R3.el.classList.remove("open");
+  cancelAnimationFrame(R3.raf);
+  R3.tweens.forEach(tw => tw.res());
+  R3.tweens = [];
+  clearDice();
+  R3.busy = false;
+  renderDice();
+}
+
+function rollSpecs(kind, arg) {
+  const d8face = v => R3.geo.d8vals.indexOf(v);
+  if (kind === "d8" || kind === "refail") {
+    const L = dice.last;
+    const base = kind === "d8" ? L.base : arg;
+    const mk = v => ({kind: "d8", face: d8face(v), hit: v >= L.need, dim: v < L.need, v});
+    const w1 = base.map(mk).sort((a, b) => b.v - a.v);
+    const w2 = L.bonus.map(mk).sort((a, b) => b.v - a.v);
+    const hits = L.base.filter(v => v >= L.need).length, bh = L.bonus.filter(v => v >= L.need).length;
+    const waves = [{label: kind === "refail" ? `Re-rolling ${base.length} miss${base.length === 1 ? "" : "es"}` : `${base.length}D8 · need ${L.need}+`, dice: w1}];
+    if (w2.length) waves.push({label: `Exploding 8s! +${w2.length} bonus ${w2.length === 1 ? "die" : "dice"}`, dice: w2});
+    return {waves, good: hits + bh > 0, sum: `<b>${hits + bh}</b> success${hits + bh === 1 ? "" : "es"}<small>${hits} from ${L.base.length}D8${L.bonus.length ? ` + ${bh} from ${L.bonus.length} exploding` : ""} · needing ${L.need}+</small>`};
+  }
+  if (kind === "cmd" || kind === "cmdOne") {
+    const list = kind === "cmd" ? dice.rolled : [arg];
+    const w = list.map(x => ({kind: "cmd", color: x.c, face: x.i, v: x.v, hit: false}));
+    const cp = dice.rolled.reduce((a, x) => a + x.v, 0);
+    return {waves: [{label: kind === "cmd" ? "Command Dice" : `Re-rolling a ${arg.c} die`, dice: w}], good: true, sum: `<b>${cp}</b> Command Point${cp === 1 ? "" : "s"}<small>${kind === "cmdOne" ? `Re-rolled ${arg.c}: ${arg.v} · ` : ""}${dice.rerolls} re-roll${dice.rerolls === 1 ? "" : "s"} left</small>`};
+  }
+  const T = dice.tgt;
+  const opts = TGT_FACES.map((v, i) => [v, i]).filter(([v]) => T.hit ? v === "hit" : v === T.dist);
+  const face = opts[Math.floor(Math.random() * opts.length)][1];
+  return {waves: [{label: "Targeting Die", dice: [{kind: "tgt", face, rot: T.hit ? 0 : T.rot, hit: !!T.hit}]}], good: !!T.hit, sum: T.hit ? `<b>ON TARGET</b>` : `<b>Scatter ${T.dist}"</b><small>The arrow on the die points ${Math.abs(T.rot)}° ${T.rot >= 0 ? "clockwise" : "counter-clockwise"} from the top of the screen</small>`};
+}
+
+async function play3D(kind, arg) {
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!dice.anim3d || reduce || R3.busy) return;
+  if (kind === "refail" && (!arg || !arg.length) && !(dice.last && dice.last.bonus.length)) return;
+  R3.busy = true;
+  sfx();
+  try { await loadThree(); } catch (e) { R3.busy = false; toast("3D dice need an internet connection – showing results instead"); return; }
+  buildAssets();
+  refreshCmdMats();
+  setupScene();
+  R3.resize();
+  const spec = rollSpecs(kind, arg);
+  const total = spec.waves.reduce((a, w) => a + w.dice.length, 0);
+  const s = total > 30 ? 0.62 : total > 16 ? 0.78 : total <= 2 ? 1.7 : total <= 4 ? 1.3 : 1;
+  R3.skip = false;
+  clearDice();
+  R3.el.querySelector(".r3-bar").classList.remove("on");
+  R3.el.querySelector(".r3-hint").style.display = "";
+  R3.el.classList.add("open");
+  R3.cam.position.copy(VIEW().multiplyScalar(23.8 * (s < 1 ? 1.05 : 0.95)));
+  R3.cam.lookAt(0, 0, 0);
+  cancelAnimationFrame(R3.raf);
+  loop();
+  const rows = [];
+  for (const w of spec.waves) {
+    if (rows.length) { R3.skip = false; await new Promise(r => setTimeout(r, 350)); }
+    const before = R3.dice.length;
+    await throwWave(w.dice, w.label, s);
+    if (!R3.skip) await new Promise(r => setTimeout(r, 280));
+    rows.push(R3.dice.slice(before));
+    await lineUp(s, rows);
+  }
+  lightRings();
+  playChime(spec.good);
+  R3.el.querySelector(".r3-hint").style.display = "none";
+  R3.el.querySelector(".r3-sum").innerHTML = spec.sum;
+  R3.el.querySelector(".r3-bar").classList.add("on");
+  R3.el.querySelector(".r3-ok").focus();
+}
+
+window.addEventListener("keydown", e => { if (R3.el && R3.el.classList.contains("open") && (e.key === "Enter" || e.key === "Escape") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); closeRoll3D(); return; } if (R3.el && R3.el.classList.contains("open") && e.key === " ") { R3.skip = true; e.preventDefault(); return; } if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
 
 load();
 if (cur) render(); else { cur = newList("asterians"); render(); start(); }
