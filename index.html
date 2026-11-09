@@ -327,7 +327,8 @@ body.noscroll{overflow:hidden}
 @media (max-width:1100px){.dmenu{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:600px){.dmenu{gap:8px}.dbig{min-height:130px;padding:12px 2px}.dbig b{font-size:18px;letter-spacing:.02em}.dbig small{font-size:11px}}
 .popt{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;background:var(--panel2);cursor:pointer}
-.popt.ind{margin-left:26px;background:transparent}
+.popt.ind{margin-left:26px;background:transparent;padding:6px 10px;margin-bottom:5px}
+.psub[hidden]{display:none}
 .popt input{accent-color:var(--fac);width:18px;height:18px;margin-top:2px;flex:none}
 .popt small{display:block;color:var(--muted);font-size:12.5px}
 .printonly.measuring{display:block!important;position:absolute;left:-30000px;top:0;width:8.1in;visibility:hidden}
@@ -1197,7 +1198,7 @@ const TACTICAL = [
   {n: "Fight On!", sub: "Re-roll", c: "1", w: "After rolling to hit or to damage a target.", e: "Re-roll up to two dice in a Unit's roll that failed to hit or damage a target with a Shooting or Assault attack. Dice already re-rolled for other reasons can't be re-rolled. Only once per roll against a specific target (with all the involved weapons) – but you may spend another CP on the damage roll, or on a roll against a different target."},
   {n: "Courage!", sub: "Clear Pin marker", c: "1+", w: "In the End Phase (Roll for Pin markers removal step), before any dice are rolled.", e: "Each Command Point spent removes one Pin marker from one friendly Unit."},
 ];
-let popts = {roster: 1, tactical: 1, units: 0, perUnit: 0, cmds: 0, ref: 0};
+let popts = {roster: 1, rHead: 1, rRoster: 1, rProfiles: 1, rRules: 1, rOrders: 1, rKeywords: 1, tactical: 1, units: 0, perUnit: 0, cmds: 0, ref: 0};
 try { popts = Object.assign(popts, JSON.parse(store(true, "ewp_print_v1") || "{}")); } catch (e) {}
 
 function cardFrame(inner, cls) { return `<div class="tc ${cls || ""}" style="--fc:${FAC_COLORS[cur.faction] || "#e0a63a"}"><div class="tc-in">${inner}</div></div>`; }
@@ -1292,7 +1293,7 @@ function fitCards(root) {
 
 function buildPrint(o) {
   const parts = [];
-  if (o.roster) parts.push(`<div class="pr-sec">${rosterHtml({tactical: o.tactical})}</div>`);
+  if (o.roster && (o.rHead || o.rRoster || o.rProfiles || o.rRules || o.rOrders || o.rKeywords || o.tactical)) parts.push(`<div class="pr-sec">${rosterHtml(o)}</div>`);
   if (o.units) {
     const cards = [];
     unitCardList(o.perUnit).forEach(({u, e, n}) => cards.push({u, e, n}));
@@ -1336,8 +1337,16 @@ async function runPrint(o) {
 function openPrintDialog(preset) {
   if (preset) popts = Object.assign({}, popts, preset);
   const ck = (k, label, hint, indent) => `<label class="popt ${indent ? "ind" : ""}"><input type="checkbox" data-po="${k}" ${popts[k] ? "checked" : ""}><span><b>${label}</b>${hint ? `<small>${hint}</small>` : ""}</span></label>`;
-  const body = `${ck("roster", "Army roster &amp; summary", "Header, roster tables, unit profiles, army rules, Strategic Orders, keywords.")}
-    ${ck("tactical", "Include universal Tactical Orders", "Keep Going!, Fight On! and Courage! – added to the summary and the command cards.", true)}
+  const body = `${ck("roster", "Army summary", "Choose which parts to include:")}
+    <div class="psub" ${popts.roster ? "" : "hidden"}>
+    ${ck("rHead", "Top summary", "Army name, faction, points, units, Unit Strength, Army Nerve, Command Dice.", true)}
+    ${ck("rRoster", "Roster &amp; points lists", "Each Company's units and points, plus Battlefield Stratagems.", true)}
+    ${ck("rProfiles", "Unit profiles", "Full stats, weapons and special rules for every unit.", true)}
+    ${ck("rRules", "Army rules", "Army Special Rule and Command Pool reminder.", true)}
+    ${ck("rOrders", "Strategic Orders", "Your faction's Strategic Orders table.", true)}
+    ${ck("tactical", "Universal Tactical Orders", "Keep Going!, Fight On! and Courage! – also added to the command cards.", true)}
+    ${ck("rKeywords", "Keywords", "Definitions of every keyword your list uses.", true)}
+    </div>
     ${ck("units", "Unit reference cards", "Trading-card size, 2.5 × 3.5 in, nine per page.")}
     ${ck("perUnit", "One card per unit taken (instead of one per unit type)", "", true)}
     ${ck("cmds", "Command cards", "Your Strategic Orders, Battlefield Stratagems bought, and Tactical Orders if included above.")}
@@ -1345,7 +1354,7 @@ function openPrintDialog(preset) {
     <p class="hint">For cards: print at <b>100% / Actual size</b> with headers &amp; footers off so each card measures exactly 2.5 × 3.5 in. Cards sit edge to edge – cut straight along the joins between the dark frames.</p>
     <div style="display:flex;gap:8px;margin-top:12px"><button class="tbtn primary" data-go-print>Print</button><button class="tbtn" data-close>Cancel</button></div>`;
   modal("Print", body, o => {
-    o.querySelectorAll("[data-po]").forEach(inp => inp.onchange = () => { popts[inp.dataset.po] = inp.checked ? 1 : 0; store(false, "ewp_print_v1", JSON.stringify(popts)); });
+    o.querySelectorAll("[data-po]").forEach(inp => inp.onchange = () => { popts[inp.dataset.po] = inp.checked ? 1 : 0; store(false, "ewp_print_v1", JSON.stringify(popts)); if (inp.dataset.po === "roster") o.querySelector(".psub").hidden = !inp.checked; });
     o.querySelector("[data-go-print]").onclick = () => {
       if (!popts.roster && !popts.units && !popts.cmds && !popts.ref) { toast("Pick something to print"); return; }
       o.remove();
@@ -1360,7 +1369,7 @@ function rosterHtml(opts) {
   const pool = {Black: 3 + t.dice.Black, Orange: t.dice.Orange, Green: t.dice.Green};
   const iss = issues();
   const entries = co => co.units.map(e => ({e, u: unitOf(e)})).filter(x => x.u).sort((a, b) => sortKey(a.u) - sortKey(b.u));
-  let h = `<div class="pr"><div class="pr-head"><h1>${esc(cur.name)}</h1><div class="fac">${esc(f.n)}</div>
+  let h = `<div class="pr"><!--S:head--><div class="pr-head"><h1>${esc(cur.name)}</h1><div class="fac">${esc(f.n)}</div>
     <div class="pr-strip">
       <div><small>Points</small><b>${totalPts()} / ${cur.limit}</b></div>
       <div><small>Units</small><b>${t.units}</b></div>
@@ -1368,7 +1377,7 @@ function rosterHtml(opts) {
       <div><small>Army Nerve</small><b>${esc(f.nerve)}</b></div>
       <div><small>Command Dice</small><b>${["Black", "Orange", "Green"].filter(c => pool[c]).map(c => pool[c] + " " + c).join(" · ")}</b></div>
     </div>${iss.length ? `<div class="pr-warn">List not valid: ${esc(iss.join(" "))}</div>` : ""}</div>`;
-  h += `<h2>Roster</h2><div class="pr-roster">`;
+  h += `<!--S:roster--><h2>Roster</h2><div class="pr-roster">`;
   cur.companies.forEach((co, ci) => {
     h += `<table><caption>Company ${ci + 1}</caption><tr><th>Unit</th><th>Slot</th><th>Bases</th><th>Pts</th></tr>`;
     entries(co).forEach(({e, u}) => {
@@ -1387,7 +1396,7 @@ function rosterHtml(opts) {
     h += `<table><caption>Battlefield Stratagems</caption><tr><th>Stratagem</th><th>Pts</th></tr>${rows.map(([n, p]) => `<tr><td class="n">${esc(n)}</td><td>${p}</td></tr>`).join("")}<tr class="tot"><td class="n">Total</td><td>${sp}</td></tr></table>`;
   }
   h += `</div>`;
-  h += `<h2>Unit Profiles</h2>`;
+  h += `<!--S:profiles--><h2>Unit Profiles</h2>`;
   const seen = new Map();
   cur.companies.forEach(co => entries(co).forEach(({e, u}) => {
     const k = u.id + (e.ct ? "+ct" : "");
@@ -1404,13 +1413,18 @@ function rosterHtml(opts) {
   });
   h += `</div>`;
   if ([...seen.values()].some(({u}) => u.w.some(w => w[5]))) h += `<div class="pr-foot" style="margin-top:3px">* Firing mode – choose one each time the unit fires.</div>`;
-  h += `<h2>Army Rules</h2><div class="pr-rules">${f.rules.map(([n, x]) => `<div class="pr-box"><div class="bt">Army Special Rule – ${esc(n)}</div><p>${esc(x)}</p></div>`).join("")}<div class="pr-box"><div class="bt">Command Pool</div><p>Each Round roll ${pool.Black} Black${pool.Orange ? ", " + pool.Orange + " Orange" : ""}${pool.Green ? ", " + pool.Green + " Green" : ""} Command Dice. Re-roll one die per Command Unit In Play. Army Nerve ${esc(f.nerve)}.</p></div></div>`;
-  h += `<h3>Strategic Orders</h3><table class="pr-orders"><tr><th>Order</th><th>CP</th><th>When</th><th>Effect</th></tr>${f.orders.map(([n, c, w, e]) => `<tr><td class="nm">${esc(n)}</td><td class="c">${esc(c)}</td><td>${esc(w)}</td><td>${esc(e)}</td></tr>`).join("")}</table>`;
-  if (opts && opts.tactical) h += `<h3>Tactical Orders (any friendly Unit In Play)</h3><table class="pr-orders"><tr><th>Order</th><th>CP</th><th>When</th><th>Effect</th></tr>${TACTICAL.map(o => `<tr><td class="nm">${esc(o.n)}</td><td class="c">${esc(o.c)}</td><td>${esc(o.w)}</td><td>${esc(o.e)}</td></tr>`).join("")}</table>`;
-  h += `<h2>Keywords Used</h2><div class="pr-kw">${usedGlossary().map(([n, x]) => `<div><b>${esc(n)}:</b> ${esc(x)}</div>`).join("")}</div>`;
-  h += `<div class="pr-foot">Full rules: Epic Warpath Rulebook PDF ${RULES_URL} · Free online rules ${COMPANION_URL}</div>`;
+  h += `<!--S:rules--><h2>Army Rules</h2><div class="pr-rules">${f.rules.map(([n, x]) => `<div class="pr-box"><div class="bt">Army Special Rule – ${esc(n)}</div><p>${esc(x)}</p></div>`).join("")}<div class="pr-box"><div class="bt">Command Pool</div><p>Each Round roll ${pool.Black} Black${pool.Orange ? ", " + pool.Orange + " Orange" : ""}${pool.Green ? ", " + pool.Green + " Green" : ""} Command Dice. Re-roll one die per Command Unit In Play. Army Nerve ${esc(f.nerve)}.</p></div></div>`;
+  h += `<!--S:orders--><h3>Strategic Orders</h3><table class="pr-orders"><tr><th>Order</th><th>CP</th><th>When</th><th>Effect</th></tr>${f.orders.map(([n, c, w, e]) => `<tr><td class="nm">${esc(n)}</td><td class="c">${esc(c)}</td><td>${esc(w)}</td><td>${esc(e)}</td></tr>`).join("")}</table>`;
+  if (opts && opts.tactical) h += `<!--S:tactical--><h3>Tactical Orders (any friendly Unit In Play)</h3><table class="pr-orders"><tr><th>Order</th><th>CP</th><th>When</th><th>Effect</th></tr>${TACTICAL.map(o => `<tr><td class="nm">${esc(o.n)}</td><td class="c">${esc(o.c)}</td><td>${esc(o.w)}</td><td>${esc(o.e)}</td></tr>`).join("")}</table>`;
+  h += `<!--S:keywords--><h2>Keywords Used</h2><div class="pr-kw">${usedGlossary().map(([n, x]) => `<div><b>${esc(n)}:</b> ${esc(x)}</div>`).join("")}</div>`;
+  h += `<!--S:foot--><div class="pr-foot">Full rules: Epic Warpath Rulebook PDF ${RULES_URL} · Free online rules ${COMPANION_URL}</div>`;
   h += `<div class="pr-foot">Epic Warpath Army Builder · Created by Ian McGonigal · Rules © Mantic Games, FAQ &amp; Errata v1.2 applied</div></div>`;
-  return h;
+  const on = {head: opts.rHead, roster: opts.rRoster, profiles: opts.rProfiles, rules: opts.rRules, orders: opts.rOrders, tactical: opts.tactical, keywords: opts.rKeywords, foot: 1};
+  const parts = h.split(/<!--S:(\w+)-->/);
+  let out = parts[0];
+  for (let i = 1; i < parts.length; i += 2) if (on[parts[i]]) out += parts[i + 1];
+  if (!on.rules) out = out.replace(/<h3>(Strategic Orders|Tactical Orders[^<]*)<\/h3>/, "<h2>$1</h2>");
+  return out;
 }
 
 function start() {
