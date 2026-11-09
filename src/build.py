@@ -17,6 +17,8 @@ if os.path.exists('images.json'):
     print('images attached:', n)
 html = open('app.html').read()
 html = html.replace('__DATA__', json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/'))
+rules = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'rules.json')))
+html = html.replace('__RULES__', json.dumps(rules, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/'))
 out = sys.argv[1] if len(sys.argv) > 1 else 'index.html'
 open(out, 'w').write(html)
 print(out, len(html), 'bytes')

@@ -231,7 +231,71 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 @media (max-width:600px){.r3-bar{left:12px;right:12px;transform:translateY(30px);max-width:none;gap:10px;padding:10px 10px 10px 14px}.r3-bar.on{transform:none}.r3-bar{flex-wrap:wrap}.r3-sum{font-size:22px;flex:1 1 100%;min-width:0;text-align:center}.r3-sum small{font-size:12px}.r3-ok{font-size:17px;padding:10px 14px;flex:1}.r3-again{padding:10px;font-size:14px;flex:1}.r3-banner{font-size:21px;padding:0 12px}}
 .rlinks{display:flex;gap:8px;flex-wrap:wrap}
 .rlinks a{text-decoration:none;color:var(--text)}
-.dmenu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.reader{position:fixed;inset:0;z-index:97;background:var(--bg);display:none;flex-direction:column}
+.reader.open{display:flex}
+body.noscroll{overflow:hidden}
+.rd-top{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0b0e12;border-bottom:1px solid var(--line)}
+.rd-title{font-family:var(--head);font-size:20px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+#rdChSel{display:none;max-width:44%}
+.rd-top .search{flex:1;min-width:0}
+.rd-top .ibtn{font-size:18px}
+.rd-body{flex:1;display:grid;grid-template-columns:250px minmax(0,1fr);min-height:0}
+.rd-nav{overflow:auto;border-right:1px solid var(--line);padding:8px;background:var(--panel)}
+.rn{display:flex;gap:8px;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:7px 9px;color:var(--muted);font-size:14px}
+.rn span{color:var(--dim);min-width:18px;text-align:right}
+.rn:hover{background:var(--panel2);color:var(--text)}
+.rn[aria-current]{background:var(--panel2);color:var(--fac);font-weight:600}
+.rd-main{overflow:auto;padding:18px 28px 60px;line-height:1.55;max-width:none}
+.rd-main>*{max-width:820px;margin-left:auto;margin-right:auto}
+.rd-main h2{font-family:var(--head);font-size:30px;letter-spacing:.03em;margin:0 0 6px}
+.rchead small{color:var(--fac);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:12px}
+.rtocs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 18px}
+.rt{font-size:13px;border:1px solid var(--line2);background:var(--panel2);border-radius:20px;padding:4px 11px}
+.rt:hover{border-color:var(--fac)}
+.rs{scroll-margin-top:10px;border-radius:8px;padding:2px 0}
+.rs.flash{animation:flash 1.6s}
+@keyframes flash{0%,40%{background:rgba(224,166,58,.14)}100%{background:transparent}}
+.rs h3{font-family:var(--head);font-size:22px;margin:22px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--line2);display:flex;align-items:baseline;gap:8px}
+.rs h4{font-family:var(--head);font-size:18px;margin:16px 0 4px;display:flex;align-items:baseline;gap:8px;color:#f1e3c4}
+.rm{color:var(--fac);font-size:.8em}
+.rp{margin-left:auto;font-family:var(--body);font-size:11px;color:var(--dim);font-weight:500}
+.rbody p{margin:6px 0}
+.rbody h5{font-size:15px;margin:12px 0 4px;color:var(--fac)}
+.rbody img{display:block;max-width:100%;height:auto;margin:12px auto;border-radius:8px;background:#fff}
+.rbody table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14px}
+.rbody td,.rbody th{border:1px solid var(--line2);padding:6px 8px;vertical-align:top}
+.rbody th{background:var(--panel2)}
+.rbody tr td:first-child{white-space:nowrap;font-weight:600}
+.rbody ul,.rbody ol{padding-left:22px}
+.rpager{display:flex;justify-content:space-between;gap:10px;margin-top:30px!important}
+.rtoc{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px;margin-top:14px}
+.rtc{display:grid;grid-template-columns:auto 1fr;gap:0 10px;text-align:left;border:1px solid var(--line2);background:var(--panel2);border-radius:10px;padding:12px}
+.rtc span{grid-row:span 2;font-family:var(--head);font-size:24px;color:var(--fac);font-weight:700}
+.rtc b{font-family:var(--head);font-size:17px}
+.rtc small{color:var(--muted)}
+.rtc:hover{border-color:var(--fac)}
+.rhit{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:9px 12px;margin:0 auto 8px}
+.rhit small{display:block;color:var(--fac);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.rhit b{display:block;font-family:var(--head);font-size:17px}
+.rhit span{color:var(--muted);font-size:13px}
+.rhit mark{background:rgba(224,166,58,.35);color:var(--text);border-radius:3px}
+.rhit:hover{border-color:var(--fac)}
+@media (max-width:900px){.rd-body{grid-template-columns:1fr}.rd-nav{display:none}#rdChSel{display:block}.rd-main{padding:12px 16px 50px}.rd-title{display:none}.rd-top{flex-wrap:wrap}.rd-top .search{order:3;flex:1 1 100%}#rdChSel{flex:1;max-width:none}.rd-main h2{font-size:25px}}
+.dmenu{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.scard{display:flex;flex-direction:column;gap:8px}
+.sp{border:1px solid var(--line);border-radius:10px;background:var(--panel2);padding:10px 12px}
+.sp p{margin:6px 0 0;font-size:14px;line-height:1.45}
+.sp .sx{color:#f0dcb4;border-left:3px solid var(--fac);padding-left:8px}
+.sgame{margin-top:8px}
+.sgame .tbtn{margin-top:8px}
+.sph{display:flex;align-items:center;gap:9px}
+.sph b{font-family:var(--head);font-size:18px;letter-spacing:.04em;text-transform:uppercase;flex:1}
+.sn{width:24px;height:24px;border-radius:50%;background:var(--fac);color:#111;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none}
+.sroll{font-family:var(--head);font-weight:700;font-size:22px;min-width:44px;text-align:center;border:1px solid var(--line2);border-radius:8px;padding:0 6px;background:var(--panel);line-height:1.15}
+.sroll small{display:block;font-family:var(--body);font-size:10px;color:var(--dim);font-weight:600}
+.sres{display:inline-block;margin-left:6px;font-weight:700;color:var(--muted)}
+.sres.ok{color:var(--ok)}
+.lscn{cursor:pointer}
 .dbig{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:132px;border-radius:14px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);padding:12px 6px}
 .dbig:hover,.dbig:focus-visible{border-color:var(--fac);color:var(--fac)}
 .dbig:active{transform:scale(.97)}
@@ -260,13 +324,16 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 .lc.tap{cursor:pointer;transform:scale(1.08)}
 .lc.tg{gap:3px;grid-auto-flow:column;color:var(--text);padding:0 6px}
 .lc.tg i{font-style:normal;font-size:10px;color:var(--fac);display:inline-block}
-@media (max-width:600px){.dmenu{gap:8px}.dbig{min-height:150px;padding:12px 2px}.dbig b{font-size:18px;letter-spacing:.02em}.dbig small{font-size:11px}}
+@media (max-width:1100px){.dmenu{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.dmenu{gap:8px}.dbig{min-height:130px;padding:12px 2px}.dbig b{font-size:18px;letter-spacing:.02em}.dbig small{font-size:11px}}
 footer{padding:16px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line)}
 footer a{color:var(--muted)}
 .hint{font-size:12.5px;color:var(--muted)}
 .printonly{display:none}
 @media (max-width:900px){
-  main{grid-template-columns:1fr;padding:12px 12px 80px}
+  main{grid-template-columns:1fr;padding:12px}
+  .app{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+  .tabs{padding-bottom:env(safe-area-inset-bottom)}
   .tabs{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;background:#0b0e12;border-top:1px solid var(--line)}
   .tabs button{flex:1;padding:12px 4px;background:transparent;border:0;font-family:var(--head);font-weight:700;font-size:15px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
   .tabs button.on{color:var(--fac);box-shadow:0 -2px 0 var(--fac) inset}
@@ -342,6 +409,7 @@ footer a{color:var(--muted)}
   <header class="top">
     <div class="brand">Epic Warpath <span>Army Builder</span></div>
     <input class="listname" id="listName" aria-label="List name">
+    <button class="tbtn" id="btnRules">📖 Rules</button>
     <button class="tbtn" id="btnDice">🎲 Dice</button>
     <button class="tbtn" id="btnLists">My Lists</button>
     <button class="tbtn" id="btnExport">Export</button>
@@ -364,7 +432,12 @@ footer a{color:var(--muted)}
     <button data-t="add">Add</button>
     <button data-t="info">Summary</button>
     <button data-dice>Dice</button>
+    <button data-rules>Rules</button>
   </nav>
+  <div class="reader" id="reader" role="dialog" aria-label="Rules reference">
+    <div class="rd-top"><b class="rd-title">📖 Rules</b><select id="rdChSel" aria-label="Chapter"></select><input id="rdSearch" class="search" type="search" placeholder="Search the rules…" aria-label="Search the rules"><button class="ibtn" data-rclose aria-label="Close rules">✕</button></div>
+    <div class="rd-body"><nav class="rd-nav" id="rdNav"></nav><article class="rd-main" id="rdMain"></article></div>
+  </div>
   <aside class="drawer" id="drawer" aria-label="Dice roller">
     <div class="ph"><h2>Dice Roller</h2><button class="ibtn" id="closeDice" aria-label="Close dice roller">✕</button></div>
     <div class="dbody" id="diceBody"></div>
@@ -1192,6 +1265,70 @@ function rollCmd() {
 }
 
 
+const SCN = [
+  {n: "Deployment Zones", r: [
+    "Both players deploy along the longest table edges, at least 15\" from the centre line between the players.",
+    "Both players deploy along the shortest table edges, at least 15\" from the centre line between the players.",
+    "Randomly determine two opposite corners. Each deployment zone is a triangle drawn from the mid-point +6\" of one table edge, to the mid-point +6\" along the adjoining edge.",
+    "All four corners are used. Deployment zones are rectangles 24\" away from any other Deployment Zone. Each player gets one pair of opposite corners and must alternate deploying Units into each (so there are roughly equal numbers of Units in both of a player's zones)."]},
+  {n: "Objectives", r: [
+    "Use five Dynamic Objectives and place them following the rules for Objective placement. If the first four objectives placed are Inactive, the fifth one is automatically Active.",
+    "Use three Dynamic Objectives and place them following the rules for Objective placement. Then place one Static Objective marker in each player's Deployment Zone(s), at least 9\" from any other Objective marker and no closer than 6\" to any table edge.",
+    "Place one Static Objective in the exact centre of the table. Each player takes one more Static and one more Dynamic Objective marker. Take it in turns to place them in any order, following the normal rules for Objective placement.",
+    "Place one Static Objective in the exact centre of the table. Place two more Static Objectives either side of it, 12\" away, along a line that runs from the middle of a random table edge through the centre to the other side. Then each player places one Dynamic Objective following the normal rules for Objective placement."]},
+  {n: "Scoring", r: [
+    "Score VPs for Objectives you claim at the end of each Round. In Rounds 1–3, Active Dynamic and Static Objectives score 3 VPs each. From Round 4 onwards they score 5 VPs each. Most VPs at the end of the last Round wins.",
+    "Score VPs for Objectives you claim at the end of each Round: Static and Active Dynamic Objectives score 3 VPs each. In addition, the player with the most Pin markers on their Units at the end of a Round makes a single unmodified Nerve test against their Army Nerve; if failed, they lose 1 VP (minimum zero). Most VPs at the end of the last Round wins.",
+    "Score VPs for Objectives you claim at the end of each Round: Static and Active Dynamic Objectives score 3 VPs each. In addition, add up the US of each side's Units wholly within each Deployment Zone at the end of each Round (Pinned Units count as US 1 unless already US 0). The highest US in each Deployment Zone scores an extra 3 VPs per Zone. Most VPs at the end of the last Round wins.",
+    "Score VPs for enemy Units destroyed each Round: 1 VP per Infantry or Bike Unit; 2 VPs per Heavy Infantry, Command, Vehicle or Walker Unit; 3 VPs per Super-heavy. From the end of Round 3 onwards, also score 3 VPs per Static or Active Objective and 1 VP per Inactive Objective you claim. Most VPs at the end of the last Round wins."]},
+  {n: "Reserves Ratio", r: [
+    "Reserves are not allowed (unless a Unit has a rule that says otherwise).",
+    "Up to half of each player's Units (rounding up; count whole Units, not Bases) may be placed in Reserve.",
+    "Each player must deploy at least three Units on the table. Any number of remaining Units may then be placed in Reserve.",
+    "Any number of Units may be placed in Reserve. Reserves may not enter play until Round 3 at the earliest, unless a Unit has the Orbital/Subterranean Deployment Keyword, in which case it may arrive from Round 2 as normal."]},
+];
+const RANGE = ["1–2", "3–4", "5–6", "7–8"];
+let scn = null;
+try { scn = JSON.parse(store(true, "ewp_scenario_v1") || "null"); } catch (e) { scn = null; }
+const saveScn = () => store(false, "ewp_scenario_v1", JSON.stringify(scn));
+
+function rollScenario() {
+  const v = [d(8), d(8), d(8), d(8)];
+  scn = {v, t: Date.now(), corners: d(2) === 1 ? "top-left & bottom-right" : "top-right & bottom-left", edge: ["North (top)", "East (right)", "South (bottom)", "West (left)"][d(4) - 1], r6: null, recon: null};
+  saveScn();
+}
+
+function scnExtra(i) {
+  const k = Math.ceil(scn.v[i] / 2) - 1;
+  if (i === 0 && k === 2) return `Random roll: the deployment corners are <b>${scn.corners}</b> (as seen from your side of the table).`;
+  if (i === 1 && k === 3) return `Random roll: the Static Objective line runs from the <b>${scn.edge}</b> table edge through the centre.`;
+  return "";
+}
+
+function scenarioHtml() {
+  if (!scn) return `<p class="hint">Roll a D8 on each of the four Scenario Parameter charts (Deployment Zones, Objectives, Scoring, Reserves Ratio), in order, as the rulebook describes.</p>`;
+  let h = `<div class="scard">`;
+  SCN.forEach((p, i) => {
+    const k = Math.ceil(scn.v[i] / 2) - 1, ex = scnExtra(i);
+    h += `<div class="sp"><div class="sph"><span class="sn">${i + 1}</span><b>${p.n}</b><span class="sroll" title="D8 roll">${scn.v[i]}<small>${RANGE[k]}</small></span></div><p>${esc(p.r[k])}</p>${ex ? `<p class="sx">${ex}</p>` : ""}</div>`;
+  });
+  h += `</div>
+  <div class="sp sgame"><div class="sph"><span class="sn">5</span><b>Game Length</b></div><p>Play 5 Rounds. At the end of Round 5, roll a die: on a 5+ play Round 6, otherwise the game ends.</p>
+    <button class="tbtn" data-roll="r6">Roll for Round 6</button>${scn.r6 ? ` <span class="sres ${scn.r6 >= 5 ? "ok" : ""}">${scn.r6}: ${scn.r6 >= 5 ? "Play Round 6!" : "Game ends after Round 5"}</span>` : ""}</div>
+  <div class="sp sgame"><div class="sph"><span class="sn">6</span><b>Recon Roll</b></div><p>Each player rolls 3 Black Command Dice plus their Tactician dice and compares totals (re-roll draws). The winner picks Deployment Zone(s), declares Reserves and transports first, then players alternate deploying one Unit at a time. HQ Units deploy last, all together.</p>
+    <button class="tbtn" data-roll="recon">Roll my Recon (${(() => { const a = armyDice(); return a.Black + "B " + a.Orange + "O " + a.Green + "G"; })()})</button>${scn.recon ? ` <span class="sres">Recon total: ${scn.recon.total}</span>` : ""}</div>
+  <p class="hint" style="margin-top:8px"><a href="#" data-openrules="scenarios">Read the full Scenarios chapter</a></p>`;
+  return h;
+}
+
+function rollR6() { scn.r6 = d(8); saveScn(); }
+function rollRecon() {
+  const a = armyDice(), list = [];
+  ["Black", "Orange", "Green"].forEach(c => { for (let i = 0; i < a[c]; i++) list.push(Object.assign({c}, cmdRoll(c))); });
+  scn.recon = {dice: list, total: list.reduce((s, x) => s + x.v, 0)};
+  saveScn();
+}
+
 let dlog = [];
 try { dlog = JSON.parse(store(true, "ewp_dice_log_v1") || "[]"); } catch (e) { dlog = []; }
 const saveLog = () => store(false, "ewp_dice_log_v1", JSON.stringify(dlog.slice(0, 60)));
@@ -1209,6 +1346,19 @@ function logEntry(kind) {
     e.title = "Command Dice";
     fillCmd(e);
     dice.cmdLogId = e.id;
+  } else if (kind === "scn") {
+    e.title = "Scenario";
+    e.chips = scn.v.map(v => ({v, hit: 0}));
+    e.total = SCN.map((p, i) => p.n.split(" ")[0][0] + scn.v[i]).join(" ");
+    e.scn = 1;
+  } else if (kind === "r6") {
+    e.title = "Round 6?";
+    e.chips = [{v: scn.r6, hit: scn.r6 >= 5 ? 1 : 0}];
+    e.total = scn.r6 >= 5 ? "Play Round 6" : "Game ends";
+  } else if (kind === "recon") {
+    e.title = "Recon Roll";
+    e.cmd = scn.recon.dice.map(x => ({c: x.c, v: x.v, rr: 0}));
+    e.total = scn.recon.total + " total";
   } else if (kind === "tgt") {
     const T = dice.tgt;
     e.title = "Targeting Die";
@@ -1248,6 +1398,9 @@ function doRoll(kind, arg) {
   else if (kind === "cmd") { rollCmd(); logEntry("cmd"); }
   else if (kind === "cmdOne") { if (!rerollCmdDie(arg)) { toast("No re-rolls left"); return; } }
   else if (kind === "tgt") { rollTgt(); logEntry("tgt"); }
+  else if (kind === "scn") { rollScenario(); logEntry("scn"); }
+  else if (kind === "r6") { if (!scn) return; rollR6(); logEntry("r6"); }
+  else if (kind === "recon") { if (!scn) return; rollRecon(); logEntry("recon"); }
   saveDice(); renderDice();
   play3D(kind, arg);
 }
@@ -1258,6 +1411,7 @@ function rollAgain(kind) {
 
 const ICON_D8 = `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 44 24 24 45 4 24Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M4 24h40M24 3 16 24l8 21 8-21Z" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/><text x="24" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" font-family="Barlow Condensed,sans-serif">8</text></svg>`;
 const ICON_CMD = `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="8" width="32" height="32" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><g transform="translate(12 12)" fill="currentColor"><path d="${"M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"}"/></g></svg>`;
+const ICON_SCN = `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="9" width="36" height="30" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><path d="M6 24h36M24 9v30" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 3"/><circle cx="24" cy="24" r="3.5" fill="currentColor"/><path d="M10 13l6 0 0 5M38 35l-6 0 0-5" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>`;
 const ICON_TGT = `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="24" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 2v10M24 36v10M2 24h10M36 24h10" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>`;
 
 function logHtml() {
@@ -1270,7 +1424,7 @@ function logHtml() {
     if (e.chips) chips = e.chips.map(c => `<span class="lc ${c.hit ? "hit" : ""} ${c.bonus ? "bonus" : ""} ${c.v === 8 && c.hit ? "ex" : ""}">${c.v}</span>`).join("");
     else if (e.cmd) chips = e.cmd.map((c, i) => `<span class="lc cmd ${c.c} ${c.rr ? "rr" : ""} ${live ? "tap" : ""}" ${live ? `data-lcr="${i}" title="Tap to re-roll"` : ""}>${c.v}</span>`).join("");
     else if (e.tgt) chips = e.tgt.hit ? `<span class="lc hit wide">ON TARGET</span>` : `<span class="lc tg"><i style="transform:rotate(${e.tgt.rot}deg)">▲</i>${e.tgt.dist}"</span>`;
-    h += `<div class="le ${idx === 0 ? "new" : ""}"><div class="lh"><b>${esc(e.title)}</b><span>${tm}</span></div>
+    h += `<div class="le ${idx === 0 ? "new" : ""} ${e.scn ? "lscn" : ""}" ${e.scn ? 'data-view="scn" title="Open Scenario"' : ""}><div class="lh"><b>${esc(e.title)}</b><span>${tm}</span></div>
       <div class="lr"><div class="lchips">${chips}</div><div class="lt">${esc(e.total)}</div></div>
       ${live ? `<div class="hint" style="margin-top:4px">Tap a die to re-roll it · ${dice.rerolls} re-roll${dice.rerolls === 1 ? "" : "s"} left</div>` : ""}</div>`;
   });
@@ -1285,6 +1439,7 @@ function renderDice() {
       <button class="dbig" data-view="d8">${ICON_D8}<b>D8</b><small>Attack roll</small></button>
       <button class="dbig" data-view="cmd">${ICON_CMD}<b>Command</b><small>Command Dice</small></button>
       <button class="dbig" data-roll="tgt">${ICON_TGT}<b>Target</b><small>Roll now</small></button>
+      <button class="dbig" data-view="scn">${ICON_SCN}<b>Scenario</b><small>Battle setup</small></button>
     </div>
     <div class="drow" style="margin:12px 0 0;gap:16px"><label class="ct" style="color:var(--text)"><input type="checkbox" id="d3d" ${dice.anim3d ? "checked" : ""}> 3D dice</label><label class="ct" style="color:var(--text)"><input type="checkbox" id="dsnd" ${dice.sound ? "checked" : ""}> Sound</label></div></div>`;
   } else if (dview === "d8") {
@@ -1298,6 +1453,8 @@ function renderDice() {
     <button class="rollbtn wide" data-roll="d8">Roll ${dice.n}D8</button>
     ${dice.last && dice.last.base.some(v => v < dice.last.need) ? `<button class="tbtn wide" data-roll="refail" style="margin-top:8px">Re-roll misses from last roll (${dice.last.base.filter(v => v < dice.last.need).length})</button>` : ""}
     </div>`;
+  } else if (dview === "scn") {
+    h += back("Scenario") + `<div class="dsec"><button class="rollbtn wide" data-roll="scn">${scn ? "Roll a New Scenario" : "Roll Scenario"}</button></div><div class="dsec">${scenarioHtml()}</div>`;
   } else if (dview === "cmd") {
     const ad = armyDice();
     h += back("Command Dice") + `<div class="dsec">
@@ -1316,7 +1473,9 @@ function renderDice() {
 }
 
 $("#diceBody").addEventListener("click", e => {
-  const b = e.target.closest("button,[data-lcr]");
+  const ro = e.target.closest("[data-openrules]");
+  if (ro) { e.preventDefault(); const ci = RCH.findIndex(c => c.t.toLowerCase() === ro.dataset.openrules); openRules(ci); return; }
+  const b = e.target.closest("button,[data-lcr],.lscn");
   if (!b) return;
   if (b.dataset.view) { dview = b.dataset.view; if (dview === "d8") dice.explode = false; renderDice(); $("#diceBody").scrollTop = 0; return; }
   if (b.dataset.lcr !== undefined) { doRoll("cmdOne", +b.dataset.lcr); return; }
@@ -1326,7 +1485,7 @@ $("#diceBody").addEventListener("click", e => {
   else if (b.dataset.cstep) { const c = b.dataset.cstep; dice.cmd[c] = Math.max(0, Math.min(20, (dice.cmd[c] || 0) + +b.dataset.d)); }
   else if (b.dataset.roll) {
     const r = b.dataset.roll;
-    if (["d8", "refail", "cmd", "tgt"].includes(r)) { doRoll(r); return; }
+    if (["d8", "refail", "cmd", "tgt", "scn", "r6", "recon"].includes(r)) { doRoll(r); return; }
     if (r === "fromarmy") { const a = armyDice(); dice.cmd = {Black: a.Black, Orange: a.Orange, Green: a.Green}; }
     else if (r === "resetfaces") dice.faces = JSON.parse(JSON.stringify(DEFAULT_FACES));
     else if (r === "clearlog") { if (!confirm("Clear the roll log?")) return; dlog = []; dice.cmdLogId = null; saveLog(); }
@@ -1676,6 +1835,7 @@ function loop() {
     if (t >= 1) { tw.res(); return false; }
     return true;
   });
+  if (R3.sim) R3.sim();
   R3.ren.render(R3.scene, R3.cam);
   R3.raf = requestAnimationFrame(loop);
 }
@@ -1688,62 +1848,154 @@ function camTo(dist, dur) {
   return tween(dur, t => { R3.cam.position.lerpVectors(from, to, easeIO(t)); R3.cam.lookAt(0, 0, 0); });
 }
 
-function scatterSpots(n, s) {
-  const out = [], minD = 2.0 * s;
-  const W = Math.min(7.5, 2.4 + Math.sqrt(n) * 1.7 * s), H = Math.min(4.6, 1.6 + Math.sqrt(n) * 1.1 * s);
-  for (let i = 0; i < n; i++) {
-    let best = null, bestD = -1;
-    for (let k = 0; k < 40; k++) {
-      const p = new THREE.Vector3((Math.random() * 2 - 1) * W, 0, (Math.random() * 2 - 1) * H + 0.8);
-      const dmin = out.reduce((m, q) => Math.min(m, q.distanceTo(p)), 99);
-      if (dmin > bestD) { best = p; bestD = dmin; }
-      if (dmin >= minD) break;
-    }
-    out.push(best);
+
+function floorBox(dist) {
+  const cam = R3.cam.clone();
+  cam.position.copy(VIEW().multiplyScalar(dist));
+  cam.lookAt(0, 0, 0);
+  cam.updateMatrixWorld(true);
+  cam.updateProjectionMatrix();
+  const hit = (x, y) => {
+    const r = new THREE.Raycaster();
+    r.setFromCamera(new THREE.Vector2(x, y), cam);
+    const t = -r.ray.origin.y / r.ray.direction.y;
+    return r.ray.origin.clone().addScaledVector(r.ray.direction, t);
+  };
+  const top = window.innerWidth < 600 ? 0.8 : 0.84, bot = window.innerWidth < 600 ? -0.78 : -0.8;
+  const tl = hit(-0.94, top), tr = hit(0.94, top), bl = hit(-0.94, bot), br = hit(0.94, bot);
+  return {minX: Math.max(tl.x, bl.x), maxX: Math.min(tr.x, br.x), minZ: Math.max(tl.z, tr.z), maxZ: Math.min(bl.z, br.z)};
+}
+
+function throwDist(n, s) {
+  const need = n * Math.pow(2.5 * s, 2) * 2.2;
+  let dist = 21;
+  for (let k = 0; k < 40; k++) {
+    const b = floorBox(dist);
+    if ((b.maxX - b.minX) * (b.maxZ - b.minZ) >= need && (b.maxX - b.minX) > 5 * s) return {dist, box: b};
+    dist *= 1.07;
   }
-  return out;
+  return {dist, box: floorBox(dist)};
+}
+
+function stepSim(sim, dt) {
+  const G = 34, B = sim.box, list = sim.list;
+  list.forEach(o => {
+    const P = o.p, V = o.v;
+    V.y -= G * dt;
+    P.addScaledVector(V, dt);
+    const fh = o.fh;
+    if (P.y > sim.ceil) { P.y = sim.ceil; if (V.y > 0) V.y = -V.y * 0.3; }
+    if (P.y < fh) {
+      P.y = fh;
+      if (V.y < -1.6) { if (!sim.silent) playClack(Math.min(1, -V.y / 14), Math.random()); o.w.multiplyScalar(0.8).add(new THREE.Vector3(V.z, 0, -V.x).multiplyScalar(0.35 / o.r)); }
+      V.y = V.y < -1.6 ? -V.y * 0.42 : 0;
+      V.x *= 0.86; V.z *= 0.86;
+    }
+    if (P.y <= fh + 0.02) {
+      const f = Math.max(0, 1 - 2.6 * dt);
+      V.x *= f; V.z *= f;
+      o.w.multiplyScalar(Math.max(0, 1 - 3.2 * dt));
+      o.w.lerp(new THREE.Vector3(V.z, 0, -V.x).multiplyScalar(1 / o.r), 0.08);
+    } else {
+      o.w.multiplyScalar(Math.max(0, 1 - 0.3 * dt));
+    }
+    const wall = (val, lo, hi, axis) => {
+      if (val < lo) { P[axis] = lo; if (V[axis] < 0) { if (!sim.silent && V[axis] < -3) playClack(Math.min(0.6, -V[axis] / 20), 0.3); V[axis] = -V[axis] * 0.62; o.w.multiplyScalar(0.9); } }
+      else if (val > hi) { P[axis] = hi; if (V[axis] > 0) { if (!sim.silent && V[axis] > 3) playClack(Math.min(0.6, V[axis] / 20), 0.3); V[axis] = -V[axis] * 0.62; o.w.multiplyScalar(0.9); } }
+    };
+    wall(P.x, B.minX + o.r, B.maxX - o.r, "x");
+    wall(P.z, B.minZ + o.r, B.maxZ - o.r, "z");
+    const wl = o.w.length();
+    if (wl > 1e-4) o.q.premultiply(new THREE.Quaternion().setFromAxisAngle(o.w.clone().multiplyScalar(1 / wl), wl * dt));
+  });
+  const all = list.concat(sim.statics);
+  for (let it = 0; it < 3; it++)
+  for (let i = 0; i < list.length; i++) {
+    const a = list[i];
+    for (let j = i + 1; j < all.length; j++) {
+      const b = all[j];
+      const d = b.p.clone().sub(a.p), dist = d.length(), min = a.r + b.r;
+      if (dist >= min || dist < 1e-6) continue;
+      const n = d.multiplyScalar(1 / dist), over = min - dist;
+      if (b.stat) { a.p.addScaledVector(n, -over); }
+      else { a.p.addScaledVector(n, -over / 2); b.p.addScaledVector(n, over / 2); }
+      const bv = b.stat ? new THREE.Vector3() : b.v;
+      const vn = bv.clone().sub(a.v).dot(n);
+      if (vn < 0 && it === 0) {
+        const jimp = -(1 + 0.5) * vn / (b.stat ? 1 : 2);
+        a.v.addScaledVector(n, -jimp);
+        if (!b.stat) b.v.addScaledVector(n, jimp);
+        const kick = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(Math.min(12, -vn * 2));
+        a.w.add(kick); if (!b.stat) b.w.sub(kick);
+        if (!sim.silent && vn < -2.5) playClack(Math.min(0.8, -vn / 12), 0.6 + Math.random() * 0.4);
+      }
+    }
+  }
+  sim.t += dt;
+  const moving = list.some(o => o.v.lengthSq() > 0.25 || o.p.y > o.fh + 0.05 || o.w.lengthSq() > 4);
+  sim.still = moving ? 0 : sim.still + dt;
+  if (sim.still > 0.15 || sim.t > 3.6) sim.done = true;
+}
+
+function syncSim(sim) {
+  sim.list.forEach(o => { o.mesh.position.copy(o.p); o.mesh.quaternion.copy(o.q); });
 }
 
 async function throwWave(specs, label, s) {
   if (label) showBanner(label);
-  const spots = scatterSpots(specs.length, s);
+  const statics = R3.dice.map(o => ({p: o.mesh.position.clone(), r: o.r || 1.1 * s, stat: 1}));
+  const {dist, box} = throwDist(specs.length + statics.length * 0.6, s);
+  await camTo(dist, statics.length ? 450 : 1);
+  const W = box.maxX - box.minX;
   const list = specs.map((sp, i) => {
     const o = makeDie(sp);
     o.mesh.scale.setScalar(s);
     o.s = s;
-    o.end = spots[i];
-    const side = Math.random() < 0.5 ? -1 : 1;
-    o.start = new THREE.Vector3(side * (9 + Math.random() * 3), 5 + Math.random() * 3, 7 + Math.random() * 3);
-    const restAng = sp.kind === "tgt" ? sp.rot : (Math.random() * 40 - 20);
-    const floorUp = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), -restAng * Math.PI / 180);
-    o.qRest = restQuat(o.frames[sp.face], new THREE.Vector3(0, 1, 0), floorUp);
-    o.axis = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
-    o.spin = (4 + Math.random() * 4) * Math.PI;
-    o.bounces = 3 + Math.floor(Math.random() * 2);
-    o.dur = 1250 + Math.random() * 600;
-    o.delay = i * Math.min(60, 500 / specs.length);
-    o.mesh.position.copy(o.start);
-    o.mesh.visible = false;
+    o.r = (sp.kind === "cmd" ? 1.0 : 0.95) * s;
+    o.fh = (sp.kind === "cmd" ? 0.86 : 0.74) * s;
+    const perRow = Math.max(1, Math.floor((W - 2 * o.r) / (2.3 * o.r))), row = Math.floor(i / perRow), col = i % perRow, inRow = Math.min(perRow, specs.length - row * perRow);
+    const x = box.minX + o.r + (W - 2 * o.r) * ((col + 0.5) / inRow);
+    o.p = new THREE.Vector3(x, 1.4 * s + (row % 3) * 2.3 * s, Math.min(box.maxZ - o.r, box.maxZ - o.r - (row >= 3 ? (row - 2) * 2.3 * s : 0)));
+    o.v = new THREE.Vector3((Math.random() - 0.5) * 10, 2 + Math.random() * 4, -(11 + Math.random() * 9));
+    o.w = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(10 + Math.random() * 14);
+    o.q = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random() * 6.3, Math.random() * 6.3, Math.random() * 6.3));
+    o.mesh.position.copy(o.p);
+    o.mesh.quaternion.copy(o.q);
     R3.dice.push(o);
     return o;
   });
   playShake();
-  await Promise.all(list.map(o => new Promise(res => setTimeout(res, R3.skip ? 0 : o.delay)).then(() => {
-    o.mesh.visible = true;
-    const hits = [];
-    for (let m = 0; m < o.bounces; m++) hits.push({t: (2 * m + 1) / (2 * o.bounces) * 0.82, done: false, v: Math.pow(0.55, m)});
-    return tween(o.dur, t => {
-      const e = ease(t);
-      o.mesh.position.x = o.start.x + (o.end.x - o.start.x) * e;
-      o.mesh.position.z = o.start.z + (o.end.z - o.start.z) * e;
-      const bt = Math.min(1, t / 0.82);
-      const h = o.start.y * Math.abs(Math.cos(Math.PI * o.bounces * bt / 1)) * Math.pow(1 - bt, 2);
-      o.mesh.position.y = o.rest * o.s + h;
-      const spinQ = new THREE.Quaternion().setFromAxisAngle(o.axis, o.spin * Math.pow(1 - e, 1.6));
-      o.mesh.quaternion.copy(o.qRest).premultiply(spinQ);
-      hits.forEach(hh => { if (!hh.done && t >= hh.t) { hh.done = true; if (!R3.skip) playClack(hh.v * (0.6 + Math.random() * 0.4), Math.random()); } });
+  const sim = {list, statics, box, t: 0, still: 0, done: false, silent: false, ceil: 4.2 + 2 * s};
+  await new Promise(res => {
+    let last = performance.now(), acc = 0;
+    R3.sim = () => {
+      if (R3.skip) {
+        sim.silent = true;
+        let g = 0;
+        while (!sim.done && g++ < 1200) stepSim(sim, 1 / 120);
+        sim.done = true;
+      } else {
+        const now = performance.now();
+        acc += Math.min(0.05, (now - last) / 1000);
+        last = now;
+        while (acc >= 1 / 120 && !sim.done) { stepSim(sim, 1 / 120); acc -= 1 / 120; }
+      }
+      syncSim(sim);
+      if (sim.done) { R3.sim = null; res(); }
+    };
+  });
+  await Promise.all(list.map(o => {
+    const restAng = o.spec.kind === "tgt" ? o.spec.rot : (Math.random() * 40 - 20);
+    const floorUp = new THREE.Vector3(0, 0, -1).applyAxisAngle(new THREE.Vector3(0, 1, 0), -restAng * Math.PI / 180);
+    const qT = restQuat(o.frames[o.spec.face], new THREE.Vector3(0, 1, 0), floorUp);
+    const qF = o.mesh.quaternion.clone(), y0 = o.mesh.position.y, yR = o.rest * s;
+    if (!R3.skip) setTimeout(() => playClack(0.35, Math.random()), 200 + Math.random() * 120);
+    return tween(380, t => {
+      const e = easeIO(t);
+      o.mesh.quaternion.copy(qF).slerp(qT, e);
+      o.mesh.position.y = y0 + (yR - y0) * e + Math.sin(Math.PI * e) * 0.45 * s;
     });
-  })));
+  }));
 }
 
 async function lineUp(s, rowsOf) {
@@ -1853,6 +2105,7 @@ function closeRoll3D() {
   cancelAnimationFrame(R3.raf);
   R3.tweens.forEach(tw => tw.res());
   R3.tweens = [];
+  R3.sim = null;
   clearDice();
   R3.busy = false;
   renderDice();
@@ -1877,6 +2130,18 @@ function rollSpecs(kind, arg) {
     const one = kind === "cmdOne" ? dice.rolled[arg] : null;
     return {waves: [{label: kind === "cmd" ? "Command Dice" : `Re-rolling a ${one.c} die`, dice: w}], good: true, sum: cmdSum()};
   }
+  if (kind === "scn") {
+    const w = scn.v.map(v => ({kind: "d8", face: d8face(v), v, hit: false}));
+    return {waves: [{label: "Scenario", dice: w}], good: true, nosort: 1, sum: `<b>Scenario rolled</b><small>${SCN.map((p, i) => p.n + " " + scn.v[i]).join(" · ")}</small>`};
+  }
+  if (kind === "r6") {
+    const v = scn.r6;
+    return {waves: [{label: "End of Round 5", dice: [{kind: "d8", face: d8face(v), v, hit: v >= 5, dim: v < 5}]}], good: v >= 5, sum: v >= 5 ? `<b>Play Round 6!</b><small>Rolled ${v} (5+ needed)</small>` : `<b>Game ends</b><small>Rolled ${v} – the game ends after Round 5</small>`};
+  }
+  if (kind === "recon") {
+    const w = scn.recon.dice.map(x => ({kind: "cmd", color: x.c, face: x.i, v: x.v, hit: false}));
+    return {waves: [{label: "Recon Roll", dice: w}], good: true, sum: `<b>${scn.recon.total}</b> Recon total<small>Compare with your opponent – highest picks Deployment Zone(s); re-roll draws</small>`};
+  }
   const T = dice.tgt;
   const opts = TGT_FACES.map((v, i) => [v, i]).filter(([v]) => T.hit ? v === "hit" : v === T.dist);
   const face = opts[Math.floor(Math.random() * opts.length)][1];
@@ -1887,6 +2152,7 @@ async function play3D(kind, arg) {
   const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!dice.anim3d || reduce || R3.busy) return;
   if (kind === "refail" && (!arg || !arg.length) && !(dice.last && dice.last.bonus.length)) return;
+  if (kind === "recon" && (!scn || !scn.recon || !scn.recon.dice.length)) return;
   R3.busy = true;
   R3.kind = kind; R3.arg = arg;
   sfx();
@@ -1905,7 +2171,7 @@ async function play3D(kind, arg) {
   R3.el.querySelector(".r3-hint").classList.remove("top");
   R3.el.querySelector(".r3-hint").textContent = "Tap to skip";
   R3.el.classList.add("open");
-  R3.cam.position.copy(VIEW().multiplyScalar(23.8 * (s < 1 ? 1.05 : 0.95)));
+  R3.cam.position.copy(VIEW().multiplyScalar(throwDist(total, s).dist));
   R3.cam.lookAt(0, 0, 0);
   cancelAnimationFrame(R3.raf);
   loop();
@@ -1927,7 +2193,86 @@ async function play3D(kind, arg) {
   R3.el.querySelector(".r3-ok").focus();
 }
 
-window.addEventListener("keydown", e => { if (R3.el && R3.el.classList.contains("open") && (e.key === "r" || e.key === "R") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); R3.el.querySelector(".r3-again").click(); return; } if (R3.el && R3.el.classList.contains("open") && (e.key === "Enter" || e.key === "Escape") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); closeRoll3D(); return; } if (R3.el && R3.el.classList.contains("open") && e.key === " ") { R3.skip = true; e.preventDefault(); return; } if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
+const RULES = __RULES__;
+let rd = {ch: -1, q: ""};
+const stripTags = h => h.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;|&rsquo;/g, "'").replace(/\s+/g, " ").trim();
+const RCH = RULES.c.map(c => {
+  if (/^keywords$/i.test(c.t)) {
+    const extra = DATA.glossary.map(([n, t]) => ({m: "", t: n, p: "", l: 2, h: `<p>${esc(t.replace(/\s*\[Errata v1\.2\]$/, ""))}${/\[Errata v1\.2\]$/.test(t) ? ` <span class="e-badge">ERRATA</span>` : ""}</p>`}));
+    return Object.assign({}, c, {s: [{m: "", t: "Keywords", p: "P46", l: 1, h: "<p>Every keyword in the game. Entries marked ERRATA are updated by FAQ &amp; Errata v1.2.</p>"}].concat(extra)});
+  }
+  return c;
+});
+RCH.forEach(c => c.s.forEach(s => { s.x = (s.t + " " + stripTags(s.h)).toLowerCase(); }));
+
+function openRules(ch, si) {
+  if (ch !== undefined) { rd.ch = ch; rd.q = ""; }
+  renderReader();
+  $("#reader").classList.add("open");
+  document.body.classList.add("noscroll");
+  if (si !== undefined) setTimeout(() => goSection(si), 30);
+}
+function closeRules() { $("#reader").classList.remove("open"); document.body.classList.remove("noscroll"); }
+
+function goSection(si) {
+  const el = document.getElementById("rs-" + rd.ch + "-" + si);
+  if (!el) return;
+  el.scrollIntoView({block: "start"});
+  el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+}
+
+function secHead(s, ci, si) {
+  const tag = s.l === 1 ? "h3" : "h4";
+  if (!s.t) return "";
+  return `<${tag}>${s.m ? `<span class="rm">${esc(s.m)}</span>` : ""}${esc(s.t)}${s.p ? `<span class="rp">${esc(s.p.replace(/^P/, "p."))}</span>` : ""}</${tag}>`;
+}
+
+function renderReader() {
+  const q = rd.q.trim().toLowerCase();
+  let nav = `<button class="rn ${q ? "" : ""}" data-rch="-1" ${!q && rd.ch === -1 ? 'aria-current="true"' : ""}>Contents</button>` + RCH.map((c, i) => `<button class="rn" data-rch="${i}" ${!q && rd.ch === i ? 'aria-current="true"' : ""}><span>${i + 1}</span>${esc(c.t)}</button>`).join("");
+  let main = "";
+  if (q) {
+    const terms = q.split(/\s+/).filter(Boolean);
+    const hits = [];
+    RCH.forEach((c, ci) => c.s.forEach((s, si) => { if (terms.every(t => s.x.includes(t))) hits.push({ci, si, s, c}); }));
+    main = `<h2>${hits.length} result${hits.length === 1 ? "" : "s"} for “${esc(rd.q)}”</h2>`;
+    main += hits.slice(0, 80).map(({ci, si, s, c}) => {
+      const txt = stripTags(s.h);
+      const i = txt.toLowerCase().indexOf(terms[0]);
+      const a = Math.max(0, i - 70), snip = (a ? "…" : "") + txt.slice(a, a + 200) + (txt.length > a + 200 ? "…" : "");
+      let hs = esc(snip);
+      terms.forEach(t => { hs = hs.replace(new RegExp("(" + t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig"), "<mark>$1</mark>"); });
+      return `<button class="rhit" data-go="${ci}:${si}"><small>${esc(c.t)}${s.p ? " · " + esc(s.p.replace(/^P/, "p.")) : ""}</small><b>${esc(s.t || c.t)}</b><span>${hs}</span></button>`;
+    }).join("") || `<p class="hint">Nothing found. Try a single word like “pinned” or “assault”.</p>`;
+  } else if (rd.ch < 0 || rd.ch >= RCH.length) {
+    main = `<h2>${esc(RULES.v || "Epic Warpath Rules")}</h2><p class="hint">From the Mantic Companion online rules, with FAQ &amp; Errata v1.2 keyword changes. Tap a chapter or search above.</p><div class="rtoc">` +
+      RCH.map((c, i) => `<button class="rtc" data-rch="${i}"><span>${i + 1}</span><b>${esc(c.t)}</b><small>${c.s.filter(s => s.t && s.l === 1).length || c.s.length} sections</small></button>`).join("") + `</div>`;
+  } else {
+    const c = RCH[rd.ch];
+    const toc = c.s.map((s, si) => s.t && s.l === 1 ? `<button class="rt" data-go="${rd.ch}:${si}">${esc(s.t)}</button>` : "").join("");
+    main = `<div class="rchead"><small>Chapter ${rd.ch + 1}</small><h2>${esc(c.t)}</h2>${toc ? `<div class="rtocs">${toc}</div>` : ""}</div>`;
+    main += c.s.map((s, si) => `<section class="rs lvl${s.l}" id="rs-${rd.ch}-${si}">${secHead(s, rd.ch, si)}<div class="rbody">${s.h}</div></section>`).join("");
+    main += `<div class="rpager">${rd.ch > 0 ? `<button class="tbtn" data-rch="${rd.ch - 1}">‹ ${esc(RCH[rd.ch - 1].t)}</button>` : "<span></span>"}${rd.ch < RCH.length - 1 ? `<button class="tbtn" data-rch="${rd.ch + 1}">${esc(RCH[rd.ch + 1].t)} ›</button>` : ""}</div>`;
+  }
+  $("#rdNav").innerHTML = nav;
+  $("#rdMain").innerHTML = main;
+  $("#rdChSel").innerHTML = `<option value="-1">Contents</option>` + RCH.map((c, i) => `<option value="${i}" ${!q && rd.ch === i ? "selected" : ""}>${i + 1}. ${esc(c.t)}</option>`).join("");
+  $("#rdMain").querySelectorAll("img").forEach(im => im.addEventListener("error", () => im.remove()));
+}
+
+$("#reader").addEventListener("click", e => {
+  const t = e.target.closest("[data-rch],[data-go],[data-rclose]");
+  if (!t) return;
+  if (t.dataset.rclose !== undefined) { closeRules(); return; }
+  if (t.dataset.rch !== undefined) { rd.ch = +t.dataset.rch; rd.q = ""; $("#rdSearch").value = ""; renderReader(); $("#rdMain").scrollTop = 0; return; }
+  if (t.dataset.go) { const [ci, si] = t.dataset.go.split(":").map(Number); rd.ch = ci; rd.q = ""; $("#rdSearch").value = ""; renderReader(); setTimeout(() => goSection(si), 20); }
+});
+$("#rdSearch").addEventListener("input", e => { rd.q = e.target.value; renderReader(); $("#rdMain").scrollTop = 0; });
+$("#rdChSel").addEventListener("change", e => { rd.ch = +e.target.value; rd.q = ""; $("#rdSearch").value = ""; renderReader(); $("#rdMain").scrollTop = 0; });
+$("#btnRules").onclick = () => openRules();
+document.querySelector("#tabs [data-rules]").onclick = () => openRules();
+
+window.addEventListener("keydown", e => { if (R3.el && R3.el.classList.contains("open") && (e.key === "r" || e.key === "R") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); R3.el.querySelector(".r3-again").click(); return; } if (R3.el && R3.el.classList.contains("open") && (e.key === "Enter" || e.key === "Escape") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); closeRoll3D(); return; } if (R3.el && R3.el.classList.contains("open") && e.key === " ") { R3.skip = true; e.preventDefault(); return; } if (e.key === "Escape" && $("#reader").classList.contains("open")) { closeRules(); return; } if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
 
 load();
 if (cur) render(); else { cur = newList("asterians"); render(); start(); }
