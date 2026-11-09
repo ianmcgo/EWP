@@ -220,6 +220,7 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 .r3-banner.on{animation:bann 1.8s ease forwards}
 @keyframes bann{0%{opacity:0;transform:translateY(-12px) scale(.96)}12%{opacity:1;transform:none}80%{opacity:1}100%{opacity:.85}}
 .r3-hint{position:absolute;bottom:18px;left:0;right:0;text-align:center;color:var(--muted);font-size:13px;z-index:2;pointer-events:none}
+.r3-hint.top{bottom:auto;top:72px;color:#fff;font-size:15px;font-weight:600;text-shadow:0 1px 6px rgba(0,0,0,.9)}
 .r3-bar{position:absolute;left:50%;bottom:22px;transform:translate(-50%,30px);opacity:0;pointer-events:none;display:flex;align-items:center;gap:18px;background:rgba(23,27,33,.94);border:1px solid var(--line2);border-radius:14px;padding:12px 14px 12px 20px;z-index:3;transition:.3s;max-width:calc(100% - 32px);box-shadow:0 10px 40px rgba(0,0,0,.6)}
 .r3-bar.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .r3-sum{font-family:var(--head);font-size:26px;font-weight:700;line-height:1.1}
@@ -228,6 +229,36 @@ textarea.out{width:100%;min-height:260px;background:#0d1014;border:1px solid var
 .r3-ok{font-size:20px;padding:11px 26px;flex:none}
 .r3-again{flex:none;padding:11px 16px;font-size:15px}
 @media (max-width:600px){.r3-bar{left:12px;right:12px;transform:translateY(30px);max-width:none;gap:10px;padding:10px 10px 10px 14px}.r3-bar.on{transform:none}.r3-bar{flex-wrap:wrap}.r3-sum{font-size:22px;flex:1 1 100%;min-width:0;text-align:center}.r3-sum small{font-size:12px}.r3-ok{font-size:17px;padding:10px 14px;flex:1}.r3-again{padding:10px;font-size:14px;flex:1}.r3-banner{font-size:21px;padding:0 12px}}
+.dmenu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.dbig{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:132px;border-radius:14px;border:1px solid var(--line2);background:var(--panel2);color:var(--text);padding:12px 6px}
+.dbig:hover,.dbig:focus-visible{border-color:var(--fac);color:var(--fac)}
+.dbig:active{transform:scale(.97)}
+.dbig svg{width:52px;height:52px}
+.dbig b{font-family:var(--head);font-size:22px;letter-spacing:.04em;text-transform:uppercase;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.dbig small{font-size:12px;color:var(--muted)}
+.dback{display:flex;align-items:center;gap:10px;padding-top:10px;padding-bottom:10px}
+.dback .ibtn{font-size:15px;font-weight:600;color:var(--text);border-color:var(--line2);padding:6px 10px}
+.rollbtn.wide,.tbtn.wide{width:100%;padding:14px;font-size:19px}
+.tbtn.wide{font-size:15px}
+.dlog h3{display:flex;align-items:center}
+.le{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin-bottom:8px;background:var(--panel2)}
+.le.new{border-color:var(--fac)}
+.lh{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.lh span{color:var(--dim)}
+.lr{display:flex;align-items:center;gap:10px}
+.lchips{display:flex;flex-wrap:wrap;gap:4px;flex:1}
+.lt{font-family:var(--head);font-weight:700;font-size:18px;white-space:nowrap;color:var(--fac)}
+.lc{min-width:24px;height:24px;padding:0 4px;display:grid;place-items:center;border-radius:5px;background:var(--panel);border:1px solid var(--line2);font-family:var(--head);font-weight:700;font-size:14px;color:var(--dim)}
+.lc.hit{background:var(--ok);border-color:var(--ok);color:#111}
+.lc.ex{box-shadow:0 0 0 2px var(--fac) inset}
+.lc.bonus{outline:1.5px dashed var(--fac);outline-offset:1px}
+.lc.wide{padding:0 8px;font-size:13px}
+.lc.cmd{color:#111}.lc.cmd.Black{background:#151515;color:#eee;border-color:#444}.lc.cmd.Orange{background:#e8641e;border-color:#e8641e}.lc.cmd.Green{background:#7ccf3a;border-color:#7ccf3a}
+.lc.cmd.rr{box-shadow:0 0 0 2px var(--fac)}
+.lc.tap{cursor:pointer;transform:scale(1.08)}
+.lc.tg{gap:3px;grid-auto-flow:column;color:var(--text);padding:0 6px}
+.lc.tg i{font-style:normal;font-size:10px;color:var(--fac);display:inline-block}
+@media (max-width:600px){.dmenu{gap:8px}.dbig{min-height:150px;padding:12px 2px}.dbig b{font-size:18px;letter-spacing:.02em}.dbig small{font-size:11px}}
 footer{padding:16px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line)}
 footer a{color:var(--muted)}
 .hint{font-size:12.5px;color:var(--muted)}
@@ -1092,8 +1123,6 @@ document.querySelector("#tabs [data-dice]").onclick = () => openDice();
 $("#btnDice").onclick = () => openDice();
 $("#closeDice").onclick = () => $("#drawer").classList.remove("open");
 
-const SWORD = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></svg>`;
-const SWORDS2 = `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-8 12 12)"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></g><g transform="scale(-1 1) translate(-24 0) rotate(-8 12 12)"><path d="M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"/></g></svg>`;
 const DEFAULT_FACES = {Black: [0, 0, 1, 1, 1, 2], Orange: [0, 1, 1, 1, 2, 2], Green: [1, 1, 2, 2, 2, 3]};
 let dice = {n: 6, need: 5, explode: true, last: null, cmd: {Black: 3, Orange: 0, Green: 0}, rolled: [], rerolls: 0, spent: 0, tgt: null, faces: JSON.parse(JSON.stringify(DEFAULT_FACES))};
 try { const sd = JSON.parse(store(true, "ewp_dice_v2") || "null"); if (sd) dice = Object.assign(dice, sd, {last: null, rolled: [], tgt: null}); } catch (e) {}
@@ -1148,98 +1177,155 @@ function rollTgt() {
   dice.tgt = f <= 3 ? {hit: 1, n: Date.now(), rot: rot} : {hit: 0, dist: [3, 3, 4, 5, 6][f - 4], rot: rot, spin: spin, n: Date.now()};
 }
 
-function rollAgain(kind, arg) {
-  if (kind === "d8" || kind === "refail") { rollD8(); saveDice(); renderDice(); play3D("d8"); }
-  else if (kind === "cmd") { rollCmd(); saveDice(); renderDice(); play3D("cmd"); }
-  else if (kind === "cmdOne") {
-    if (!dice.rerolls) { rollCmd(); saveDice(); renderDice(); play3D("cmd"); return; }
-    Object.assign(arg, cmdRoll(arg.c)); arg.rr = 1; dice.rerolls--; saveDice(); renderDice(); play3D("cmdOne", arg);
-  }
-  else if (kind === "tgt") { rollTgt(); saveDice(); renderDice(); play3D("tgt"); }
-}
-
 function rollCmd() {
   dice.rolled = [];
   ["Black", "Orange", "Green"].forEach(c => { for (let i = 0; i < (dice.cmd[c] || 0); i++) dice.rolled.push(Object.assign({c, rr: 0}, cmdRoll(c))); });
   dice.rerolls = armyDice().cmdUnits;
-  dice.spent = 0;
 }
 
-function faceSvg(v) { return v >= 3 ? `<span class="tri">${SWORDS2}${SWORD}</span>` : v === 2 ? SWORDS2 : v === 1 ? SWORD : ""; }
+
+let dlog = [];
+try { dlog = JSON.parse(store(true, "ewp_dice_log_v1") || "[]"); } catch (e) { dlog = []; }
+const saveLog = () => store(false, "ewp_dice_log_v1", JSON.stringify(dlog.slice(0, 60)));
+let dview = "menu";
+
+function logEntry(kind) {
+  const e = {id: uidGen(), t: Date.now(), kind};
+  if (kind === "d8" || kind === "refail") {
+    const L = dice.last;
+    const hits = L.base.filter(v => v >= L.need).length + L.bonus.filter(v => v >= L.need).length;
+    e.title = (kind === "refail" ? "Re-rolled misses · " : "") + L.base.length + "D8 · need " + L.need + "+";
+    e.total = hits + " success" + (hits === 1 ? "" : "es");
+    e.chips = [...L.base].sort((a, b) => b - a).map(v => ({v, hit: v >= L.need ? 1 : 0})).concat(L.bonus.map(v => ({v, hit: v >= L.need ? 1 : 0, bonus: 1})));
+  } else if (kind === "cmd") {
+    e.title = "Command Dice";
+    fillCmd(e);
+    dice.cmdLogId = e.id;
+  } else if (kind === "tgt") {
+    const T = dice.tgt;
+    e.title = "Targeting Die";
+    e.total = T.hit ? "On Target" : 'Scatter ' + T.dist + '"';
+    e.tgt = T.hit ? {hit: 1} : {dist: T.dist, rot: T.rot};
+  }
+  dlog.unshift(e);
+  dlog = dlog.slice(0, 60);
+  saveLog();
+}
+
+function fillCmd(e) {
+  const cp = dice.rolled.reduce((a, x) => a + x.v, 0);
+  e.total = cp + " CP";
+  e.cmd = dice.rolled.map(x => ({c: x.c, v: x.v, rr: x.rr ? 1 : 0}));
+  e.rerolls = dice.rerolls;
+}
+
+function updateCmdLog() {
+  const e = dlog.find(x => x.id === dice.cmdLogId);
+  if (e) { fillCmd(e); saveLog(); }
+}
+
+function rerollCmdDie(i) {
+  const x = dice.rolled[i];
+  if (!x || !dice.rerolls) return null;
+  Object.assign(x, cmdRoll(x.c));
+  x.rr = 1;
+  dice.rerolls--;
+  updateCmdLog();
+  return x;
+}
+
+function doRoll(kind, arg) {
+  if (kind === "d8") { rollD8(); logEntry("d8"); }
+  else if (kind === "refail") { const fr = rerollFails(); logEntry("refail"); arg = fr; }
+  else if (kind === "cmd") { rollCmd(); logEntry("cmd"); }
+  else if (kind === "cmdOne") { if (!rerollCmdDie(arg)) { toast("No re-rolls left"); return; } }
+  else if (kind === "tgt") { rollTgt(); logEntry("tgt"); }
+  saveDice(); renderDice();
+  play3D(kind, arg);
+}
+
+function rollAgain(kind) {
+  doRoll(kind === "refail" ? "d8" : kind === "cmdOne" ? "cmd" : kind);
+}
+
+const ICON_D8 = `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 3 44 24 24 45 4 24Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M4 24h40M24 3 16 24l8 21 8-21Z" fill="none" stroke="currentColor" stroke-width="2" opacity=".6"/><text x="24" y="30" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor" font-family="Barlow Condensed,sans-serif">8</text></svg>`;
+const ICON_CMD = `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="8" width="32" height="32" rx="6" fill="none" stroke="currentColor" stroke-width="3"/><g transform="translate(12 12)" fill="currentColor"><path d="${"M20.5 2.5 13 4l-8.2 8.2-1.6-1.6-1.4 1.4 2.4 2.4-2.7 2.7 1.4 1.4 2.7-2.7 2.4 2.4 1.4-1.4-1.6-1.6L20 7z"}"/></g></svg>`;
+const ICON_TGT = `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="17" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="24" r="8" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M24 2v10M24 36v10M2 24h10M36 24h10" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="24" r="2.5" fill="currentColor"/></svg>`;
+
+function logHtml() {
+  let h = `<div class="dsec dlog"><h3>Roll Log ${dlog.length ? `<button class="ibtn" data-roll="clearlog" style="margin-left:auto;font-size:12px">Clear</button>` : ""}</h3>`;
+  if (!dlog.length) return h + `<p class="hint">Your rolls will appear here.</p></div>`;
+  dlog.forEach((e, idx) => {
+    const tm = new Date(e.t).toLocaleTimeString([], {hour: "numeric", minute: "2-digit"});
+    const live = e.kind === "cmd" && e.id === dice.cmdLogId && dice.rerolls > 0;
+    let chips = "";
+    if (e.chips) chips = e.chips.map(c => `<span class="lc ${c.hit ? "hit" : ""} ${c.bonus ? "bonus" : ""} ${c.v === 8 && c.hit ? "ex" : ""}">${c.v}</span>`).join("");
+    else if (e.cmd) chips = e.cmd.map((c, i) => `<span class="lc cmd ${c.c} ${c.rr ? "rr" : ""} ${live ? "tap" : ""}" ${live ? `data-lcr="${i}" title="Tap to re-roll"` : ""}>${c.v}</span>`).join("");
+    else if (e.tgt) chips = e.tgt.hit ? `<span class="lc hit wide">ON TARGET</span>` : `<span class="lc tg"><i style="transform:rotate(${e.tgt.rot}deg)">▲</i>${e.tgt.dist}"</span>`;
+    h += `<div class="le ${idx === 0 ? "new" : ""}"><div class="lh"><b>${esc(e.title)}</b><span>${tm}</span></div>
+      <div class="lr"><div class="lchips">${chips}</div><div class="lt">${esc(e.total)}</div></div>
+      ${live ? `<div class="hint" style="margin-top:4px">Tap a die to re-roll it · ${dice.rerolls} re-roll${dice.rerolls === 1 ? "" : "s"} left</div>` : ""}</div>`;
+  });
+  return h + `</div>`;
+}
 
 function renderDice() {
-  const L = dice.last;
-  let h = `<div class="dsec drow" style="margin:0;gap:16px"><label class="ct" style="color:var(--text)"><input type="checkbox" id="d3d" ${dice.anim3d ? "checked" : ""}> 3D dice</label><label class="ct" style="color:var(--text)"><input type="checkbox" id="dsnd" ${dice.sound ? "checked" : ""}> Sound</label></div>
-  <div class="dsec"><h3>D8 Attack Roll</h3>
-    <div class="drow"><span class="hint">Dice</span>${[1, 2, 3, 4, 6, 8, 10, 12, 16, 20].map(n => `<button class="qn ${dice.n === n ? "on" : ""}" data-dn="${n}">${n}</button>`).join("")}
+  const back = t => `<div class="dsec dback"><button class="ibtn" data-view="menu">‹ Back</button><h3 style="margin:0">${t}</h3></div>`;
+  let h = "";
+  if (dview === "menu") {
+    h += `<div class="dsec"><div class="dmenu">
+      <button class="dbig" data-view="d8">${ICON_D8}<b>D8</b><small>Attack roll</small></button>
+      <button class="dbig" data-view="cmd">${ICON_CMD}<b>Command</b><small>Command Dice</small></button>
+      <button class="dbig" data-roll="tgt">${ICON_TGT}<b>Target</b><small>Roll now</small></button>
+    </div>
+    <div class="drow" style="margin:12px 0 0;gap:16px"><label class="ct" style="color:var(--text)"><input type="checkbox" id="d3d" ${dice.anim3d ? "checked" : ""}> 3D dice</label><label class="ct" style="color:var(--text)"><input type="checkbox" id="dsnd" ${dice.sound ? "checked" : ""}> Sound</label></div></div>`;
+  } else if (dview === "d8") {
+    h += back("D8 Attack Roll") + `<div class="dsec">
+    <div class="hint" style="margin-bottom:4px">Number of dice</div>
+    <div class="drow">${[1, 2, 3, 4, 6, 8, 10, 12, 16, 20].map(n => `<button class="qn ${dice.n === n ? "on" : ""}" data-dn="${n}">${n}</button>`).join("")}
       <span class="stepper"><button data-dstep="-1">−</button><b style="min-width:24px;text-align:center">${dice.n}</b><button data-dstep="1">+</button></span></div>
-    <div class="drow"><span class="hint">Need</span>${[2, 3, 4, 5, 6, 7, 8].map(n => `<button class="qn ${dice.need === n ? "on" : ""}" data-need="${n}">${n}+</button>`).join("")}</div>
+    <div class="hint" style="margin-bottom:4px">Need to hit</div>
+    <div class="drow">${[2, 3, 4, 5, 6, 7, 8].map(n => `<button class="qn ${dice.need === n ? "on" : ""}" data-need="${n}">${n}+</button>`).join("")}</div>
     <div class="drow"><label class="ct" style="color:var(--text)"><input type="checkbox" id="dExplode" ${dice.explode ? "checked" : ""}> Exploding 8s (Sustained Attack / Vicious)</label></div>
-    <div class="drow"><button class="rollbtn" data-roll="d8">Roll ${dice.n}D8</button>${L ? `<button class="tbtn" data-roll="refail">Re-roll misses</button>` : ""}</div>`;
-  if (L) {
-    const hits = L.base.filter(v => v >= L.need).length;
-    const bh = L.bonus.filter(v => v >= L.need).length;
-    const sorted = [...L.base].sort((a, b) => b - a);
-    h += `<div class="tray">${sorted.map(v => `<span class="d8 ${v >= L.need ? "hit" : ""} ${v === 8 && L.explode && v >= L.need ? "ex" : ""}">${v}</span>`).join("")}</div>`;
-    if (L.bonus.length) h += `<div class="hint" style="margin-top:8px">Bonus dice from 8s:</div><div class="tray">${L.bonus.map(v => `<span class="d8 bonus ${v >= L.need ? "hit" : ""} ${v === 8 ? "ex" : ""}">${v}</span>`).join("")}</div>`;
-    h += `<div class="res">${hits + bh} success${hits + bh === 1 ? "" : "es"} <small>${hits} from ${L.base.length}D8${L.bonus.length ? ` + ${bh} from ${L.bonus.length} exploding` : ""} · needing ${L.need}+</small></div>`;
-  }
-  h += `</div>`;
-  const ad = armyDice();
-  const cp = dice.rolled.reduce((a, x) => a + x.v, 0);
-  h += `<div class="dsec"><h3>Command Dice</h3>
+    <button class="rollbtn wide" data-roll="d8">Roll ${dice.n}D8</button>
+    ${dice.last && dice.last.base.some(v => v < dice.last.need) ? `<button class="tbtn wide" data-roll="refail" style="margin-top:8px">Re-roll misses from last roll (${dice.last.base.filter(v => v < dice.last.need).length})</button>` : ""}
+    </div>`;
+  } else if (dview === "cmd") {
+    const ad = armyDice();
+    h += back("Command Dice") + `<div class="dsec">
     <div class="drow">${["Black", "Orange", "Green"].map(c => `<span class="die"><i class="${c}"></i>${c}<span class="stepper"><button data-cstep="${c}" data-d="-1">−</button><b>${dice.cmd[c] || 0}</b><button data-cstep="${c}" data-d="1">+</button></span></span>`).join("")}</div>
     <div class="drow"><button class="tbtn" data-roll="fromarmy">Use my army: 3 Black + Tacticians (${ad.Black}B ${ad.Orange}O ${ad.Green}G)</button></div>
-    <div class="drow"><button class="rollbtn" data-roll="cmd">Roll Command Dice</button></div>`;
-  if (dice.rolled.length) {
-    h += `<div class="hint">${dice.rerolls ? `Tap a die to re-roll it – ${dice.rerolls} re-roll${dice.rerolls > 1 ? "s" : ""} left (1 per Command Unit in play).` : "No re-rolls left. Tap Spend as you use Command Points."}</div>
-      <div class="tray">${dice.rolled.map((x, i) => `<span class="cd ${x.c} ${x.rr ? "rr" : ""}" data-cdi="${i}" title="${x.c}: ${x.v} CP">${faceSvg(x.v)}</span>`).join("")}</div>
-      <div class="cpbox"><span class="big">${Math.max(0, cp - dice.spent)}</span><span>of ${cp} Command Points left</span>
-      <button class="tbtn" data-roll="spend" ${cp - dice.spent <= 0 ? "disabled" : ""}>Spend 1</button><button class="tbtn" data-roll="unspend" ${dice.spent <= 0 ? "disabled" : ""}>Undo</button></div>`;
-  }
-  h += `<details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Command dice faces</summary>
+    <p class="hint" style="margin:0 0 10px">After rolling, tap a die to re-roll it: one re-roll per Command Unit in your list (${ad.cmdUnits}).</p>
+    <button class="rollbtn wide" data-roll="cmd">Roll ${(dice.cmd.Black || 0) + (dice.cmd.Orange || 0) + (dice.cmd.Green || 0)} Command Dice</button>
+    <details style="margin-top:12px"><summary class="hint" style="cursor:pointer">Command dice faces</summary>
     <p class="hint">Black: 2 blank, 3 × one sword, 1 × two swords. Orange: 1 blank, 3 × one, 2 × two. Green: 2 × one, 3 × two, 1 × three. Edit if your dice differ (0 = blank).</p>
     <div class="faces"><span></span>${[1, 2, 3, 4, 5, 6].map(i => `<span class="hint" style="text-align:center">F${i}</span>`).join("")}
     ${["Black", "Orange", "Green"].map(c => `<span class="die" style="padding:2px 6px"><i class="${c}"></i>${c}</span>${dice.faces[c].map((v, i) => `<select data-face="${c}" data-fi="${i}">${[0, 1, 2, 3].map(n => `<option ${n === v ? "selected" : ""}>${n}</option>`).join("")}</select>`).join("")}`).join("")}
     </div><button class="tbtn" data-roll="resetfaces" style="margin-top:8px">Reset to standard dice</button></details></div>`;
-  const T = dice.tgt;
-  h += `<div class="dsec"><h3>Targeting Die</h3>
-    <div class="drow"><button class="rollbtn" data-roll="tgt">Roll Targeting Die</button></div>
-    ${T ? `<div class="drow" style="gap:10px;flex-wrap:nowrap">${T.hit
-      ? `<span class="tbox"><span class="tdie hit" data-n="${T.n}">ON<br>TARGET</span></span>`
-      : `<span class="tbox"><span class="tdie" data-n="${T.n}" style="--rot:${T.rot}deg;--spin:${T.spin}deg"><i>▲</i>${T.dist}"</span></span><div><b>Scatter ${T.dist}"</b><br><span class="hint">Arrow points ${Math.abs(T.rot)}° ${T.rot >= 0 ? "clockwise" : "counter-clockwise"} from the top of the screen</span></div>`}</div>` : `<p class="hint">Faces: 3 On Target, and scatter distances 3, 3, 4, 5, 6.</p>`}
-  </div>`;
+  }
+  h += logHtml();
   $("#diceBody").innerHTML = h;
 }
 
 $("#diceBody").addEventListener("click", e => {
-  const b = e.target.closest("button,[data-cdi]");
+  const b = e.target.closest("button,[data-lcr]");
   if (!b) return;
+  if (b.dataset.view) { dview = b.dataset.view; renderDice(); $("#diceBody").scrollTop = 0; return; }
+  if (b.dataset.lcr !== undefined) { doRoll("cmdOne", +b.dataset.lcr); return; }
   if (b.dataset.dn) dice.n = +b.dataset.dn;
   else if (b.dataset.dstep) dice.n = Math.max(1, Math.min(60, dice.n + +b.dataset.dstep));
   else if (b.dataset.need) dice.need = +b.dataset.need;
   else if (b.dataset.cstep) { const c = b.dataset.cstep; dice.cmd[c] = Math.max(0, Math.min(20, (dice.cmd[c] || 0) + +b.dataset.d)); }
-  else if (b.dataset.cdi !== undefined) {
-    if (!dice.rerolls) { toast("No re-rolls left"); return; }
-    const x = dice.rolled[+b.dataset.cdi];
-    Object.assign(x, cmdRoll(x.c)); x.rr = 1; dice.rerolls--;
-    saveDice(); renderDice();
-    play3D("cmdOne", x);
-    return;
-  }
   else if (b.dataset.roll) {
     const r = b.dataset.roll;
-    if (r === "d8") { rollD8(); saveDice(); renderDice(); play3D("d8"); return; }
-    else if (r === "refail") { const fr = rerollFails(); saveDice(); renderDice(); play3D("refail", fr); return; }
-    else if (r === "cmd") { rollCmd(); saveDice(); renderDice(); play3D("cmd"); return; }
-    else if (r === "fromarmy") { const a = armyDice(); dice.cmd = {Black: a.Black, Orange: a.Orange, Green: a.Green}; }
-    else if (r === "spend") dice.spent++;
-    else if (r === "unspend") dice.spent = Math.max(0, dice.spent - 1);
-    else if (r === "tgt") { rollTgt(); saveDice(); renderDice(); play3D("tgt"); return; }
+    if (["d8", "refail", "cmd", "tgt"].includes(r)) { doRoll(r); return; }
+    if (r === "fromarmy") { const a = armyDice(); dice.cmd = {Black: a.Black, Orange: a.Orange, Green: a.Green}; }
     else if (r === "resetfaces") dice.faces = JSON.parse(JSON.stringify(DEFAULT_FACES));
+    else if (r === "clearlog") { if (!confirm("Clear the roll log?")) return; dlog = []; dice.cmdLogId = null; saveLog(); }
   }
   saveDice(); renderDice();
 });
+
 $("#diceBody").addEventListener("change", e => {
   if (e.target.id === "dExplode") dice.explode = e.target.checked;
   if (e.target.id === "d3d") dice.anim3d = e.target.checked;
@@ -1519,7 +1605,11 @@ function setupScene() {
   };
   window.addEventListener("resize", resize);
   R3.resize = resize;
-  el.addEventListener("pointerdown", e => { if (!e.target.closest(".r3-bar")) R3.skip = true; });
+  el.addEventListener("pointerdown", e => {
+    if (e.target.closest(".r3-bar")) return;
+    if (R3.el.querySelector(".r3-bar.on")) { pickReroll(e); return; }
+    R3.skip = true;
+  });
   el.querySelector(".r3-ok").onclick = closeRoll3D;
   el.querySelector(".r3-again").onclick = () => { const k = R3.kind, a = R3.arg; closeRoll3D(); rollAgain(k, a); };
 }
@@ -1671,6 +1761,7 @@ async function lineUp(s, rowsOf) {
     target.y = Math.max(target.y, 1.0 * s);
     const ang = o.spec.kind === "tgt" ? o.spec.rot : 0;
     const fdir = o.spec.kind === "cmd" ? dir.clone().add(new THREE.Vector3(0.22, 0.3, 0)).normalize() : dir;
+    o.fdir = fdir;
     const qT = restQuat(o.frames[o.spec.face], fdir, screenUp(fdir, ang));
     const from = o.mesh.position.clone(), qF = o.mesh.quaternion.clone();
     const ringT = target.clone(); ringT.y = 0.02;
@@ -1701,6 +1792,53 @@ function lightRings() {
   R3.dice.forEach(o => { if (o.spec.hit) tween(350, t => { o.ring.material.opacity = 0.85 * t; }); else if (o.spec.dim) tween(350, t => { o.mesh.scale.setScalar(o.s * (1 - 0.12 * t)); }); });
 }
 
+function cmdSum() {
+  const cp = dice.rolled.reduce((a, x) => a + x.v, 0);
+  return `<b>${cp}</b> Command Point${cp === 1 ? "" : "s"}<small>${dice.rerolls} re-roll${dice.rerolls === 1 ? "" : "s"} left</small>`;
+}
+
+function setHint() {
+  const h = R3.el.querySelector(".r3-hint");
+  const cmd = R3.kind === "cmd" || R3.kind === "cmdOne";
+  if (cmd && dice.rerolls > 0) { h.textContent = `Tap a die to re-roll it (${dice.rerolls} left)`; h.style.display = ""; h.classList.add("top"); }
+  else { h.style.display = "none"; h.classList.remove("top"); }
+}
+
+function pickReroll(e) {
+  if (!(R3.kind === "cmd" || R3.kind === "cmdOne") || R3.rerolling) return;
+  const r = R3.ren.domElement.getBoundingClientRect();
+  const m = new THREE.Vector2((e.clientX - r.left) / r.width * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+  const ray = new THREE.Raycaster();
+  ray.setFromCamera(m, R3.cam);
+  const hit = ray.intersectObjects(R3.dice.map(o => o.mesh), false)[0];
+  if (!hit) return;
+  const o = R3.dice.find(q => q.mesh === hit.object);
+  if (!o || o.spec.kind !== "cmd") return;
+  if (!dice.rerolls) { toast("No re-rolls left"); return; }
+  const x = rerollCmdDie(o.spec.idx);
+  if (!x) return;
+  o.spec.face = x.i; o.spec.v = x.v;
+  R3.rerolling = true;
+  const from = o.mesh.quaternion.clone(), base = o.mesh.position.clone();
+  const qT = restQuat(o.frames[x.i], o.fdir, screenUp(o.fdir, 0));
+  const axis = new THREE.Vector3(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize();
+  playShake();
+  tween(750, t => {
+    const e2 = ease(t);
+    o.mesh.position.copy(base);
+    o.mesh.position.y += Math.sin(Math.PI * Math.min(1, t * 1.15)) * 2.2 * o.s;
+    const q = from.clone().slerp(qT, e2);
+    o.mesh.quaternion.copy(q).premultiply(new THREE.Quaternion().setFromAxisAngle(axis, 4 * Math.PI * (1 - e2)));
+  }).then(() => {
+    R3.rerolling = false;
+    playClack(0.8, Math.random());
+    R3.el.querySelector(".r3-sum").innerHTML = cmdSum();
+    R3.el.querySelector(".r3-again").textContent = "↻ Roll Again";
+    setHint();
+    renderDice();
+  });
+}
+
 function closeRoll3D() {
   if (!R3.el) return;
   R3.el.classList.remove("open");
@@ -1726,10 +1864,10 @@ function rollSpecs(kind, arg) {
     return {waves, good: hits + bh > 0, sum: `<b>${hits + bh}</b> success${hits + bh === 1 ? "" : "es"}<small>${hits} from ${L.base.length}D8${L.bonus.length ? ` + ${bh} from ${L.bonus.length} exploding` : ""} · needing ${L.need}+</small>`};
   }
   if (kind === "cmd" || kind === "cmdOne") {
-    const list = kind === "cmd" ? dice.rolled : [arg];
-    const w = list.map(x => ({kind: "cmd", color: x.c, face: x.i, v: x.v, hit: false}));
-    const cp = dice.rolled.reduce((a, x) => a + x.v, 0);
-    return {waves: [{label: kind === "cmd" ? "Command Dice" : `Re-rolling a ${arg.c} die`, dice: w}], good: true, sum: `<b>${cp}</b> Command Point${cp === 1 ? "" : "s"}<small>${kind === "cmdOne" ? `Re-rolled ${arg.c}: ${arg.v} · ` : ""}${dice.rerolls} re-roll${dice.rerolls === 1 ? "" : "s"} left</small>`};
+    const idxs = kind === "cmd" ? dice.rolled.map((_, i) => i) : [arg];
+    const w = idxs.map(i => { const x = dice.rolled[i]; return {kind: "cmd", color: x.c, face: x.i, v: x.v, hit: false, idx: i}; });
+    const one = kind === "cmdOne" ? dice.rolled[arg] : null;
+    return {waves: [{label: kind === "cmd" ? "Command Dice" : `Re-rolling a ${one.c} die`, dice: w}], good: true, sum: cmdSum()};
   }
   const T = dice.tgt;
   const opts = TGT_FACES.map((v, i) => [v, i]).filter(([v]) => T.hit ? v === "hit" : v === T.dist);
@@ -1756,6 +1894,8 @@ async function play3D(kind, arg) {
   clearDice();
   R3.el.querySelector(".r3-bar").classList.remove("on");
   R3.el.querySelector(".r3-hint").style.display = "";
+  R3.el.querySelector(".r3-hint").classList.remove("top");
+  R3.el.querySelector(".r3-hint").textContent = "Tap to skip";
   R3.el.classList.add("open");
   R3.cam.position.copy(VIEW().multiplyScalar(23.8 * (s < 1 ? 1.05 : 0.95)));
   R3.cam.lookAt(0, 0, 0);
@@ -1772,9 +1912,9 @@ async function play3D(kind, arg) {
   }
   lightRings();
   playChime(spec.good);
-  R3.el.querySelector(".r3-hint").style.display = "none";
+  setHint();
   R3.el.querySelector(".r3-sum").innerHTML = spec.sum;
-  R3.el.querySelector(".r3-again").textContent = kind === "cmdOne" ? (dice.rerolls ? `↻ Re-roll again (${dice.rerolls} left)` : "↻ Roll all again") : kind === "refail" ? "↻ Roll new pool" : "↻ Roll Again";
+  R3.el.querySelector(".r3-again").textContent = kind === "cmdOne" ? "↻ Roll all again" : kind === "refail" ? "↻ Roll new pool" : "↻ Roll Again";
   R3.el.querySelector(".r3-bar").classList.add("on");
   R3.el.querySelector(".r3-ok").focus();
 }

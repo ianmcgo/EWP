@@ -73,10 +73,17 @@ The unit picker runs each unit through the same rules *before* you add it: units
 
 ## Dice roller
 
-- **D8 attack roll**: pick dice count and target number; optional Exploding 8s (each natural 8 that succeeds adds a bonus die, recursively). "Re-roll misses" re-rolls failed dice.
-- **Command Dice**: "Use my army" loads 3 Black plus one die per Tactician colour in the list. After rolling you can tap dice to re-roll them, one per Command Unit in the list (per the rulebook). The CP tracker lets you spend points through the Round.
-- **Targeting Die**: 3 On Target faces (shown as a plain "ON TARGET" tile) and 5 scatter faces (3, 3, 4, 5, 6). A scatter result spins in and lands rotated a random 1–179° clockwise or counter-clockwise; the arrow on the tile shows the scatter direction, and the angle is also given in text. The face count was checked against the Targeting Die STL.
-- **Command Dice faces**:
+The dice panel opens on a menu of three big buttons:
+
+- **D8** opens its options: number of dice, the target number, and Exploding 8s, then Roll. If the last roll had misses, there's also "Re-roll misses from last roll".
+- **Command** opens its options: Black/Orange/Green counts, "Use my army" (3 Black plus one die per Tactician colour in the list), the face settings, then Roll.
+- **Target** rolls the Targeting Die straight away (3 On Target faces; scatter 3, 3, 4, 5, 6 with a random direction).
+
+Results aren't shown on the option screens. They appear in the 3D roll and in the **Roll Log**, which sits at the bottom of every dice screen. The log keeps the last 60 rolls in the browser (`ewp_dice_log_v1`), each with its time, the dice (hits green, exploding 8s outlined, bonus dice dashed) and the total. It can be cleared.
+
+**Command Die re-rolls**: after a Command roll you get one re-roll per Command Unit in your list. Tap a die in the 3D lineup and it hops and lands on a new face; with 3D off, tap the die in the latest log entry instead. Re-rolled dice are outlined in the log, and the entry's CP total updates.
+
+**Command Dice faces**:
 
   | Colour | Blank | 1 sword | 2 swords | 3 swords | Average CP |
   |---|---|---|---|---|---|
@@ -84,7 +91,7 @@ The unit picker runs each unit through the same rules *before* you add it: units
   | Orange | 1 | 3 | 2 | – | 1.17 |
   | Green | – | 2 | 3 | 1 | 1.83 |
 
-  The faces can still be edited under "Command dice faces" if needed; the setting is saved in the browser (key `ewp_dice_v2`).
+These can be edited under "Command dice faces"; the setting is saved in the browser (`ewp_dice_v2`).
 
 ### 3D roll animation
 
