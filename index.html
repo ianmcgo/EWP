@@ -274,6 +274,9 @@ body.noscroll{overflow:hidden}
 .rtc b{font-family:var(--head);font-size:17px}
 .rtc small{color:var(--muted)}
 .rtc:hover{border-color:var(--fac)}
+.rtc.ext,.rn.ext{text-decoration:none;color:inherit}
+.rtc.ext{border-style:dashed}
+.rn.ext{color:var(--fac)}
 .rhit{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:9px 12px;margin:0 auto 8px}
 .rhit small{display:block;color:var(--fac);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .rhit b{display:block;font-family:var(--head);font-size:17px}
@@ -2526,7 +2529,10 @@ function secHead(s, ci, si) {
 
 function renderReader() {
   const q = rd.q.trim().toLowerCase();
-  let nav = `<button class="rn ${q ? "" : ""}" data-rch="-1" ${!q && rd.ch === -1 ? 'aria-current="true"' : ""}>Contents</button>` + RCH.map((c, i) => `<button class="rn" data-rch="${i}" ${!q && rd.ch === i ? 'aria-current="true"' : ""}><span>${i + 1}</span>${esc(c.t)}</button>`).join("");
+  const n = RCH.length;
+  const ext = [[RULES_URL, "Rulebook PDF"], [ERRATA_URL, "FAQ &amp; Errata PDF"]];
+  let nav = `<button class="rn" data-rch="-1" ${!q && rd.ch === -1 ? 'aria-current="true"' : ""}>Contents</button>` + RCH.map((c, i) => `<button class="rn" data-rch="${i}" ${!q && rd.ch === i ? 'aria-current="true"' : ""}><span>${i + 1}</span>${esc(c.t)}</button>`).join("")
+    + ext.map(([u, t], k) => `<a class="rn ext" href="${u}" target="_blank" rel="noopener"><span>${n + k + 1}</span>${t} ↗</a>`).join("");
   let main = "";
   if (q) {
     const terms = q.split(/\s+/).filter(Boolean);
@@ -2543,7 +2549,9 @@ function renderReader() {
     }).join("") || `<p class="hint">Nothing found. Try a single word like “pinned” or “assault”.</p>`;
   } else if (rd.ch < 0 || rd.ch >= RCH.length) {
     main = `<h2>${esc(RULES.v || "Epic Warpath Rules")}</h2><p class="hint">From the Mantic Companion online rules, with FAQ &amp; Errata v1.2 keyword changes. Tap a chapter or search above.</p><div class="rtoc">` +
-      RCH.map((c, i) => `<button class="rtc" data-rch="${i}"><span>${i + 1}</span><b>${esc(c.t)}</b><small>${c.s.filter(s => s.t && s.l === 1).length || c.s.length} sections</small></button>`).join("") + `</div>`;
+      RCH.map((c, i) => `<button class="rtc" data-rch="${i}"><span>${i + 1}</span><b>${esc(c.t)}</b><small>${c.s.filter(s => s.t && s.l === 1).length || c.s.length} sections</small></button>`).join("") +
+      `<a class="rtc ext" href="${RULES_URL}" target="_blank" rel="noopener"><span>${n + 1}</span><b>Rulebook PDF ↗</b><small>Full Epic Warpath rulebook (Mantic)</small></a>` +
+      `<a class="rtc ext" href="${ERRATA_URL}" target="_blank" rel="noopener"><span>${n + 2}</span><b>FAQ &amp; Errata PDF ↗</b><small>v1.2 – free download from Mantic's store</small></a>` + `</div>`;
   } else {
     const c = RCH[rd.ch];
     const toc = c.s.map((s, si) => s.t && s.l === 1 ? `<button class="rt" data-go="${rd.ch}:${si}">${esc(s.t)}</button>` : "").join("");
@@ -2553,7 +2561,7 @@ function renderReader() {
   }
   $("#rdNav").innerHTML = nav;
   $("#rdMain").innerHTML = main;
-  $("#rdChSel").innerHTML = `<option value="-1">Contents</option>` + RCH.map((c, i) => `<option value="${i}" ${!q && rd.ch === i ? "selected" : ""}>${i + 1}. ${esc(c.t)}</option>`).join("");
+  $("#rdChSel").innerHTML = `<option value="-1">Contents</option>` + RCH.map((c, i) => `<option value="${i}" ${!q && rd.ch === i ? "selected" : ""}>${i + 1}. ${esc(c.t)}</option>`).join("") + `<option value="pdf">${n + 1}. Rulebook PDF ↗</option><option value="errata">${n + 2}. FAQ &amp; Errata PDF ↗</option>`;
   $("#rdMain").querySelectorAll("img").forEach(im => im.addEventListener("error", () => im.remove()));
 }
 
@@ -2565,7 +2573,7 @@ $("#reader").addEventListener("click", e => {
   if (t.dataset.go) { const [ci, si] = t.dataset.go.split(":").map(Number); rd.ch = ci; rd.q = ""; $("#rdSearch").value = ""; renderReader(); setTimeout(() => goSection(si), 20); }
 });
 $("#rdSearch").addEventListener("input", e => { rd.q = e.target.value; renderReader(); $("#rdMain").scrollTop = 0; });
-$("#rdChSel").addEventListener("change", e => { rd.ch = +e.target.value; rd.q = ""; $("#rdSearch").value = ""; renderReader(); $("#rdMain").scrollTop = 0; });
+$("#rdChSel").addEventListener("change", e => { if (e.target.value === "pdf" || e.target.value === "errata") { window.open(e.target.value === "pdf" ? RULES_URL : ERRATA_URL, "_blank", "noopener"); renderReader(); return; } rd.ch = +e.target.value; rd.q = ""; $("#rdSearch").value = ""; renderReader(); $("#rdMain").scrollTop = 0; });
 $("#btnRules").onclick = () => openRules();
 $("#rdPrint").onclick = () => { closeRules(); runPrint({ref: 1}); };
 document.querySelector("#tabs [data-rules]").onclick = () => openRules();
