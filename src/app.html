@@ -399,6 +399,17 @@ footer a{color:var(--muted)}
   .col[data-tab].on{display:block}
   .bar{padding:8px 12px;gap:10px;position:static}
   #btnRules,#btnDice{display:none}
+  header.top{gap:6px}
+  header.top .brand{flex:1 1 100%}
+  .listname{flex:1 1 0;min-width:0;font-size:18px;padding:5px 4px;text-overflow:ellipsis}
+  header.top .tbtn{flex:none;padding:6px 9px;font-size:13px}
+  header.top .tbtn .my{display:none}
+}
+@media (max-width:370px){
+  header.top{padding:8px 8px;gap:5px}
+  header.top .tbtn{padding:6px 7px;font-size:12px}
+  header.top .tbtn .my{display:none}
+  .listname{font-size:16px}
   .toast{bottom:74px}
   .tabs small{display:block;font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:0;color:var(--muted)}
   header.top{padding:8px 12px}
@@ -473,7 +484,7 @@ footer a{color:var(--muted)}
     <input class="listname" id="listName" aria-label="List name">
     <button class="tbtn" id="btnRules">📖 Rules</button>
     <button class="tbtn" id="btnDice">🎲 Dice</button>
-    <button class="tbtn" id="btnLists">My Lists</button>
+    <button class="tbtn" id="btnLists"><span class="my">My </span>Lists</button>
     <button class="tbtn" id="btnExport">Export</button>
     <button class="tbtn" id="btnShare">Share</button>
     <button class="tbtn primary" id="btnPrint">Print</button>
