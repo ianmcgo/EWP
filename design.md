@@ -61,11 +61,11 @@ The unit picker runs each unit through the same rules *before* you add it: units
 ## Rules links
 
 The Summary panel's **Rules** section, the footer and the printout link to:
-- **Rulebook PDF**: Mantic's store page (£25 digital rulebook and tokens).
+- **Rulebook PDF**: the rulebook PDF hosted on Mantic's own site (`manticgames.com/wp-content/uploads/2025/07/MGEWM101-Epic-Warpath-Rulebook-EN.pdf`), opened directly.
 - **FAQ & Errata PDF**: free from Mantic's store.
 - **Free online rules**: the Mantic Companion rules (free account required).
 
-The rulebook itself isn't included or hosted here.
+The rulebook itself isn't copied into this repo; the link points at Mantic's copy.
 
 ## Sharing, export, print
 

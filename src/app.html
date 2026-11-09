@@ -356,7 +356,7 @@ footer a{color:var(--muted)}
   </main>
   <footer>
     Created by Ian McGonigal · <a href="https://ianmcgo.github.io/website/" target="_blank" rel="noopener">Website</a> · <a href="https://www.patreon.com/cw/ianmcg" target="_blank" rel="noopener">Patreon</a><br>
-    <a href="https://www.manticgames.com/epic-warpath/epic-warpath-digital-rulebook/" target="_blank" rel="noopener">Rulebook PDF</a> · <a href="https://www.manticgames.com/epic-warpath/getting-started/latest-faq-errata/" target="_blank" rel="noopener">FAQ &amp; Errata</a> · <a href="https://companion.manticgames.com/epic-warpath-rules/" target="_blank" rel="noopener">Free online rules</a><br>
+    <a href="https://www.manticgames.com/wp-content/uploads/2025/07/MGEWM101-Epic-Warpath-Rulebook-EN.pdf" target="_blank" rel="noopener">Rulebook PDF</a> · <a href="https://www.manticgames.com/epic-warpath/getting-started/latest-faq-errata/" target="_blank" rel="noopener">FAQ &amp; Errata</a> · <a href="https://companion.manticgames.com/epic-warpath-rules/" target="_blank" rel="noopener">Free online rules</a><br>
     Unofficial fan tool. Epic Warpath and all related content © Mantic Games. Data from the Epic Warpath Rulebook (1st Edition).
   </footer>
   <nav class="tabs" id="tabs">
@@ -373,7 +373,7 @@ footer a{color:var(--muted)}
 </div>
 <script>
 const DATA = __DATA__;
-const RULES_URL = "https://www.manticgames.com/epic-warpath/epic-warpath-digital-rulebook/";
+const RULES_URL = "https://www.manticgames.com/wp-content/uploads/2025/07/MGEWM101-Epic-Warpath-Rulebook-EN.pdf";
 const COMPANION_URL = "https://companion.manticgames.com/epic-warpath-rules/";
 const ERRATA_URL = "https://www.manticgames.com/epic-warpath/getting-started/latest-faq-errata/";
 const FAC_COLORS = {"asterians":"#7fd3e6","enforcers":"#5b9be6","forge-fathers":"#e0913f","gcps":"#9cbc5e","marauders":"#d6ad3c","nameless":"#bb7ddb","plague":"#8fcc48","veer-myn":"#df6a58"};
@@ -795,7 +795,7 @@ function renderInfo() {
     }
   });
   h += `</div>
-    <div class="side-sec"><h3>Rules</h3><div class="rlinks"><a class="tbtn" href="${RULES_URL}" target="_blank" rel="noopener">📖 Rulebook PDF</a><a class="tbtn" href="${ERRATA_URL}" target="_blank" rel="noopener">FAQ &amp; Errata PDF</a><a class="tbtn" href="${COMPANION_URL}" target="_blank" rel="noopener">Free online rules</a></div><p class="hint" style="margin:6px 0 0">Rulebook PDF and FAQ &amp; Errata download from Mantic's store (rulebook £25, errata free). The free online rules need a free Mantic Companion account.</p></div>
+    <div class="side-sec"><h3>Rules</h3><div class="rlinks"><a class="tbtn" href="${RULES_URL}" target="_blank" rel="noopener">📖 Rulebook PDF</a><a class="tbtn" href="${ERRATA_URL}" target="_blank" rel="noopener">FAQ &amp; Errata PDF</a><a class="tbtn" href="${COMPANION_URL}" target="_blank" rel="noopener">Free online rules</a></div><p class="hint" style="margin:6px 0 0">The Rulebook PDF opens directly from Mantic's site. The FAQ &amp; Errata is a free download from Mantic's store; the online rules need a free Mantic Companion account.</p></div>
     <div class="side-sec"><h3>Army Special Rule</h3>${f.rules.map(([n, t, er]) => `<p style="margin:0;font-size:13px"><b>${esc(n)}:</b> ${esc(t)}${er ? ` <span class="e-badge" title="${esc(er)}">ERRATA</span>` : ""}</p>`).join("")}</div>
     <div class="side-sec"><h3>Strategic Orders</h3>${f.orders.map(([n, c, w, e, er]) => `<div class="order"><span class="cost">${esc(c)} CP</span><b>${esc(n)}</b>${er ? ` <span class="e-badge">ERRATA</span>` : ""}<div class="when">${esc(w)}</div><div>${esc(e)}</div></div>`).join("")}</div>
     <div class="side-sec"><h3>Keywords in this list</h3>${usedGlossary().map(([n, t]) => `<details class="gl"><summary>${esc(n)}</summary><p>${esc(t)}</p></details>`).join("") || `<span class="hint">Add units to see the keywords you'll need.</span>`}</div>
