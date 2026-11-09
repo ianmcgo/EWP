@@ -69,6 +69,9 @@ The rulebook itself isn't copied into this repo; the link points at Mantic's cop
 
 ## Rules reference
 
+(The reader's 🖨 Quick ref button prints the one-page rules reference.)
+
+
 **📖 Rules** (header button, or the Rules tab on phones) opens a full-screen reader with all 15 chapters of the Epic Warpath Rules (version 1.1) from the Mantic Companion online rules:
 - Chapter list on the left (a dropdown on phones), a Contents page, section jump buttons at the top of each chapter, and previous/next chapter buttons.
 - **Search** across every section; results show the chapter, page and a highlighted snippet, and tapping one jumps to that section.
@@ -90,14 +93,16 @@ The fourth dice menu button, **Scenario**, follows the Battle Scenario steps in 
 
 - **Share** encodes the list as base64url JSON in the URL hash (`#l=…`). Opening the link imports a copy. Links only work for other people when the page is hosted (e.g. GitHub Pages), not from a local file.
 - **Export** gives a plain-text list (for forums/Discord) and a `.json` download that can be re-imported from *My Lists*.
-- **Print** builds a print-only layout, organized top to bottom:
-  1. Centered header with army name, faction, and a stat strip (points, units, Unit Strength, Army Nerve, Command Dice pool).
-  2. **Roster**: one compact table per Company plus Battlefield Stratagems, side by side.
-  3. **Unit Profiles**: two-column cards with centered stat and weapon tables. Identical units are printed once with a ×N badge to save space.
-  4. **Army Rules**: army special rule, Command Pool reminder, and a Strategic Orders table.
-  5. **Keywords Used**: only the keywords in your list, in three columns.
+- **Print** opens a dialog (choices are remembered) with four sections, each starting on a new page:
+  1. **Army roster & summary**: centered header and stat strip, a compact roster table per Company plus Battlefield Stratagems, two-column unit profiles (identical units printed once with ×N), army rules, Strategic Orders and only the keywords your list uses. Long rules text stays left-aligned; headings, stats and tables are centered.
+     - **Include universal Tactical Orders** adds Keep Going!, Fight On! and Courage! to the summary (and to the command cards).
+  2. **Unit reference cards**: trading-card style at exactly 2.5 × 3.5 in, nine per page in a 3 × 3 grid. Each card has the name banner, a points badge in the faction colour, type/bases/slot line, the unit photo, a stat bar (SP SH AS AR SV HT US), keywords, a weapons table, Command Transport and special rules, and a footer with faction and Army Nerve. One card per unit type by default (×N shown), or one per unit taken.
+  3. **Command cards**: the same card frame for your faction's Strategic Orders (CP badge, When box, effect), your Battlefield Stratagems (points badge, gold frame) and, if chosen, the Tactical Orders (grey frame).
+  4. **One-page rules reference**: a three-column Letter/A4 sheet based on the rulebook's Quick Reference Sheets: round sequence, Command Phase, Action Tokens, Tactical Orders, Movement, Shooting with modifiers, Blast weapons, Assault with modifiers, Pinning, End Phase, key keywords, objectives and game end. Also available from the 🖨 Quick ref button in the rules reader.
 
-  Long rules text stays left-aligned for readability; headings, stats and tables are centered.
+  **Cutting**: there are no cut lines. Cards sit edge to edge inside a full-bleed dark frame, so two straight cuts each way separate a sheet and every card keeps an even dark border even if a cut is slightly off. Print at 100% / Actual size with headers and footers off (page margin is 0.2 in).
+
+  **Fitting**: each card's text auto-shrinks (7 pt down to about 5 pt) until it fits. Before going very small it shortens the photo, then drops it; if a card still overflows (very long Super-heavy rules), its special rules continue on a second card marked 1/2 and 2/2. Printing waits up to 4 s for unit photos to load.
 
 ## Dice roller
 

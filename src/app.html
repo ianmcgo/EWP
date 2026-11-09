@@ -326,6 +326,63 @@ body.noscroll{overflow:hidden}
 .lc.tg i{font-style:normal;font-size:10px;color:var(--fac);display:inline-block}
 @media (max-width:1100px){.dmenu{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:600px){.dmenu{gap:8px}.dbig{min-height:130px;padding:12px 2px}.dbig b{font-size:18px;letter-spacing:.02em}.dbig small{font-size:11px}}
+.popt{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border:1px solid var(--line);border-radius:9px;margin-bottom:7px;background:var(--panel2);cursor:pointer}
+.popt.ind{margin-left:26px;background:transparent}
+.popt input{accent-color:var(--fac);width:18px;height:18px;margin-top:2px;flex:none}
+.popt small{display:block;color:var(--muted);font-size:12.5px}
+.printonly.measuring{display:block!important;position:absolute;left:-30000px;top:0;width:8.1in;visibility:hidden}
+.tc{width:2.5in;height:3.5in;box-sizing:border-box;padding:.085in;background:#1b1f25;position:relative;overflow:hidden;font-family:var(--body);color:#1a1a1a;--fs:6.6pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;break-inside:avoid}
+.tc-in{height:100%;display:flex;flex-direction:column;border-radius:.09in;background:#f3efe6;overflow:hidden;box-shadow:0 0 0 .025in var(--fc) inset}
+.tc-top{display:flex;align-items:center;gap:.04in;background:linear-gradient(90deg,#23282f,#363c45);color:#fff;padding:.05in .06in .04in .09in;border-bottom:.025in solid var(--fc)}
+.tc-name{flex:1;font-family:var(--head);font-weight:700;font-size:10.5pt;line-height:1.02;letter-spacing:.02em;text-transform:uppercase}
+.tc-pts{flex:none;min-width:.36in;height:.36in;border-radius:50%;background:var(--fc);color:#111;display:grid;place-items:center;align-content:center;font-family:var(--head);font-weight:700;font-size:10.5pt;line-height:.9;border:.02in solid #fff}
+.tc-pts small{display:block;font-size:5pt;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.tc-sub{font-size:6pt;font-weight:600;color:#444;padding:.025in .09in;background:#e6e0d2;border-bottom:1px solid #cfc6b3;text-align:center}
+.tc-art{height:.95in;background:#11151a;display:flex;align-items:center;justify-content:center;overflow:hidden;border-bottom:.02in solid var(--fc);flex:none}
+.tc-art.short{height:.55in}
+.tc-art img{width:100%;height:100%;object-fit:cover}
+.tc-art.none span{font-family:var(--head);color:var(--fc);font-size:12pt;letter-spacing:.15em;text-transform:uppercase;opacity:.8}
+.tc-stats{display:grid;grid-template-columns:repeat(7,1fr);background:#2a2f37;color:#fff;text-align:center;flex:none}
+.tc-stats div{padding:.015in 0;border-right:1px solid #444b55}
+.tc-stats div:last-child{border-right:0}
+.tc-stats small{display:block;font-size:4.6pt;font-weight:700;color:#bfc6cf;letter-spacing:.05em}
+.tc-stats b{font-family:var(--head);font-size:8.5pt;line-height:1.05}
+.tc-body{flex:1;min-height:0;overflow:hidden;padding:.04in .07in;font-size:var(--fs);line-height:1.22}
+.tc-kw{font-style:italic;text-align:center;font-weight:600;color:#3b3b3b;margin-bottom:.03in}
+.tc-w{width:100%;border-collapse:collapse;font-size:var(--fs)}
+.tc-w th{font-size:calc(var(--fs) * .82);text-transform:uppercase;letter-spacing:.04em;color:#555;border-bottom:1px solid #b9b09c;text-align:center;padding:0 .015in}
+.tc-w th:first-child,.tc-w td:first-child{text-align:left}
+.tc-w td{border-bottom:1px solid #ddd5c4;padding:.012in .015in;text-align:center;vertical-align:top}
+.tc-w td:last-child{font-style:italic}
+.tc-rule{margin:.03in 0 0}
+.tc-note{margin:.03in 0 0;font-size:calc(var(--fs) * .85);color:#666;font-style:italic;text-align:center}
+.tc-more{font-style:italic;color:#7a5a12}
+.tc-cont{font-family:var(--head);font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:calc(var(--fs) * 1.1);text-align:center;margin-bottom:.03in}
+.tc-foot{flex:none;display:flex;justify-content:space-between;background:#23282f;color:#cfd4db;font-size:5.2pt;padding:.02in .09in;letter-spacing:.06em;text-transform:uppercase;border-top:.02in solid var(--fc)}
+.tc.cmd .tc-body{display:flex;flex-direction:column;gap:.05in;padding:.07in .09in;font-size:calc(var(--fs) * 1.25)}
+.tc.cmd .tc-when{background:#e6e0d2;border-left:.03in solid var(--fc);padding:.04in .06in;border-radius:.03in}
+.tc.cmd .tc-when b{display:block;font-family:var(--head);font-size:7pt;letter-spacing:.08em;text-transform:uppercase;color:#555}
+.tc.cmd .tc-eff{line-height:1.3}
+.tc.cmd .tc-pts.cp{border-radius:.08in}
+.tc.cmd.t{--fc:#9aa7b4!important}
+.tc.cmd.b{--fc:#c9a227!important}
+.tc.cmd .tc-top{padding:.08in .06in .07in .1in}
+.tc.cmd .tc-name{font-size:12pt}
+.tc.cmd .tc-sub{font-size:6.5pt}
+.qr{font-size:8.1pt;line-height:1.3;color:#111}
+.qr-head{text-align:center;font-family:var(--head);font-size:15pt;letter-spacing:.05em;text-transform:uppercase;border-bottom:2px solid #111;padding-bottom:3px;margin-bottom:6px}
+.qr-head b{font-size:17pt}
+.qr-head span{display:block;font-family:var(--body);font-size:7pt;letter-spacing:0;text-transform:none;color:#555}
+.qr-cols{columns:3;column-gap:.18in}
+.qr section{break-inside:avoid;border:1px solid #bbb;border-radius:4px;padding:3px 6px 4px;margin:0 0 5px}
+.qr h4{margin:0 0 2px;font-family:var(--head);font-size:9.5pt;letter-spacing:.06em;text-transform:uppercase;text-align:center;background:#222;color:#fff;border-radius:3px;padding:1px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.qr p{margin:2px 0}
+.qr ol,.qr ul{margin:2px 0;padding-left:14px}
+.qr li{margin:1px 0}
+.qr table{width:100%;border-collapse:collapse;margin:2px 0}
+.qr td{border-top:1px solid #ddd;padding:1px 3px;vertical-align:top}
+.qr td:first-child{font-weight:700;white-space:nowrap;text-align:center;width:1%}
+.qr-foot{text-align:center;color:#777;font-size:6.5pt;margin-top:4px}
 footer{padding:16px;text-align:center;color:var(--dim);font-size:13px;border-top:1px solid var(--line)}
 footer a{color:var(--muted)}
 .hint{font-size:12.5px;color:var(--muted)}
@@ -350,7 +407,10 @@ footer a{color:var(--muted)}
   .kv{grid-template-columns:repeat(2,1fr)}
 }
 @media print{
-  @page{margin:9mm}
+  @page{margin:.2in}
+  .pr-sec+.pr-sec{break-before:page}
+  .tc-page{display:grid;grid-template-columns:repeat(3,2.5in);grid-auto-rows:3.5in;justify-content:center;align-content:start;break-after:page}
+  .tc-page:last-child{break-after:auto}
   html,body{background:#fff!important;color:#111;font-size:10px;line-height:1.3}
   .app>*:not(.printonly){display:none!important}
   .printonly{display:block!important}
@@ -435,7 +495,7 @@ footer a{color:var(--muted)}
     <button data-rules>Rules</button>
   </nav>
   <div class="reader" id="reader" role="dialog" aria-label="Rules reference">
-    <div class="rd-top"><b class="rd-title">📖 Rules</b><select id="rdChSel" aria-label="Chapter"></select><input id="rdSearch" class="search" type="search" placeholder="Search the rules…" aria-label="Search the rules"><button class="ibtn" data-rclose aria-label="Close rules">✕</button></div>
+    <div class="rd-top"><b class="rd-title">📖 Rules</b><select id="rdChSel" aria-label="Chapter"></select><input id="rdSearch" class="search" type="search" placeholder="Search the rules…" aria-label="Search the rules"><button class="tbtn" id="rdPrint" title="Print a one-page rules reference">🖨 Quick ref</button><button class="ibtn" data-rclose aria-label="Close rules">✕</button></div>
     <div class="rd-body"><nav class="rd-nav" id="rdNav"></nav><article class="rd-main" id="rdMain"></article></div>
   </div>
   <aside class="drawer" id="drawer" aria-label="Dice roller">
@@ -1089,7 +1149,7 @@ function openExport() {
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     };
-    o.querySelector("[data-print]").onclick = () => { o.remove(); doPrint(); };
+    o.querySelector("[data-print]").onclick = () => { o.remove(); openPrintDialog(); };
   });
 }
 
@@ -1131,7 +1191,169 @@ function openShare() {
   });
 }
 
-function doPrint() {
+const TACTICAL = [
+  {n: "Keep Going!", sub: "Extra Activation", c: "1", w: "After activating a Unit in a Phase and completing its action.", e: "Activate another Unit before returning play to your opponent to have their turn. A player may only interrupt the normal turn sequence like this once before their opponent must take another turn. This order may not be used with the first player's first Activation in a Phase (the player going first in a Phase may not Activate two Units until their opponent has Activated at least one)."},
+  {n: "Fight On!", sub: "Re-roll", c: "1", w: "After rolling to hit or to damage a target.", e: "Re-roll up to two dice in a Unit's roll that failed to hit or damage a target with a Shooting or Assault attack. Dice already re-rolled for other reasons can't be re-rolled. Only once per roll against a specific target (with all the involved weapons) – but you may spend another CP on the damage roll, or on a roll against a different target."},
+  {n: "Courage!", sub: "Clear Pin marker", c: "1+", w: "In the End Phase (Roll for Pin markers removal step), before any dice are rolled.", e: "Each Command Point spent removes one Pin marker from one friendly Unit."},
+];
+let popts = {roster: 1, tactical: 1, units: 0, perUnit: 0, cmds: 0, ref: 0};
+try { popts = Object.assign(popts, JSON.parse(store(true, "ewp_print_v1") || "{}")); } catch (e) {}
+
+function cardFrame(inner, cls) { return `<div class="tc ${cls || ""}" style="--fc:${FAC_COLORS[cur.faction] || "#e0a63a"}"><div class="tc-in">${inner}</div></div>`; }
+
+function unitCardHtml(u, e, n, part) {
+  const f = fac();
+  const head = `<div class="tc-top"><span class="tc-name">${esc(u.n)}</span><span class="tc-pts">${unitPts(e)}<small>pts</small></span></div>
+    <div class="tc-sub">${esc(typeLabel(u))} · ${u.b} base${u.b > 1 ? "s" : ""} · ${esc(roles(u).includes("HQ") ? "HQ" : u.c)}${u.u ? " · Unique" : ""}${n > 1 ? ` · ×${n}` : ""}</div>`;
+  if (part === 2) {
+    return cardFrame(head + `<div class="tc-body"><div class="tc-cont">Special Rules (continued)</div>${(u.r || []).map(([rn, x]) => `<p class="tc-rule"><b>${esc(rn)}:</b> ${esc(x)}</p>`).join("")}</div><div class="tc-foot"><span>${esc(f.n)}</span><span>2/2</span></div>`, "unit");
+  }
+  const art = u.img ? `<div class="tc-art"><img src="${esc(u.img)}" alt=""></div>` : `<div class="tc-art none"><span>${esc(f.n)}</span></div>`;
+  const stats = `<div class="tc-stats">${[["SP", u.s[0]], ["SH", u.s[1]], ["AS", u.s[2]], ["AR", u.s[3]], ["SV", u.s[4]], ["HT", u.ht], ["US", u.us]].map(([k, v]) => `<div><small>${k}</small><b>${esc(v || "-")}</b></div>`).join("")}</div>`;
+  const kw = `<div class="tc-kw">${esc(u.k.join(", ") || "No keywords")}</div>`;
+  const wt = `<table class="tc-w"><tr><th>Weapon</th><th>Rng</th><th>AD</th><th>Keywords</th></tr>${u.w.map(([g, nm, r, a, k, ch]) => `<tr><td>${g ? `<i>${esc(g)}:</i> ` : ""}${esc(nm)}${ch ? "*" : ""}</td><td>${esc(r === "A" ? "A" : r + '"')}</td><td>${esc(a)}</td><td>${esc(k || "-")}</td></tr>`).join("")}</table>`;
+  const ct = e.ct && u.ct ? `<p class="tc-rule"><b>Command Transport:</b> ${esc(u.ct.name)} (+${u.ct.p} pts)</p>` : "";
+  const rules = part === 1 ? `<p class="tc-rule tc-more">Special rules continue on the next card.</p>` : (u.r || []).map(([rn, x]) => `<p class="tc-rule"><b>${esc(rn)}:</b> ${esc(x)}</p>`).join("");
+  return cardFrame(head + art + stats + `<div class="tc-body">${kw}${wt}${ct}${rules}${u.w.some(w => w[5]) ? `<p class="tc-note">* firing mode – pick one each time it fires</p>` : ""}</div><div class="tc-foot"><span>${esc(f.n)}</span><span>Nerve ${esc(f.nerve)}${part === 1 ? " · 1/2" : ""}</span></div>`, "unit");
+}
+
+function orderCardHtml(kind, o) {
+  const f = fac();
+  const sub = kind === "s" ? `Strategic Order · ${esc(f.n)}` : kind === "t" ? `Tactical Order · All armies${o.sub ? " · " + esc(o.sub) : ""}` : `Battlefield Stratagem · single use`;
+  const note = kind === "s" ? "Must be within Command Radius of a friendly Command Unit. One Strategic Order per activation." : kind === "t" ? "Any friendly Unit In Play." : "";
+  return cardFrame(`<div class="tc-top"><span class="tc-name">${esc(o.n)}</span><span class="tc-pts cp">${esc(o.c)}<small>${kind === "b" ? "pts" : "CP"}</small></span></div>
+    <div class="tc-sub">${sub}</div>
+    <div class="tc-body cmd">${o.w ? `<div class="tc-when"><b>When</b>${esc(o.w)}</div>` : ""}<div class="tc-eff">${o.html || esc(o.e)}</div>${note ? `<p class="tc-note">${note}</p>` : ""}</div>
+    <div class="tc-foot"><span>${kind === "t" ? "Epic Warpath" : esc(f.n)}</span><span>${kind === "b" ? "Battlefield Stratagem" : kind === "t" ? "Tactical" : "Strategic"}</span></div>`, "cmd " + kind);
+}
+
+function stratCards() {
+  const st = cur.strat, out = [];
+  DATA.stratagems.forEach(x => {
+    if (x.p && st[x.id]) out.push({n: x.n, c: String(x.p), e: x.d});
+    if (x.tiers && st.intel) { const tr = x.tiers.find(q => q[0] === st.intel); out.push({n: x.n, c: String(tr[1]), e: `${st.intel} intel chance${st.intel > 1 ? "s" : ""}. ` + x.d}); }
+    if (x.dice) { const parts = x.dice.filter(([c]) => st.recon[c]); if (parts.length) out.push({n: x.n, c: String(parts.reduce((a, [c, v]) => a + st.recon[c] * v, 0)), e: parts.map(([c]) => st.recon[c] + " " + c).join(", ") + " Command Dice. " + x.d}); }
+  });
+  return out;
+}
+
+function unitCardList(perUnit) {
+  const items = [];
+  const seen = new Map();
+  cur.companies.forEach(co => co.units.forEach(e => {
+    const u = unitOf(e);
+    if (!u) return;
+    if (perUnit) { items.push({u, e, n: 1}); return; }
+    const k = u.id + (e.ct ? "+ct" : "");
+    if (seen.has(k)) seen.get(k).n++; else { const it = {u, e, n: 1}; seen.set(k, it); items.push(it); }
+  }));
+  items.sort((a, b) => sortKey(a.u) - sortKey(b.u));
+  return items;
+}
+
+function pages(cards) {
+  let h = "";
+  for (let i = 0; i < cards.length; i += 9) h += `<div class="tc-page">${cards.slice(i, i + 9).join("")}</div>`;
+  return h;
+}
+
+function quickRefHtml() {
+  return `<div class="qr"><div class="qr-head"><b>EPIC WARPATH</b> Quick Rules Reference <span>Rules v1.1 + FAQ &amp; Errata v1.2</span></div><div class="qr-cols">
+  <section><h4>Round Sequence</h4><ol><li><b>Command Phase</b></li><li><b>Movement Phase</b></li><li><b>Overwatch Phase</b></li><li><b>Combat Phase</b></li><li><b>End Phase</b></li></ol><p>In every Phase, players alternate activating Units. The Initiative player chooses who goes first in each Phase and the order of simultaneous rules.</p></section>
+  <section><h4>1. Command Phase</h4><ol><li><b>Roll Command Points:</b> 3 Black + Tactician dice of Units In Play. Re-roll one die per Command Unit In Play. Swords = CP; unspent CP are lost at the end of the Round.</li><li><b>Mandatory Tokens</b> (face up): Engaged Units get a Combat Token. Unengaged Pinned Units get an Advance Token (Pinned and Engaged: none). Unpinned, unengaged Command Units get Sprint + Overwatch.</li><li><b>Hidden Tokens:</b> all other Units (and Reserves arriving) get one token face down. Transported Units share their transport's token.</li><li><b>Initiative:</b> both roll D8. Round 1 re-roll ties; later ties go to the player who didn't have it last Round.</li><li><b>Reveal</b> tokens. Forgotten Units get a Combat Token.</li></ol></section>
+  <section><h4>Action Tokens</h4><table><tr><td>Advance</td><td>Move up to the first SP value, then swap for a Combat Token (may shoot in the Combat Phase).</td></tr><tr><td>Sprint</td><td>Move up to the second SP value – the only way to engage in Assault. If it engages: swap for a Combat Token (Combat (-1) if Hindered by terrain/buildings). If not: remove the token.</td></tr><tr><td>Overwatch</td><td>Shoot in the Overwatch Phase, or fire at a Unit that Assaults it. Needed for Indirect Blast fire.</td></tr><tr><td>Combat</td><td>Activate in the Combat Phase to shoot, or to trigger an Assault the Unit is engaged in.</td></tr></table></section>
+  <section><h4>Tactical Orders (any Unit)</h4><table><tr><td>1 CP</td><td><b>Keep Going!</b> After a Unit completes its action: activate another Unit. Not on the first activation of a Phase; once before your opponent's next turn.</td></tr><tr><td>1 CP</td><td><b>Fight On!</b> After rolling to hit or damage: re-roll up to 2 failed dice, once per roll per target.</td></tr><tr><td>1+ CP</td><td><b>Courage!</b> End Phase, before Pin rolls: remove 1 Pin marker per CP.</td></tr></table><p>Strategic Orders: Unit must be within Command Radius of a Command Unit; one per activation; declare before rolling.</p></section>
+  <section><h4>2. Movement Phase</h4><p>Spend Advance/Sprint tokens. Must Sprint to engage in Assault. After moving, swap the token for a Combat Token as appropriate. Overwatch Units may fire at Units assaulting them.</p><p><b>Coherency:</b> each Base within 1" of another Base of the Unit (unbroken chain) and within 6" of all of them.</p><p><b>Interpenetration:</b> can't come within 1" of enemies unless assaulting them. May move through unengaged friendly Units, ending 1" away.</p></section>
+  <section><h4>3. Overwatch Phase – Shooting</h4><ol><li>Nominate a target (Command Units only if the closest viable target, unless Super-heavy). No shooting into or out of Assaults.</li><li>Check range &amp; LOS per Base; In Cover?</li><li>Dice = eligible firing Bases × ADice.</li><li>Roll to hit vs <b>SH</b>.</li><li>Roll to damage vs target <b>AR</b> (+AP).</li><li>Saves (SV), then remove 1 Base per damage.</li></ol><table><tr><td>-1</td><td>Target In Cover</td></tr><tr><td>-2</td><td>Target has Fly (-1 vs Super-heavy)</td></tr><tr><td>-1</td><td>Target is Stealthy</td></tr><tr><td>-1</td><td>Shooter has a Pin marker</td></tr></table></section>
+  <section><h4>Blast Weapons</h4><ol><li>Place first template.</li><li>Indirect: roll Targeting Die for scatter.</li><li>Extra templates (Blast n) placed with the Targeting Die.</li><li>To hit: SH, or 5+ Indirect (Indirect ignores cover unless the target is in a building).</li><li>Damage, then remove casualties.</li></ol><p>Targeting Die: 3 On Target faces; 3, 3, 4, 5, 6" scatter in the arrow's direction.</p></section>
+  <section><h4>4. Combat Phase – Assault</h4><p>Spend Combat Tokens to shoot or resolve an Assault. All engaged Units fight; Bases in contact and friends within 1" of them attack. All attacks are simultaneous.</p><ol><li>Allocate attacks, roll to hit vs <b>AS</b>, damage vs <b>AR</b>.</li><li>Remove casualties.</li><li>Winner killed most Bases. Loser takes a Nerve test per Base of difference; lose one more Base per fail.</li><li>Tidy up: separate from Vehicles/Super-heavies; still in contact: pile in; otherwise consolidate 3" (winner may pile in). Remove Combat Tokens.</li></ol><table><tr><td>-1</td><td>Combat (-1) token</td></tr><tr><td>-1</td><td>Pin marker</td></tr><tr><td>-1</td><td>Arrived from Reserve this Round</td></tr><tr><td>-1</td><td>Disembarked into Assault this Round</td></tr><tr><td>+1</td><td>Infantry/Heavy Infantry vs APCs (+AP1)</td></tr></table></section>
+  <section><h4>Pinning</h4><p>Pinned: -1 to hit (shooting and assault); US 2+ counts as 1. Gain a Pin marker when a Unit:</p><ul><li>loses half or more of its Bases to one shooting attack;</li><li>loses an Assault;</li><li>is hit by a Pinning weapon (even with no casualties);</li><li>survives a destroyed transport.</li></ul></section>
+  <section><h4>5. End Phase</h4><ol><li>Trigger End Phase rules (flip Dynamic Objectives).</li><li>Roll to remove Pin markers.</li><li>Check victory conditions / score VPs.</li><li>Remove other markers and tokens.</li></ol></section>
+  <section><h4>Dice &amp; Key Keywords</h4><p><b>Exploding 8s</b> (Sustained Attack to hit, Vicious to damage): each natural 8 that succeeds rolls a bonus die.</p><p><b>Heavy Armour:</b> weapons without AP halve their damage dice (round up). <b>APn:</b> +n to damage rolls. <b>Stealthy:</b> -1 to be shot. <b>Unflinching:</b> never Pinned. <b>Resilience (n):</b> n shield tokens that negate damage.</p></section>
+  <section><h4>Objectives &amp; Game End</h4><p>Claim: a Base within 3"; highest total US within 3" claims it (ties: nobody). A Unit claims only one Objective. Pinned US 2+ counts as 1. Transported Units and Fliers can't claim. In a building, US counts double.</p><p>Play 5 Rounds; then D8: 5+ plays Round 6. VP tie: highest US In Play wins.</p></section>
+  </div><div class="qr-foot">Unofficial summary for quick reference – see the Epic Warpath Rulebook for full rules. Epic Warpath © Mantic Games.</div></div>`;
+}
+
+function fitCards(root) {
+  root.querySelectorAll(".tc").forEach(card => {
+    const body = card.querySelector(".tc-body");
+    if (!body) return;
+    const fits = () => body.scrollHeight <= body.clientHeight + 1;
+    const tryRange = (hi, lo) => { for (let fs = hi; fs >= lo; fs -= 0.25) { card.style.setProperty("--fs", fs + "pt"); if (fits()) return true; } return false; };
+    if (tryRange(7, 5.75)) return;
+    const art = card.querySelector(".tc-art");
+    if (art) { art.classList.add("short"); if (tryRange(7, 5.5)) return; }
+    if (tryRange(5.5, 4.75)) return;
+    if (art) { art.remove(); if (tryRange(6.5, 4.75)) return; }
+    card.classList.add("overflow");
+  });
+}
+
+function buildPrint(o) {
+  const parts = [];
+  if (o.roster) parts.push(`<div class="pr-sec">${rosterHtml({tactical: o.tactical})}</div>`);
+  if (o.units) {
+    const cards = [];
+    unitCardList(o.perUnit).forEach(({u, e, n}) => cards.push({u, e, n}));
+    parts.push(`<div class="pr-sec cards" data-kind="units">${pages(cards.map(({u, e, n}) => unitCardHtml(u, e, n, 0)))}</div>`);
+  }
+  if (o.cmds) {
+    const cards = fac().orders.map(([n, c, w, e]) => orderCardHtml("s", {n, c, w, e}));
+    if (o.tactical) TACTICAL.forEach(t => cards.push(orderCardHtml("t", t)));
+    stratCards().forEach(sc => cards.push(orderCardHtml("b", sc)));
+    parts.push(`<div class="pr-sec cards">${pages(cards)}</div>`);
+  }
+  if (o.ref) parts.push(`<div class="pr-sec">${quickRefHtml()}</div>`);
+  return parts;
+}
+
+async function runPrint(o) {
+  const area = $("#printArea");
+  area.innerHTML = buildPrint(o).join("");
+  area.classList.add("measuring");
+  fitCards(area);
+  if (o.units) {
+    const unitSec = area.querySelector('.pr-sec[data-kind="units"]');
+    const items = unitCardList(o.perUnit);
+    const cards = [...unitSec.querySelectorAll(".tc")];
+    if (cards.some(c => c.classList.contains("overflow"))) {
+      const html = [];
+      items.forEach(({u, e, n}, i) => {
+        if (cards[i] && cards[i].classList.contains("overflow") && u.r) { html.push(unitCardHtml(u, e, n, 1)); html.push(unitCardHtml(u, e, n, 2)); }
+        else html.push(cards[i] ? cards[i].outerHTML : unitCardHtml(u, e, n, 0));
+      });
+      unitSec.innerHTML = pages(html);
+      fitCards(unitSec);
+    }
+  }
+  area.classList.remove("measuring");
+  const imgs = [...area.querySelectorAll("img")];
+  await Promise.race([Promise.all(imgs.map(im => im.complete ? 1 : new Promise(r => { im.onload = im.onerror = r; }))), new Promise(r => setTimeout(r, 4000))]);
+  window.print();
+}
+
+function openPrintDialog(preset) {
+  if (preset) popts = Object.assign({}, popts, preset);
+  const ck = (k, label, hint, indent) => `<label class="popt ${indent ? "ind" : ""}"><input type="checkbox" data-po="${k}" ${popts[k] ? "checked" : ""}><span><b>${label}</b>${hint ? `<small>${hint}</small>` : ""}</span></label>`;
+  const body = `${ck("roster", "Army roster &amp; summary", "Header, roster tables, unit profiles, army rules, Strategic Orders, keywords.")}
+    ${ck("tactical", "Include universal Tactical Orders", "Keep Going!, Fight On! and Courage! – added to the summary and the command cards.", true)}
+    ${ck("units", "Unit reference cards", "Trading-card size, 2.5 × 3.5 in, nine per page.")}
+    ${ck("perUnit", "One card per unit taken (instead of one per unit type)", "", true)}
+    ${ck("cmds", "Command cards", "Your Strategic Orders, Battlefield Stratagems bought, and Tactical Orders if included above.")}
+    ${ck("ref", "One-page rules reference", "Turn sequence, tokens, orders, shooting, assault, pinning and scoring on one sheet.")}
+    <p class="hint">For cards: print at <b>100% / Actual size</b> with headers &amp; footers off so each card measures exactly 2.5 × 3.5 in. Cards sit edge to edge – cut straight along the joins between the dark frames.</p>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="tbtn primary" data-go-print>Print</button><button class="tbtn" data-close>Cancel</button></div>`;
+  modal("Print", body, o => {
+    o.querySelectorAll("[data-po]").forEach(inp => inp.onchange = () => { popts[inp.dataset.po] = inp.checked ? 1 : 0; store(false, "ewp_print_v1", JSON.stringify(popts)); });
+    o.querySelector("[data-go-print]").onclick = () => {
+      if (!popts.roster && !popts.units && !popts.cmds && !popts.ref) { toast("Pick something to print"); return; }
+      o.remove();
+      runPrint(popts);
+    };
+  });
+}
+
+function rosterHtml(opts) {
   const f = fac();
   const t = totals();
   const pool = {Black: 3 + t.dice.Black, Orange: t.dice.Orange, Green: t.dice.Green};
@@ -1183,11 +1405,11 @@ function doPrint() {
   if ([...seen.values()].some(({u}) => u.w.some(w => w[5]))) h += `<div class="pr-foot" style="margin-top:3px">* Firing mode – choose one each time the unit fires.</div>`;
   h += `<h2>Army Rules</h2><div class="pr-rules">${f.rules.map(([n, x]) => `<div class="pr-box"><div class="bt">Army Special Rule – ${esc(n)}</div><p>${esc(x)}</p></div>`).join("")}<div class="pr-box"><div class="bt">Command Pool</div><p>Each Round roll ${pool.Black} Black${pool.Orange ? ", " + pool.Orange + " Orange" : ""}${pool.Green ? ", " + pool.Green + " Green" : ""} Command Dice. Re-roll one die per Command Unit In Play. Army Nerve ${esc(f.nerve)}.</p></div></div>`;
   h += `<h3>Strategic Orders</h3><table class="pr-orders"><tr><th>Order</th><th>CP</th><th>When</th><th>Effect</th></tr>${f.orders.map(([n, c, w, e]) => `<tr><td class="nm">${esc(n)}</td><td class="c">${esc(c)}</td><td>${esc(w)}</td><td>${esc(e)}</td></tr>`).join("")}</table>`;
+  if (opts && opts.tactical) h += `<h3>Tactical Orders (any friendly Unit In Play)</h3><table class="pr-orders"><tr><th>Order</th><th>CP</th><th>When</th><th>Effect</th></tr>${TACTICAL.map(o => `<tr><td class="nm">${esc(o.n)}</td><td class="c">${esc(o.c)}</td><td>${esc(o.w)}</td><td>${esc(o.e)}</td></tr>`).join("")}</table>`;
   h += `<h2>Keywords Used</h2><div class="pr-kw">${usedGlossary().map(([n, x]) => `<div><b>${esc(n)}:</b> ${esc(x)}</div>`).join("")}</div>`;
   h += `<div class="pr-foot">Full rules: Epic Warpath Rulebook PDF ${RULES_URL} · Free online rules ${COMPANION_URL}</div>`;
   h += `<div class="pr-foot">Epic Warpath Army Builder · Created by Ian McGonigal · Rules © Mantic Games, FAQ &amp; Errata v1.2 applied</div></div>`;
-  $("#printArea").innerHTML = h;
-  window.print();
+  return h;
 }
 
 function start() {
@@ -1198,7 +1420,7 @@ $("#listName").addEventListener("input", e => { cur.name = e.target.value; save(
 $("#btnLists").onclick = openLists;
 $("#btnExport").onclick = openExport;
 $("#btnShare").onclick = openShare;
-$("#btnPrint").onclick = doPrint;
+$("#btnPrint").onclick = () => openPrintDialog();
 document.querySelectorAll("#tabs button[data-t]").forEach(b => b.onclick = () => { tab = b.dataset.t; render(); window.scrollTo(0, 0); });
 document.querySelector("#tabs [data-dice]").onclick = () => openDice();
 $("#btnDice").onclick = () => openDice();
@@ -2270,6 +2492,7 @@ $("#reader").addEventListener("click", e => {
 $("#rdSearch").addEventListener("input", e => { rd.q = e.target.value; renderReader(); $("#rdMain").scrollTop = 0; });
 $("#rdChSel").addEventListener("change", e => { rd.ch = +e.target.value; rd.q = ""; $("#rdSearch").value = ""; renderReader(); $("#rdMain").scrollTop = 0; });
 $("#btnRules").onclick = () => openRules();
+$("#rdPrint").onclick = () => { closeRules(); runPrint({ref: 1}); };
 document.querySelector("#tabs [data-rules]").onclick = () => openRules();
 
 window.addEventListener("keydown", e => { if (R3.el && R3.el.classList.contains("open") && (e.key === "r" || e.key === "R") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); R3.el.querySelector(".r3-again").click(); return; } if (R3.el && R3.el.classList.contains("open") && (e.key === "Enter" || e.key === "Escape") && R3.el.querySelector(".r3-bar.on")) { e.preventDefault(); closeRoll3D(); return; } if (R3.el && R3.el.classList.contains("open") && e.key === " ") { R3.skip = true; e.preventDefault(); return; } if (e.key === "Escape" && $("#reader").classList.contains("open")) { closeRules(); return; } if (e.key === "Escape") { hidePop(); document.querySelectorAll(".overlay").forEach(o => o.remove()); } });
